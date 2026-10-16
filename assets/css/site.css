@@ -475,6 +475,11 @@ strong { color: var(--ink); font-weight: 600; }
 }
 @media (min-width: 861px) {
   .side-panel { display: contents; }
+  /* Profil (Foto, Name, Titel) in der Seitenleiste mittig */
+  .side-top { justify-content: center; }
+  .brand { align-items: center; text-align: center; }
+  .brand-text { align-items: center; }
+  .brand img { width: 108px; height: 108px; }
 }
 
 /* ==========================================================================
