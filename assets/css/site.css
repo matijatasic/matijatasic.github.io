@@ -339,6 +339,11 @@ strong { color: var(--ink); font-weight: 600; }
 .row.is-linked { border-left-color: var(--teal); }
 /* Chips heben sich auf der hellgrünen Karte weiß ab */
 .row .tags li, .row .status.done { background: var(--surface); }
+/* Dunkelmodus: Karten nur ganz leicht grün getönt, transparent über dem Hintergrund */
+:root[data-theme="dark"] .row { background: rgba(31, 181, 168, .045); border-top-color: rgba(31, 181, 168, .14); border-right-color: rgba(31, 181, 168, .14); border-bottom-color: rgba(31, 181, 168, .14); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .row { background: rgba(31, 181, 168, .045); border-top-color: rgba(31, 181, 168, .14); border-right-color: rgba(31, 181, 168, .14); border-bottom-color: rgba(31, 181, 168, .14); }
+}
 .row h3 { font: 700 21px/1.25 var(--display); color: var(--ink); margin: 0 0 8px; letter-spacing: -.01em; }
 .row p { margin: 0 0 12px; font-size: 16px; }
 .row p:last-child { margin-bottom: 0; }
