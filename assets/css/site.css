@@ -348,8 +348,20 @@ strong { color: var(--ink); font-weight: 600; }
 .status.plan { color: var(--muted); background: transparent; border: 1px solid var(--line-strong); }
 .tags { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .tags li { font: 400 12px/1 var(--mono); color: var(--teal-text); background: var(--tint); border: 1px solid var(--tint-b); border-radius: 4px; padding: 6px 8px; }
-.more { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; font: 600 15px/1 var(--sans); color: var(--teal-text); text-decoration: none; }
-.more:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* Projekt-Link: deutlich als Schaltfläche erkennbar, passend zu Status-Chips und Buttons */
+.more {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 18px;
+  padding: 11px 14px 11px 12px; border-radius: 8px;
+  font: 700 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--teal-text); background: var(--tint); border: 1.5px solid var(--teal);
+  text-decoration: none;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.more-gh { width: 16px; height: 16px; flex: none; }
+.more-arrow { width: 14px; height: 14px; flex: none; transition: transform .2s ease; }
+.more:hover { background: var(--teal); border-color: var(--teal); color: #fff; box-shadow: 0 0 0 4px var(--glow); }
+.more:hover .more-arrow { transform: translateX(3px); }
+.more:active { transform: translateY(1px); }
 
 .skill-grid { display: grid; grid-template-columns: 180px 1fr; gap: 0 24px; align-items: start; }
 .skill-grid h3 { font: 700 12px/1.6 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 3px 0 0; }
