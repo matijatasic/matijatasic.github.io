@@ -480,6 +480,13 @@ strong { color: var(--ink); font-weight: 600; }
   .brand { align-items: center; text-align: center; }
   .brand-text { align-items: center; }
   .brand img { width: 108px; height: 108px; }
+  /* Ganze Seitenleiste symmetrisch: gleicher Rand links und rechts, alles mittig */
+  .side { padding-left: 28px; padding-right: 28px; }
+  .side .lbl { text-align: center; }
+  .toc ol { width: fit-content; margin: 0 auto; }
+  .toc a { grid-template-columns: 12px 30px auto; }
+  .pref-row { justify-content: center; }
+  .side-foot { text-align: center; }
 }
 
 /* ==========================================================================
