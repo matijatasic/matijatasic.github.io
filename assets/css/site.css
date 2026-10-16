@@ -332,11 +332,13 @@ strong { color: var(--ink); font-weight: 600; }
 /* ---------- Listen / Zeilen (Kompetenzen, Projekte) ---------- */
 .rows { display: flex; flex-direction: column; gap: 14px; margin-top: 36px; }
 .row {
-  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--line-strong);
+  background: var(--tint); border: 1px solid var(--tint-b); border-left: 3px solid var(--line-strong);
   border-radius: 10px; padding: 22px 24px 22px 24px; box-shadow: var(--shadow);
   transition: border-color .5s ease .5s, transform .2s ease;
 }
 .row.is-linked { border-left-color: var(--teal); }
+/* Chips heben sich auf der hellgrünen Karte weiß ab */
+.row .tags li, .row .status.done { background: var(--surface); }
 .row h3 { font: 700 21px/1.25 var(--display); color: var(--ink); margin: 0 0 8px; letter-spacing: -.01em; }
 .row p { margin: 0 0 12px; font-size: 16px; }
 .row p:last-child { margin-bottom: 0; }
