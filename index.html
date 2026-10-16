@@ -18,7 +18,6 @@
       if (l === 'en') d.lang = 'en';
     })();
   </script>
-  <script src="assets/js/config.js" defer></script>
   <script src="assets/js/site.js" defer></script>
 </head>
 <body>
@@ -225,8 +224,8 @@
             <span data-l="de">Lass uns <em>sprechen.</em></span>
             <span data-l="en">Let’s <em>talk.</em></span>
           </p>
-          <p><span data-l="de">Fragen zu einem Projekt oder ein Angebot? Schreib mir über das Formular oder direkt per E-Mail.</span>
-             <span data-l="en">Questions about a project or an offer? Write to me using the form or directly by email.</span></p>
+          <p><span data-l="de">Fragen zu einem Projekt oder ein Angebot? Schreib mir einfach per E-Mail.</span>
+             <span data-l="en">Questions about a project or an offer? Just send me an email.</span></p>
           <dl>
             <dt><span data-l="de">E-Mail</span><span data-l="en">Email</span></dt>
             <dd><a href="mailto:kontakt@matija-tasic.de">kontakt@matija-tasic.de</a></dd>
@@ -234,30 +233,6 @@
             <dd><a href="https://github.com/matijatasic" rel="me">github.com/matijatasic</a></dd>
           </dl>
         </div>
-
-        <form class="form" id="kontaktformular" novalidate>
-          <div class="field">
-            <label for="f-name">Name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120">
-          </div>
-          <div class="field">
-            <label for="f-email"><span data-l="de">E-Mail</span><span data-l="en">Email</span></label>
-            <input id="f-email" name="email" type="email" autocomplete="email" required maxlength="200">
-          </div>
-          <div class="field">
-            <label for="f-msg"><span data-l="de">Nachricht</span><span data-l="en">Message</span></label>
-            <textarea id="f-msg" name="message" required maxlength="5000" data-ph-de="Worum geht es?" data-ph-en="What is it about?" placeholder="Worum geht es?"></textarea>
-          </div>
-          <input class="hp" type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <label class="check">
-            <input type="checkbox" name="consent" required>
-            <span><span data-l="de">Ich bin einverstanden, dass meine Angaben zur Beantwortung meiner Anfrage verarbeitet werden. Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.</span>
-                  <span data-l="en">I agree that my details are processed to answer my request. More in the <a href="datenschutz.html">privacy policy</a>.</span></span>
-          </label>
-          <button class="btn btn-primary" type="submit"><span data-l="de">Nachricht senden</span><span data-l="en">Send message</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-        </form>
       </div>
     </section>
 

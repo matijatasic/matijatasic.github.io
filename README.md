@@ -14,8 +14,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | `impressum.html`, `datenschutz.html` | Rechtstexte |
 | `404.html` | Fehlerseite |
 | `assets/css/site.css` | Gestaltung, Farben für hell und dunkel |
-| `assets/js/site.js` | Sprach- und Darstellungsschalter, Leitung, Kontaktformular |
-| `assets/js/config.js` | Einstellungen für das Kontaktformular |
+| `assets/js/site.js` | Sprach- und Darstellungsschalter, Leitung |
 | `assets/fonts/` | Schriften mit Lizenzen |
 
 ## Lokal ansehen

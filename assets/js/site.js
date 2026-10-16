@@ -1,7 +1,6 @@
 /* matija-tasic.de · Verhalten der Seite
    - Sprache (DE/EN) und Darstellung (hell/dunkel) umschalten und merken
    - Leitung: verbindet beim Scrollen die Kapitel wie Ports in einem Netzplan
-   - Kontaktformular senden (Ziel in config.js)
 */
 (function () {
   'use strict';
@@ -214,58 +213,6 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(requestLayout);
   window.addEventListener('load', requestLayout);
   if ('ResizeObserver' in window && doc) new ResizeObserver(requestLayout).observe(doc);
-
-  /* ---------------- Kontaktformular ---------------- */
-  var form = document.querySelector('#kontaktformular');
-  if (form) {
-    var cfg = window.SITE_CONFIG || {};
-    var status = form.querySelector('.form-status');
-    var msg = {
-      de: {
-        sending: 'Wird gesendet …',
-        ok: 'Danke! Deine Nachricht ist angekommen.',
-        err: 'Das hat leider nicht geklappt. Bitte versuch es später noch einmal oder schreib mir per E-Mail.',
-        inactive: 'Das Formular ist noch nicht aktiv. Dein E-Mail-Programm öffnet sich stattdessen.'
-      },
-      en: {
-        sending: 'Sending …',
-        ok: 'Thank you! Your message has arrived.',
-        err: 'Sorry, that did not work. Please try again later or send me an email.',
-        inactive: 'The form is not active yet. Your email app will open instead.'
-      }
-    };
-    var t = function (k) { return msg[root.lang === 'en' ? 'en' : 'de'][k]; };
-    var setStatus = function (text, kind) {
-      status.textContent = text;
-      status.className = 'form-status' + (kind ? ' ' + kind : '');
-    };
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (!form.reportValidity()) return;
-      var data = new FormData(form);
-      if (data.get('botcheck')) return;
-
-      if (!cfg.formEndpoint) {
-        setStatus(t('inactive'), '');
-        var body = (data.get('message') || '') + '\n\n' + (data.get('name') || '') + '\n' + (data.get('email') || '');
-        window.location.href = 'mailto:' + (cfg.email || '') +
-          '?subject=' + encodeURIComponent('Kontakt über matija-tasic.de') +
-          '&body=' + encodeURIComponent(body);
-        return;
-      }
-      if (cfg.formAccessKey) data.append('access_key', cfg.formAccessKey);
-      data.append('subject', 'Kontakt über matija-tasic.de');
-      setStatus(t('sending'), '');
-      fetch(cfg.formEndpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-        .then(function (r) {
-          if (!r.ok) throw new Error(String(r.status));
-          form.reset();
-          setStatus(t('ok'), 'ok');
-        })
-        .catch(function () { setStatus(t('err'), 'err'); });
-    });
-  }
 
   /* ---------------- Start ---------------- */
   var saved = store('lang');
