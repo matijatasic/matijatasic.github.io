@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de" translate="no" data-title-de="Datenschutz · Matija Tasic" data-title-en="Privacy · Matija Tasic">
+<html lang="de" translate="no" data-theme="light" data-title-de="Datenschutz · Matija Tasic" data-title-en="Privacy · Matija Tasic">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Datenschutz · Matija Tasic</title>
   <meta name="description" content="Datenschutzerklärung der Website von Matija Tasic.">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="light">
   <meta name="google" content="notranslate">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -14,8 +14,8 @@
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
-      try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-      if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+      try { t = sessionStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+      if (t === 'dark') d.setAttribute('data-theme', 'dark');
       if (l === 'en') d.lang = 'en';
     })();
   </script>
@@ -145,8 +145,8 @@
         <span class="ch-rule"></span>
       </div>
 
-      <p><span data-l="de">Wenn Sie Sprache oder Darstellung (hell/dunkel) umschalten, speichert die Seite diese Auswahl im lokalen Speicher Ihres Browsers (localStorage). Diese Angaben verlassen Ihr Gerät nicht und werden nicht an mich oder Dritte übertragen. Die Speicherung ist unbedingt erforderlich, um die von Ihnen gewünschte Einstellung beizubehalten (§ 25 Abs. 2 Nr. 2 TDDDG). Sie können sie jederzeit über die Einstellungen Ihres Browsers löschen.</span>
-         <span data-l="en">When you switch language or display mode (light/dark), the site stores this choice in your browser’s local storage (localStorage). This data does not leave your device and is not sent to me or to third parties. The storage is strictly necessary to keep the setting you chose (Section 25(2) No. 2 TDDDG). You can delete it at any time in your browser settings.</span></p>
+      <p><span data-l="de">Wenn Sie die Sprache umschalten, speichert die Seite diese Auswahl im lokalen Speicher Ihres Browsers (localStorage). Die Darstellung (hell/dunkel) wird nur für den laufenden Besuch gespeichert (sessionStorage) und beim Schließen des Tabs gelöscht. Diese Angaben verlassen Ihr Gerät nicht und werden nicht an mich oder Dritte übertragen. Die Speicherung ist unbedingt erforderlich, um die von Ihnen gewünschte Einstellung beizubehalten (§ 25 Abs. 2 Nr. 2 TDDDG). Sie können sie jederzeit über die Einstellungen Ihres Browsers löschen.</span>
+         <span data-l="en">When you switch the language, the site stores this choice in your browser’s local storage (localStorage). The display mode (light/dark) is only stored for the current visit (sessionStorage) and is deleted when you close the tab. This data does not leave your device and is not sent to me or to third parties. The storage is strictly necessary to keep the setting you chose (Section 25(2) No. 2 TDDDG). You can delete it at any time in your browser settings.</span></p>
 
     </section>
 

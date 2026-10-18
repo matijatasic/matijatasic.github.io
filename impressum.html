@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de" translate="no" data-title-de="Impressum · Matija Tasic" data-title-en="Legal notice · Matija Tasic">
+<html lang="de" translate="no" data-theme="light" data-title-de="Impressum · Matija Tasic" data-title-en="Legal notice · Matija Tasic">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Impressum · Matija Tasic</title>
   <meta name="description" content="Impressum der Website von Matija Tasic.">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="light">
   <meta name="google" content="notranslate">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -14,8 +14,8 @@
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
-      try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-      if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+      try { t = sessionStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+      if (t === 'dark') d.setAttribute('data-theme', 'dark');
       if (l === 'en') d.lang = 'en';
     })();
   </script>
