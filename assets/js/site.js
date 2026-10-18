@@ -39,7 +39,8 @@
     });
   });
 
-  /* ---------------- Darstellung ---------------- */
+  /* ---------------- Darstellung ----------------
+     Start immer hell; dunkel gilt nur für den laufenden Besuch (sessionStorage). */
   function currentTheme() {
     var t = root.getAttribute('data-theme');
     if (t) return t;
@@ -49,7 +50,7 @@
     b.addEventListener('click', function () {
       var next = currentTheme() === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
-      store('theme', next);
+      try { sessionStorage.setItem('theme', next); } catch (e) {}
     });
   });
 
