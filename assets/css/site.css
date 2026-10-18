@@ -293,6 +293,7 @@ strong { color: var(--ink); font-weight: 600; }
   font: 700 12px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--muted);
   margin-bottom: 28px;
 }
+.kicker-site { margin-left: auto; color: var(--teal-text); font-weight: 400; letter-spacing: .1em; font-size: 11px; }
 .kicker b { font-weight: 400; letter-spacing: .06em; background: var(--chip-bg); color: var(--side-chip-text); padding: 6px 9px; border-radius: 4px; }
 .hero h1 {
   font: 800 clamp(56px, 9vw, 128px)/.92 var(--display); letter-spacing: -.045em; color: var(--ink);
@@ -483,6 +484,7 @@ strong { color: var(--ink); font-weight: 600; }
   .doc { padding: 24px 16px 120px var(--pad-l); background-size: 24px 24px; }
   .runhead { margin-bottom: 40px; font-size: 10px; letter-spacing: .12em; }
   .runhead span:last-child { display: none; }
+  .kicker-site { display: none; }
   .hero { min-height: auto; padding-top: 24px; }
   .hero h1 { font-size: clamp(52px, 15vw, 80px); }
   .tiles { grid-template-columns: 1fr; margin-top: 40px; }
