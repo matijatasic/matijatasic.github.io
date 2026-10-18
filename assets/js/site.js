@@ -244,7 +244,7 @@
       e.preventDefault();
       if (!form.reportValidity()) return;
       var data = new FormData(form);
-      if (data.get('_gotcha')) return;
+      if (data.get('botcheck')) return;
 
       if (!cfg.formEndpoint) {
         setStatus(t('inactive'), '');
@@ -254,7 +254,8 @@
           '&body=' + encodeURIComponent(body);
         return;
       }
-      data.append('_subject', 'Kontakt über matija-tasic.de');
+      if (cfg.formAccessKey) data.append('access_key', cfg.formAccessKey);
+      data.append('subject', 'Kontakt über matija-tasic.de');
       setStatus(t('sending'), '');
       fetch(cfg.formEndpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
         .then(function (r) {
