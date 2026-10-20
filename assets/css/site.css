@@ -449,6 +449,117 @@ strong { color: var(--ink); font-weight: 600; }
 .notfound .code { font: 800 clamp(96px, 16vw, 200px)/.9 var(--display); letter-spacing: -.05em; color: var(--ink); margin: 0 0 12px; }
 .notfound .code span { color: var(--teal); }
 
+/* ---------- Werkzeuge (werkzeuge.html) ----------
+   Nur vorhandene Farben und Bausteine: Karte wie das Kontaktformular, Felder wie .field,
+   Schaltflächen wie .btn, Chips/Mono wie Kapitelköpfe. */
+.tool-privacy {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 8px;
+  font: 400 12px/1.5 var(--mono); color: var(--teal-text); letter-spacing: .02em;
+  background: var(--tint); border: 1px solid var(--tint-b); border-radius: 999px; padding: 7px 14px;
+}
+.tool-privacy::before { content: ''; width: 7px; height: 7px; border-radius: 2px; background: var(--teal); flex: none; }
+.tools code { font: 400 .88em/1.4 var(--mono); color: var(--teal-text); }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); margin-top: 24px; }
+.tool h3 { margin-top: 32px; }
+.tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 16px; }
+.tool-grid .field-wide { grid-column: 1 / -1; }
+.tool-grid.vl-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, .8fr); }
+.field select {
+  width: 100%; font: 400 16px/1.5 var(--sans); color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line-strong); border-radius: 8px; padding: 12px 38px 12px 14px;
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size: 5px 5px; background-repeat: no-repeat;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.field input, .field select { font-variant-numeric: tabular-nums; }
+.field select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--glow); }
+#sn-in, #sn-test, #vl-base, #ov-in { font-family: var(--mono); font-size: 15px; }
+
+.tool-msg { font-size: 14px; margin: -4px 0 12px; min-height: 0; color: var(--muted); }
+.tool-msg:empty { display: none; }
+.tool-msg.ok, .tool-list .ok { color: var(--teal-text); }
+.tool-msg.warn, .tool-list .warn { color: var(--amber); }
+.tool-msg.err, .tool-list .err { color: #c4664a; }
+.tool-list { list-style: none; margin: 0 0 12px; padding: 0; font-size: 14px; }
+.tool-list:empty { display: none; }
+.tool-list li { position: relative; padding: 3px 0 3px 18px; }
+.tool-list li::before { content: ''; position: absolute; left: 0; top: .72em; width: 7px; height: 7px; border-radius: 2px; background: currentColor; }
+
+/* Ergebnis als Schlüssel/Wert-Kacheln, angelehnt an die Kacheln der Startseite */
+.kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin: 0; }
+.kv > div { background: var(--tint); border: 1px solid var(--tint-b); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+.kv dt { font: 700 10px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+.kv dd { margin: 0; font: 400 14px/1.35 var(--mono); color: var(--ink); overflow-wrap: break-word; }
+:root[data-theme="dark"] .kv > div { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .14); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .kv > div { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .14); }
+}
+
+.bits { margin-top: 14px; overflow-x: auto; }
+.bits-row { display: flex; align-items: baseline; gap: 12px; padding: 2px 0; white-space: nowrap; }
+.bits-lbl { font: 700 10px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); width: 64px; flex: none; }
+.bits code { font: 400 13px/1.6 var(--mono); letter-spacing: .04em; }
+.bits .b-net { color: var(--teal-text); font-weight: 700; }
+.bits .b-host { color: var(--muted); }
+.bits .b-dot { color: var(--line-strong); }
+.bits-key { font: 400 12px/1.5 var(--mono); color: var(--muted); margin: 6px 0 0; }
+
+/* Tabellen (VLAN-Planer) */
+.table-wrap { overflow-x: auto; margin: 4px 0 12px; -webkit-overflow-scrolling: touch; }
+.tool-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tool-table:empty { display: none; }
+.tool-table th {
+  text-align: left; font: 700 10px/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  padding: 8px 10px; border-bottom: 2px solid var(--line); white-space: nowrap;
+}
+.tool-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; color: var(--ink); }
+.tool-table td code { font-size: 13px; white-space: nowrap; }
+.tool-table td.rng { white-space: normal; min-width: 120px; }
+#vl-out tbody tr:hover td { background: var(--tint); }
+.vl-edit td { padding: 6px 6px 6px 0; border-bottom: 0; }
+.vl-edit th { padding-left: 0; }
+.vl-edit input {
+  width: 100%; font: 400 15px/1.4 var(--sans); color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line-strong); border-radius: 8px; padding: 9px 11px; font-variant-numeric: tabular-nums;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.vl-edit input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--glow); }
+.vl-edit td:nth-child(1) { width: 110px; }
+.vl-edit td:nth-child(3) { width: 110px; }
+.vl-edit td:nth-child(4) { width: 44px; }
+.vl-edit input.vl-name { min-width: 140px; }
+.vl-del {
+  appearance: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--muted); font: 400 20px/1 var(--sans);
+  transition: border-color .2s ease, color .2s ease;
+}
+.vl-del:hover { border-color: #c4664a; color: #c4664a; }
+
+.btn-sm { font-size: 14px; padding: 11px 15px; }
+.tool-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+.tool-flash { font: 400 12px/1.5 var(--mono); color: var(--teal-text); }
+.tool-note { font: 400 12px/1.6 var(--mono); color: var(--muted); margin: 0; }
+.tool-note:empty { display: none; }
+
+/* Checkliste */
+.checklist { display: grid; gap: 14px; margin-top: 8px; }
+.cl-sec { border: 1px solid var(--tint-b); border-left: 3px solid var(--teal); border-radius: 10px; background: var(--tint); margin: 0; padding: 14px 18px 10px; min-width: 0; }
+:root[data-theme="dark"] .cl-sec { background: rgba(31, 181, 168, .045); border-top-color: rgba(31, 181, 168, .14); border-right-color: rgba(31, 181, 168, .14); border-bottom-color: rgba(31, 181, 168, .14); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .cl-sec { background: rgba(31, 181, 168, .045); border-top-color: rgba(31, 181, 168, .14); border-right-color: rgba(31, 181, 168, .14); border-bottom-color: rgba(31, 181, 168, .14); }
+}
+.cl-sec legend {
+  display: flex; align-items: center; gap: 10px; padding: 0; float: left; width: 100%; margin-bottom: 8px;
+  font: 700 12px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--ink);
+}
+.cl-sec legend + * { clear: both; }
+.cl-n { font: 400 12px/1 var(--mono); letter-spacing: .04em; color: var(--side-chip-text); background: var(--chip-bg); padding: 5px 8px; border-radius: 4px; }
+.cl-sec ul { list-style: none; margin: 0; padding: 0; }
+.cl-sec li label { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; padding: 5px 0; font-size: 15px; line-height: 1.5; cursor: pointer; }
+.cl-sec li input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--teal); cursor: pointer; }
+.cl-sec li input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--teal); }
+
 /* ==========================================================================
    Tablet und Handy
    ========================================================================== */
@@ -496,6 +607,18 @@ strong { color: var(--ink); font-weight: 600; }
   .skill-grid h3 { margin-top: 0; }
   .row { padding: 18px 18px; }
   .form { padding: 18px; }
+  .tool { padding: 18px 16px; }
+  .tool-grid, .tool-grid.vl-head { grid-template-columns: 1fr; }
+  .kv { grid-template-columns: 1fr; gap: 8px; }
+  .kv > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 9px 12px; }
+  .kv dt { margin: 0; flex: none; }
+  .kv dd { text-align: right; font-size: 13px; }
+  .field select { font-size: 15px; }
+  .vl-edit td:nth-child(1), .vl-edit td:nth-child(3) { width: 68px; }
+  .vl-edit input { padding: 9px 8px; min-width: 56px; }
+  .vl-edit input.vl-name { min-width: 96px; }
+  .tool-privacy { border-radius: 10px; align-items: flex-start; }
+  .tool-privacy::before { margin-top: .5em; }
   .runfoot { right: 12px; bottom: 12px; }
   .runfoot .rf-title, .runfoot .rf-bar { display: none; }
   .runfoot { padding: 8px 12px; }
