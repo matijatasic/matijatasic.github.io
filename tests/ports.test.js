@@ -10,47 +10,53 @@ function test(name, fn) {
   try { fn(); passed++; console.log('  ok   ' + name); }
   catch (e) { failed++; console.log('  FAIL ' + name + '\n       ' + e.message); }
 }
+function pair(x) { return Array.isArray(x) && x.length === 2 && x[0] && x[1]; }
+function find(n) { return d.PORTS.filter(function (p) { return p.port === n; })[0]; }
 
 console.log('ports');
 
 test('Jeder Eintrag ist vollständig', function () {
   d.PORTS.forEach(function (p, i) {
-    assert.ok(Number.isInteger(p[0]) && p[0] >= 1 && p[0] <= 65535, 'Port in Zeile ' + i);
-    assert.ok(['TCP', 'UDP', 'TCP/UDP'].indexOf(p[1]) >= 0, 'Protokoll bei Port ' + p[0]);
-    assert.ok(typeof p[2] === 'string' || (Array.isArray(p[2]) && p[2].length === 2), 'Dienst bei Port ' + p[0]);
-    assert.ok(d.CATEGORIES[p[3]], 'Bereich bei Port ' + p[0]);
-    assert.ok(p[4] && p[5], 'Hinweis DE/EN bei Port ' + p[0]);
+    assert.ok(Number.isInteger(p.port) && p.port >= 1 && p.port <= 65535, 'Port in Zeile ' + i);
+    assert.ok(typeof p.tcp === 'boolean' && typeof p.udp === 'boolean', 'tcp/udp bei Port ' + p.port);
+    assert.ok(p.tcp || p.udp, 'mindestens ein Protokoll bei Port ' + p.port);
+    assert.ok(typeof p.name === 'string' || pair(p.name), 'Dienst bei Port ' + p.port);
+    assert.ok(d.CATEGORIES[p.cat], 'Bereich bei Port ' + p.port);
+    assert.ok(pair(p.desc), 'Beschreibung DE/EN bei Port ' + p.port);
+    assert.ok(pair(p.note), 'Firewall-Hinweis DE/EN bei Port ' + p.port);
   });
 });
 
-test('Kein Port/Protokoll doppelt', function () {
-  var seen = {};
+test('Jeder Port nur einmal, aufsteigend sortiert', function () {
+  for (var i = 1; i < d.PORTS.length; i++) assert.ok(d.PORTS[i].port > d.PORTS[i - 1].port, 'bei Port ' + d.PORTS[i].port);
+});
+
+test('Verwandte Ports stehen im Lexikon und verweisen nicht auf sich selbst', function () {
   d.PORTS.forEach(function (p) {
-    var protos = p[1] === 'TCP/UDP' ? ['TCP', 'UDP'] : [p[1]];
-    protos.forEach(function (pr) {
-      var k = p[0] + '/' + pr;
-      assert.ok(!seen[k], k + ' doppelt');
-      seen[k] = true;
+    p.related.forEach(function (n) {
+      assert.ok(find(n), 'Port ' + p.port + ' verweist auf fehlenden Port ' + n);
+      assert.notStrictEqual(n, p.port, 'Port ' + p.port + ' verweist auf sich selbst');
     });
   });
 });
 
-test('Liste ist nach Port sortiert', function () {
-  for (var i = 1; i < d.PORTS.length; i++) assert.ok(d.PORTS[i][0] >= d.PORTS[i - 1][0], 'bei ' + d.PORTS[i][0]);
+test('Jeder Bereich hat mindestens einen Port', function () {
+  Object.keys(d.CATEGORIES).forEach(function (k) {
+    assert.ok(d.PORTS.some(function (p) { return p.cat === k; }), 'Bereich ' + k);
+  });
 });
 
-test('Stichproben bekannter Ports', function () {
-  function has(port, proto, name) {
-    return d.PORTS.some(function (p) { var n = Array.isArray(p[2]) ? p[2][0] : p[2]; return p[0] === port && p[1] === proto && n.indexOf(name) >= 0; });
-  }
-  assert.ok(has(22, 'TCP', 'SSH'));
-  assert.ok(has(53, 'TCP/UDP', 'DNS'));
-  assert.ok(has(443, 'TCP', 'HTTPS'));
-  assert.ok(has(8006, 'TCP', 'Proxmox VE'));
-  assert.ok(has(51820, 'UDP', 'WireGuard'));
+test('Stichproben', function () {
+  assert.ok(find(22).tcp && !find(22).udp, '22 nur TCP');
+  assert.ok(find(53).tcp && find(53).udp, '53 TCP und UDP');
+  assert.ok(find(443).tcp && find(443).udp, '443 TCP und UDP (QUIC)');
+  assert.ok(!find(51820).tcp && find(51820).udp, '51820 nur UDP');
+  assert.ok(!find(67).tcp && find(67).udp, '67 nur UDP');
+  assert.strictEqual(find(8006).name[0].indexOf('Proxmox VE'), 0);
 });
 
 test('IANA-Bereiche', function () {
+  assert.strictEqual(d.portRange(443), 'system');
   assert.strictEqual(d.portRange(1023), 'system');
   assert.strictEqual(d.portRange(1024), 'registered');
   assert.strictEqual(d.portRange(49151), 'registered');

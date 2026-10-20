@@ -510,11 +510,30 @@ strong { color: var(--ink); font-weight: 600; }
 .bits-key { font: 400 12px/1.5 var(--mono); color: var(--muted); margin: 6px 0 0; }
 
 /* Port-Nachschlagewerk */
-.tool-grid.pt-head { grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr) minmax(0, 1.2fr); }
-.pt-table td { vertical-align: top; }
-.pt-table td.pt-svc { white-space: normal; min-width: 150px; font-weight: 500; }
-.pt-table td.pt-note { white-space: normal; min-width: 220px; color: var(--text); }
-.pt-cat { display: block; margin-top: 3px; font: 400 11px/1.4 var(--mono); letter-spacing: .04em; color: var(--muted); font-weight: 400; }
+.tool-grid.pt-head { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+.pt-card { background: var(--tint); border: 1px solid var(--tint-b); border-radius: 10px; padding: 22px 24px; margin-bottom: 14px; }
+.pt-card:empty { display: none; }
+.pt-top { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; }
+.pt-num { font: 700 34px/1 var(--mono); color: var(--teal-text); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.pt-card .pt-name { margin: 0 0 4px; font: 600 20px/1.25 var(--display); color: var(--ink); }
+.pt-cat { display: block; font: 400 11px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.pt-protos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+.pt-proto { display: inline-flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 6px; border: 1px dashed var(--line-strong); font: 700 12px/1 var(--mono); letter-spacing: .08em; color: var(--muted); }
+.pt-proto.is-on { border: 1px solid var(--teal); background: var(--surface); color: var(--teal-text); }
+.pt-yn { font-weight: 400; letter-spacing: 0; text-transform: none; }
+.pt-both { font-size: 14px; color: var(--text); margin-left: 4px; }
+.pt-card h4 { margin: 14px 0 4px; font: 700 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.pt-card p { margin: 0; color: var(--text); line-height: 1.6; }
+.pt-rel { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.pt-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--tint-b); background: var(--surface); color: var(--text); font: 500 13px/1.2 var(--sans); cursor: pointer; }
+.pt-chip code { color: var(--teal-text); font-weight: 700; }
+.pt-chip:hover, .pt-chip:focus-visible { border-color: var(--teal); outline: none; box-shadow: 0 0 0 3px var(--glow); }
+:root[data-theme="dark"] .pt-card { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .14); }
+:root[data-theme="dark"] .pt-proto.is-on, :root[data-theme="dark"] .pt-chip { background: rgba(255, 255, 255, .03); border-color: rgba(31, 181, 168, .3); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pt-card { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .14); }
+  :root:not([data-theme="light"]) .pt-proto.is-on, :root:not([data-theme="light"]) .pt-chip { background: rgba(255, 255, 255, .03); border-color: rgba(31, 181, 168, .3); }
+}
 .field input[type="search"] { -webkit-appearance: none; appearance: none; }
 
 /* Tabellen (VLAN-Planer) */
@@ -610,11 +629,9 @@ strong { color: var(--ink); font-weight: 600; }
   .ip-pair input { padding-left: 10px; padding-right: 10px; }
   .tool-grid, .tool-grid.vl-head, .tool-grid.pt-head { grid-template-columns: 1fr; }
   /* Port-Liste auf dem Handy als Zeilenkarten statt breiter Tabelle */
-  .pt-table thead { display: none; }
-  .pt-table tr { display: grid; grid-template-columns: 58px 74px minmax(0, 1fr); align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .pt-table td { border: 0; padding: 0 6px 0 0; white-space: normal; }
-  .pt-table td.pt-svc { min-width: 0; }
-  .pt-table td.pt-note { grid-column: 1 / -1; min-width: 0; padding-top: 6px; font-size: 14px; line-height: 1.5; }
+  .pt-card { padding: 18px 16px; }
+  .pt-num { font-size: 28px; }
+  .pt-card .pt-name { font-size: 18px; }
   .kv { grid-template-columns: 1fr; gap: 8px; }
   .kv > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 9px 12px; }
   .kv dt { margin: 0; flex: none; }

@@ -88,8 +88,8 @@
     <section class="chapter">
       <div class="kicker" data-node data-runtitle data-runtitle-de="Tools" data-runtitle-en="Tools"><b>00</b><span>Tools</span></div>
       <h1>Tools<span class="dot">.</span></h1>
-      <p class="lead"><span data-l="de">Drei kleine Helfer aus meinem Alltag als Admin: Netze berechnen, VLANs planen und Ports mit Firewall-Hinweis nachschlagen.</span>
-        <span data-l="en">Three small helpers from my day-to-day work as an admin: calculate networks, plan VLANs and look up ports with a firewall note.</span></p>
+      <p class="lead"><span data-l="de">Drei kleine Helfer aus meinem Alltag als Admin: Netze berechnen, VLANs planen und Ports im Lexikon nachschlagen.</span>
+        <span data-l="en">Three small helpers from my day-to-day work as an admin: calculate networks, plan VLANs and look up ports in a lexicon.</span></p>
       <p class="tool-privacy"><span data-l="de">Alles läuft nur in Ihrem Browser. Eingaben werden nicht gespeichert und nicht übertragen.</span>
         <span data-l="en">Everything runs in your browser only. Nothing you enter is stored or sent anywhere.</span></p>
     </section>
@@ -220,32 +220,22 @@
         <h2 class="ch-title"><span data-l="de">Port-Nachschlagewerk</span><span data-l="en">Port reference</span></h2>
         <span class="ch-rule"></span>
       </div>
-      <p><span data-l="de">Wichtige Ports aus Netzwerk, Server und Heimnetz, jeweils mit einem Hinweis für die Firewall. Suche nach Portnummer, Dienst oder Stichwort, zum Beispiel <code>443</code>, <code>dns</code> oder <code>vpn</code>.</span>
-        <span data-l="en">Important ports from networking, servers and home networks, each with a note for the firewall. Search by port number, service or keyword, for example <code>443</code>, <code>dns</code> or <code>vpn</code>.</span></p>
+      <p><span data-l="de">Ein kleines Lexikon der bekanntesten Ports. Wählen Sie einen Port aus der Liste oder geben Sie eine Nummer ein. Darunter steht, wofür der Port da ist, ob er über TCP, UDP oder beides läuft und worauf in der Firewall zu achten ist.</span>
+        <span data-l="en">A small lexicon of the best-known ports. Pick a port from the list or type a number. Below you see what the port is for, whether it runs over TCP, UDP or both, and what to watch out for in the firewall.</span></p>
 
       <div class="tool">
         <div class="tool-grid pt-head">
           <div class="field">
-            <label for="pt-q"><span data-l="de">Suche</span><span data-l="en">Search</span></label>
-            <input id="pt-q" type="search" spellcheck="false" autocomplete="off" maxlength="40" data-ph-de="Port, Dienst oder Stichwort" data-ph-en="Port, service or keyword" placeholder="Port, Dienst oder Stichwort">
+            <label for="pt-sel"><span data-l="de">Bekannte Ports</span><span data-l="en">Well-known ports</span></label>
+            <select id="pt-sel"></select>
           </div>
           <div class="field">
-            <label for="pt-proto"><span data-l="de">Protokoll</span><span data-l="en">Protocol</span></label>
-            <select id="pt-proto">
-              <option value="" data-de="Alle" data-en="All">Alle</option>
-              <option value="TCP">TCP</option>
-              <option value="UDP">UDP</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="pt-cat"><span data-l="de">Bereich</span><span data-l="en">Category</span></label>
-            <select id="pt-cat"></select>
+            <label for="pt-num"><span data-l="de">Oder Portnummer</span><span data-l="en">Or port number</span></label>
+            <input id="pt-num" type="text" inputmode="numeric" maxlength="5" spellcheck="false" autocomplete="off" data-ph-de="z. B. 3389" data-ph-en="e.g. 3389" placeholder="z. B. 3389">
           </div>
         </div>
         <p class="tool-msg" id="pt-msg" role="status" aria-live="polite"></p>
-        <div class="table-wrap">
-          <table class="tool-table pt-table" id="pt-out"></table>
-        </div>
+        <article class="pt-card" id="pt-card" aria-live="polite"></article>
         <p class="tool-note"><span data-l="de">Standard-Ports laut IANA bzw. Hersteller. Dienste lassen sich umkonfigurieren, die Firewall-Regel richtet sich nach dem tatsächlich genutzten Port.</span><span data-l="en">Default ports according to IANA or the vendor. Services can be reconfigured; the firewall rule follows the port actually in use.</span></p>
       </div>
     </section>
