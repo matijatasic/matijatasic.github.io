@@ -17,7 +17,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | `assets/css/site.css` | Gestaltung, Farben für hell und dunkel |
 | `assets/js/site.js` | Sprach- und Darstellungsschalter, Leitung, Kontaktformular |
 | `assets/js/ipcalc.js` | IPv4-Rechenlogik der Tools (ohne Oberfläche) |
-| `assets/js/ports.js` | Daten des Port-Nachschlagewerks |
+| `assets/js/ports.js` | Daten des Port-Lexikons (Beschreibung, Firewall-Hinweis, TCP/UDP, verwandte Ports) |
 | `assets/js/tools.js` | Oberfläche und Texte der Tools |
 | `tests/ipcalc.test.js`, `tests/ports.test.js` | Tests der Rechenlogik und der Port-Daten |
 | `assets/js/config.js` | Einstellungen für das Kontaktformular |

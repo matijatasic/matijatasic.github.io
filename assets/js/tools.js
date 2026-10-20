@@ -343,47 +343,73 @@
     registered: ['registrierter Port (1024–49151)', 'registered port (1024–49151)'],
     dynamic: ['dynamischer Port (49152–65535), wird vom Betriebssystem für ausgehende Verbindungen genutzt', 'dynamic port (49152–65535), used by the operating system for outgoing connections']
   };
-  function pName(p) { return Array.isArray(p[2]) ? t(p[2]) : p[2]; }
-  function fold(s) { return String(s).toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss'); }
+  var ptSel = $('pt-sel'), ptNum = $('pt-num');
+  var current = 443;
+  function byPort(n) { for (var i = 0; i < PD.PORTS.length; i++) if (PD.PORTS[i].port === n) return PD.PORTS[i]; return null; }
+  function pName(p) { return Array.isArray(p.name) ? t(p.name) : p.name; }
+  function cap(x) { return x.charAt(0).toUpperCase() + x.slice(1); }
+  function protoText(p) { return p.tcp && p.udp ? L('TCP und UDP', 'TCP and UDP') : p.tcp ? L('nur TCP', 'TCP only') : L('nur UDP', 'UDP only'); }
 
-  function fillCats() {
-    var sel = $('pt-cat'), cur = sel.value;
-    sel.innerHTML = '<option value="">' + esc(L('Alle', 'All')) + '</option>' +
-      Object.keys(PD.CATEGORIES).map(function (k) { return '<option value="' + k + '">' + esc(t(PD.CATEGORIES[k])) + '</option>'; }).join('');
-    sel.value = cur;
+  /* Auswahlliste nach Bereichen gruppiert, innerhalb aufsteigend nach Port */
+  function fillPorts() {
+    ptSel.innerHTML = Object.keys(PD.CATEGORIES).map(function (k) {
+      var list = PD.PORTS.filter(function (p) { return p.cat === k; });
+      if (!list.length) return '';
+      return '<optgroup label="' + esc(t(PD.CATEGORIES[k])) + '">' + list.map(function (p) {
+        return '<option value="' + p.port + '">' + p.port + ' · ' + esc(pName(p)) + '</option>';
+      }).join('') + '</optgroup>';
+    }).join('');
+    if (byPort(current)) ptSel.value = String(current);
   }
 
   function renderPorts() {
-    var q = $('pt-q').value.trim(), proto = $('pt-proto').value, cat = $('pt-cat').value;
-    var msg = $('pt-msg'), out = $('pt-out');
-    var isNum = /^\d+$/.test(q), n = isNum ? Number(q) : null;
-    var words = isNum ? [] : fold(q).split(/\s+/).filter(Boolean);
-    var hits = PD.PORTS.filter(function (p) {
-      if (proto && p[1].indexOf(proto) < 0) return false;
-      if (cat && p[3] !== cat) return false;
-      if (isNum) return p[0] === n;
-      if (!words.length) return true;
-      var hay = fold([p[0], p[1], pName(p), t(PD.CATEGORIES[p[3]]), lang() === 'en' ? p[5] : p[4]].join(' '));
-      return words.every(function (w) { return hay.indexOf(w) >= 0; });
-    });
-
-    if (isNum && n > 65535) { msg.textContent = L('Ports gibt es nur von 0 bis 65535.', 'Ports only exist from 0 to 65535.'); msg.className = 'tool-msg err'; }
-    else if (isNum && !hits.length) {
-      msg.textContent = L('Port ' + n + ' steht nicht in der Liste. Er ist ein ', 'Port ' + n + ' is not in the list. It is a ') + t(RANGE[PD.portRange(n)]) + '.';
-      msg.className = 'tool-msg';
-    } else if (!hits.length) { msg.textContent = L('Keine Treffer. Andere Suche oder Filter probieren.', 'No matches. Try another search or filter.'); msg.className = 'tool-msg warn'; }
-    else { msg.textContent = num(hits.length) + L(' von ', ' of ') + num(PD.PORTS.length) + L(' Einträgen', ' entries'); msg.className = 'tool-msg'; }
-
-    if (!hits.length) { out.innerHTML = ''; return; }
-    var head = ['Port', L('Protokoll', 'Protocol'), L('Dienst', 'Service'), L('Hinweis', 'Note')];
-    out.innerHTML = '<thead><tr>' + head.map(function (h) { return '<th scope="col">' + esc(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-      hits.map(function (p) {
-        return '<tr><td><code>' + p[0] + '</code></td><td>' + p[1] + '</td><td class="pt-svc">' + esc(pName(p)) +
-          '<span class="pt-cat">' + esc(t(PD.CATEGORIES[p[3]])) + '</span></td><td class="pt-note">' + esc(lang() === 'en' ? p[5] : p[4]) + '</td></tr>';
-      }).join('') + '</tbody>';
+    var msg = $('pt-msg'), card = $('pt-card');
+    var p = byPort(current);
+    msg.textContent = ''; msg.className = 'tool-msg';
+    if (!p) {
+      card.innerHTML = '';
+      if (current === null) return;
+      if (current > 65535) { msg.textContent = L('Ports gibt es nur von 0 bis 65535.', 'Ports only exist from 0 to 65535.'); msg.className = 'tool-msg err'; return; }
+      msg.textContent = L('Port ' + current + ' steht nicht im Lexikon. Er ist ein ', 'Port ' + current + ' is not in the lexicon. It is a ') + t(RANGE[PD.portRange(current)]) + '.';
+      return;
+    }
+    var badge = function (on, label) {
+      return '<span class="pt-proto' + (on ? ' is-on' : '') + '">' + label + '<span class="pt-yn">' + (on ? L('ja', 'yes') : L('nein', 'no')) + '</span></span>';
+    };
+    var rel = p.related.filter(byPort).map(function (n) {
+      return '<button type="button" class="pt-chip" data-port="' + n + '"><code>' + n + '</code> ' + esc(pName(byPort(n))) + '</button>';
+    }).join('');
+    card.innerHTML =
+      '<header class="pt-top"><span class="pt-num">' + p.port + '</span><div><h3 class="pt-name">' + esc(pName(p)) + '</h3>' +
+      '<span class="pt-cat">' + esc(t(PD.CATEGORIES[p.cat])) + ' · ' + esc(cap(t(RANGE[PD.portRange(p.port)]).split(',')[0])) + '</span></div></header>' +
+      '<div class="pt-protos" aria-label="' + esc(protoText(p)) + '">' + badge(p.tcp, 'TCP') + badge(p.udp, 'UDP') +
+      '<span class="pt-both">' + esc(protoText(p)) + '</span></div>' +
+      '<h4>' + L('Wofür', 'What it is for') + '</h4><p>' + esc(t(p.desc)) + '</p>' +
+      '<h4>' + L('Hinweis für die Firewall', 'Firewall note') + '</h4><p>' + esc(t(p.note)) + '</p>' +
+      (rel ? '<h4>' + L('Verwandte Ports', 'Related ports') + '</h4><div class="pt-rel">' + rel + '</div>' : '');
   }
 
-  if (PD) ['pt-q', 'pt-proto', 'pt-cat'].forEach(function (id) { $(id).addEventListener('input', renderPorts); });
+  function showPort(n) {
+    current = n;
+    if (byPort(n)) ptSel.value = String(n);
+    renderPorts();
+  }
+
+  if (PD) {
+    ptSel.addEventListener('change', function () { ptNum.value = ''; showPort(Number(ptSel.value)); });
+    ptNum.addEventListener('input', function () {
+      var v = ptNum.value.replace(/\D/g, '');
+      if (v !== ptNum.value) ptNum.value = v;
+      if (!v) { showPort(Number(ptSel.value)); return; }
+      showPort(Number(v));
+    });
+    $('pt-card').addEventListener('click', function (e) {
+      var b = e.target.closest('.pt-chip');
+      if (!b) return;
+      ptNum.value = '';
+      showPort(Number(b.getAttribute('data-port')));
+    });
+  }
 
   /* ---------- Start und Sprachwechsel ---------- */
   function renderAll() {
@@ -391,7 +417,7 @@
     renderSubnet();
     renderOverlap();
     renderVlan();
-    if (PD) { fillCats(); renderPorts(); }
+    if (PD) { fillPorts(); renderPorts(); }
   }
   new MutationObserver(renderAll).observe(root, { attributes: true, attributeFilter: ['lang'] });
   renderAll();
