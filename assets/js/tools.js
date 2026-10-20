@@ -1,5 +1,6 @@
 /* matija-tasic.de · Werkzeuge (werkzeuge.html)
-   - Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk (Daten in ports.js)
+   - Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk (Daten in ports.js),
+     Passwortgenerator (pwgen.js), Hash-Rechner (hash.js)
    - Rechenlogik steckt in ipcalc.js; hier nur Oberfläche und Texte
    - nichts wird gespeichert oder übertragen
 */
@@ -411,6 +412,176 @@
     });
   }
 
+  /* ======================================================================
+     04 Passwortgenerator (Logik in pwgen.js)
+     ====================================================================== */
+  var PW = window.PwGen;
+  var pwLen = $('pw-len'), pwVal = $('pw-val');
+  var PW_RATE = [['schwach', 'weak'], ['mittel', 'fair'], ['stark', 'strong'], ['sehr stark', 'very strong']];
+
+  function pwOpts() {
+    return {
+      length: Number(pwLen.value),
+      lower: $('pw-lower').checked, upper: $('pw-upper').checked,
+      digits: $('pw-digits').checked, symbols: $('pw-symbols').checked,
+      noSimilar: $('pw-similar').checked
+    };
+  }
+  function pwRate() {
+    var o = pwOpts(), bits = PW.entropy(o), r = PW.rating(bits);
+    $('pw-len-val').textContent = o.length;
+    $('pw-bar').style.width = Math.min(100, Math.round(bits / 1.4)) + '%';
+    $('pw-bar').className = 'r' + r;
+    $('pw-rate').textContent = bits ? L('Stärke: ', 'Strength: ') + t(PW_RATE[r]) + ' · ' + bits + ' Bit' : '';
+  }
+  function pwNew() {
+    var msg = $('pw-msg'), pw = null;
+    msg.textContent = ''; msg.className = 'tool-msg';
+    try { pw = PW.generate(pwOpts()); }
+    catch (e) { msg.textContent = L('Ihr Browser bietet keinen sicheren Zufallsgenerator.', 'Your browser offers no secure random number generator.'); msg.className = 'tool-msg err'; }
+    if (pw === null && !msg.textContent) { msg.textContent = L('Bitte mindestens eine Zeichenart wählen.', 'Please select at least one character type.'); msg.className = 'tool-msg err'; }
+    pwVal.textContent = pw || '';
+    pwRate();
+  }
+  if (PW) {
+    pwLen.addEventListener('input', pwNew);
+    ['pw-lower', 'pw-upper', 'pw-digits', 'pw-symbols', 'pw-similar'].forEach(function (id) { $(id).addEventListener('change', pwNew); });
+    $('pw-new').addEventListener('click', pwNew);
+    $('pw-copy').addEventListener('click', function () { if (pwVal.textContent) copy(pwVal.textContent, $('pw-flash')); });
+    pwNew();
+  }
+
+  /* ======================================================================
+     05 Hash-Rechner (Logik in hash.js)
+     Die Datei wird in Stücken gelesen, damit auch mehrere GB große ISOs gehen.
+     ====================================================================== */
+  var HC = window.HashCalc;
+  var hsAlg = $('hs-alg'), hsExp = $('hs-exp'), hsFile = $('hs-file'), hsDrop = $('hs-drop');
+  var hsCurrent = null;  /* { file, alg, hex } nach fertiger Berechnung */
+  var hsJob = 0;         /* zählt hoch; ältere Läufe brechen dann ab */
+  var CHUNK = 2 * 1024 * 1024;
+
+  function size(n) {
+    var u = ['Byte', 'KB', 'MB', 'GB', 'TB'], i = 0;
+    while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
+    return (i ? n.toLocaleString(lang() === 'en' ? 'en-GB' : 'de-DE', { maximumFractionDigits: 1 }) : n) + ' ' + u[i];
+  }
+  function readSlice(blob) {
+    if (blob.arrayBuffer) return blob.arrayBuffer();
+    return new Promise(function (ok, fail) {
+      var r = new FileReader();
+      r.onload = function () { ok(r.result); };
+      r.onerror = function () { fail(r.error); };
+      r.readAsArrayBuffer(blob);
+    });
+  }
+
+  /* Gültig eingefügte Prüfsumme oder null */
+  function hsExpected() {
+    var e = HC.parseExpected(hsExp.value);
+    return e && e.hex && e.alg ? e : null;
+  }
+
+  function hsVerdict() {
+    var box = $('hs-verdict'), e = hsExpected();
+    box.className = 'hs-verdict'; box.textContent = '';
+    if (!hsCurrent || !e) return;
+    if (e.alg !== hsCurrent.alg) return;
+    var ok = e.hex === hsCurrent.hex;
+    box.className = 'hs-verdict ' + (ok ? 'ok' : 'err');
+    box.textContent = ok
+      ? L('Stimmt überein. Die Datei ist unverändert.', 'Match. The file is unchanged.')
+      : L('Stimmt NICHT überein. Datei nicht verwenden, erneut herunterladen.', 'Does NOT match. Do not use the file, download it again.');
+  }
+
+  function hsShow() {
+    var out = $('hs-out');
+    if (!hsCurrent) { out.innerHTML = ''; $('hs-actions').hidden = true; return; }
+    var f = hsCurrent.file;
+    out.innerHTML =
+      '<div><dt>' + L('Datei', 'File') + '</dt><dd>' + esc(f.name) + '</dd></div>' +
+      '<div><dt>' + L('Größe', 'Size') + '</dt><dd>' + esc(size(f.size)) + '</dd></div>' +
+      '<div><dt>' + L('Verfahren', 'Algorithm') + '</dt><dd>' + HC.ALGS[hsCurrent.alg].name + '</dd></div>' +
+      '<div class="kv-wide"><dt>' + L('Prüfsumme', 'Checksum') + '</dt><dd><code>' + hsCurrent.hex + '</code></dd></div>';
+    $('hs-actions').hidden = false;
+    hsVerdict();
+  }
+
+  function hsRun(file) {
+    var job = ++hsJob, alg = hsAlg.value, h = HC.create(alg), pos = 0;
+    var prog = $('hs-prog'), bar = $('hs-bar'), pct = $('hs-pct'), t0 = Date.now();
+    hsCurrent = null; hsShow(); $('hs-verdict').className = 'hs-verdict'; $('hs-verdict').textContent = '';
+    prog.hidden = false; bar.style.width = '0%';
+    function step() {
+      if (job !== hsJob) return;
+      if (pos >= file.size) {
+        prog.hidden = true;
+        hsCurrent = { file: file, alg: alg, hex: h.digest() };
+        hsShow();
+        return;
+      }
+      readSlice(file.slice(pos, pos + CHUNK)).then(function (buf) {
+        if (job !== hsJob) return;
+        h.update(new Uint8Array(buf));
+        pos += buf.byteLength;
+        var p = file.size ? pos / file.size : 1, sec = (Date.now() - t0) / 1000;
+        bar.style.width = Math.round(p * 100) + '%';
+        pct.textContent = Math.floor(p * 100) + ' % · ' + size(pos) + ' / ' + size(file.size) +
+          (sec > 1 ? ' · ' + size(pos / sec) + '/s' : '');
+        setTimeout(step, 0);
+      }, function () {
+        prog.hidden = true;
+        $('hs-verdict').className = 'hs-verdict err';
+        $('hs-verdict').textContent = L('Die Datei konnte nicht gelesen werden.', 'The file could not be read.');
+      });
+    }
+    step();
+  }
+
+  function hsText() {
+    var v = $('hs-text').value, alg = hsAlg.value;
+    $('hs-text-out').innerHTML = '<div class="kv-wide"><dt>' + HC.ALGS[alg].name + '</dt><dd><code>' + HC.hashText(alg, v) + '</code></dd></div>';
+  }
+
+  if (HC) {
+    hsFile.addEventListener('change', function () { if (hsFile.files[0]) hsRun(hsFile.files[0]); });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      hsDrop.addEventListener(ev, function (e) { e.preventDefault(); hsDrop.classList.add('is-over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      hsDrop.addEventListener(ev, function () { hsDrop.classList.remove('is-over'); });
+    });
+    hsDrop.addEventListener('drop', function (e) {
+      e.preventDefault();
+      var f = e.dataTransfer && e.dataTransfer.files[0];
+      if (f) hsRun(f);
+    });
+    $('hs-stop').addEventListener('click', function () { hsJob++; $('hs-prog').hidden = true; hsFile.value = ''; });
+    hsAlg.addEventListener('change', function () {
+      hsText();
+      if (hsCurrent) hsRun(hsCurrent.file);
+      else hsVerdict();
+    });
+    /* Eingefügte Prüfsumme bestimmt das Verfahren (64 Zeichen → SHA-256 usw.) */
+    hsExp.addEventListener('input', function () {
+      var raw = HC.parseExpected(hsExp.value), e = hsExpected(), msg = $('hs-exp-msg');
+      msg.textContent = ''; msg.className = 'tool-msg';
+      if (raw && !e) {
+        msg.textContent = L('Keine Prüfsumme erkannt. Erwartet werden 32, 40, 64 oder 128 Hex-Zeichen.', 'No checksum recognised. Expected 32, 40, 64 or 128 hex characters.');
+        msg.className = 'tool-msg err';
+      }
+      if (e && e.alg !== hsAlg.value) {
+        hsAlg.value = e.alg;
+        msg.textContent = L('Verfahren anhand der Länge erkannt: ', 'Algorithm detected from the length: ') + HC.ALGS[e.alg].name;
+        hsText();
+        if (hsCurrent) { hsRun(hsCurrent.file); return; }
+      }
+      hsVerdict();
+    });
+    $('hs-text').addEventListener('input', hsText);
+    $('hs-copy').addEventListener('click', function () { if (hsCurrent) copy(hsCurrent.hex, $('hs-flash')); });
+  }
+
   /* ---------- Start und Sprachwechsel ---------- */
   function renderAll() {
     translateOptions();
@@ -418,6 +589,8 @@
     renderOverlap();
     renderVlan();
     if (PD) { fillPorts(); renderPorts(); }
+    if (PW) pwRate();
+    if (HC) { hsText(); hsShow(); }
   }
   new MutationObserver(renderAll).observe(root, { attributes: true, attributeFilter: ['lang'] });
   renderAll();

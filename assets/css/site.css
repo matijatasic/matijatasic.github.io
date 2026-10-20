@@ -193,10 +193,12 @@ strong { color: var(--ink); font-weight: 600; }
 .toc a.is-current .led { box-shadow: 0 0 0 4px rgba(23,163,152,.22), 0 0 12px var(--glow); }
 
 .itools { margin-top: 40px; }
-.itools ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.itools ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+/* fünftes Werkzeug über die ganze Breite */
+.itools li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .itools a {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; border-radius: 8px; text-decoration: none;
+  padding: 10px 12px; border-radius: 8px; text-decoration: none;
   background: var(--side-2); color: var(--side-muted);
   font: 700 12px/1.2 var(--mono); letter-spacing: .04em;
   transition: background-color .2s ease, color .2s ease;
@@ -549,6 +551,52 @@ strong { color: var(--ink); font-weight: 600; }
 }
 .field input[type="search"] { -webkit-appearance: none; appearance: none; }
 
+/* Passwortgenerator */
+.pw-box { background: var(--tint); border: 1px solid var(--tint-b); border-radius: 10px; padding: 18px 20px; }
+.pw-val { display: block; font: 400 20px/1.5 var(--mono); color: var(--ink); overflow-wrap: anywhere; min-height: 1.5em; user-select: all; }
+.pw-meter { display: flex; align-items: center; gap: 12px; margin-top: 12px; font: 400 12px/1.4 var(--mono); color: var(--muted); }
+.pw-bar { flex: 1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.pw-bar i { display: block; height: 100%; width: 0; background: var(--teal); border-radius: 3px; transition: width .25s ease; }
+.pw-bar i.r0 { background: #c4664a; }
+.pw-bar i.r1 { background: var(--amber); }
+.pw-rate { flex: none; }
+.pw-len { display: grid; grid-template-columns: auto 1fr 3ch; align-items: center; gap: 14px; margin: 28px 0 18px; }
+.pw-len label { font: 700 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.pw-len input { width: 100%; accent-color: var(--teal); }
+.pw-len output { font: 700 16px/1 var(--mono); color: var(--ink); text-align: right; }
+.pw-opts { margin-bottom: 8px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.pw-opts .check { margin: 0 0 10px; color: var(--text); }
+
+/* Hash-Rechner */
+.tool-grid.hs-head { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); }
+.hs-drop {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+  padding: 26px 16px; border: 2px dashed var(--line-strong); border-radius: 10px; cursor: pointer;
+  color: var(--muted); transition: border-color .2s ease, background-color .2s ease;
+}
+.hs-drop svg { width: 28px; height: 28px; color: var(--teal); }
+.hs-drop-main { font: 600 15px/1.4 var(--sans); color: var(--ink); }
+.hs-drop-sub { font: 400 12px/1.4 var(--mono); }
+.hs-drop:hover, .hs-drop.is-over, .hs-drop:focus-within { border-color: var(--teal); background: var(--tint); }
+.hs-file { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.hs-prog { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 14px; font: 400 12px/1.4 var(--mono); color: var(--muted); }
+.hs-prog[hidden], .tool-actions[hidden] { display: none; }
+.hs-prog .pw-bar { flex: 1 1 160px; }
+.hs-verdict:empty { display: none; }
+.hs-verdict { margin: 14px 0; padding: 12px 14px; border-radius: 8px; font: 600 15px/1.4 var(--sans); }
+.hs-verdict.ok { background: var(--tint); border: 1px solid var(--teal); color: var(--teal-text); }
+.hs-verdict.err { background: rgba(196, 102, 74, .1); border: 1px solid #c4664a; color: #c4664a; }
+.hs-verdict.ok::before { content: '✓  '; }
+.hs-verdict.err::before { content: '✕  '; }
+#hs-out { margin-top: 14px; }
+.kv .kv-wide { grid-column: 1 / -1; }
+.kv .kv-wide code { overflow-wrap: anywhere; color: var(--ink); }
+:root[data-theme="dark"] .pw-box { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .3); }
+:root[data-theme="dark"] .hs-drop:hover, :root[data-theme="dark"] .hs-drop.is-over, :root[data-theme="dark"] .hs-drop:focus-within { background: rgba(31, 181, 168, .045); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pw-box { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .3); }
+}
+
 /* Tabellen (VLAN-Planer) */
 .table-wrap { overflow-x: auto; margin: 4px 0 12px; -webkit-overflow-scrolling: touch; }
 .tool-table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -621,7 +669,7 @@ strong { color: var(--ink); font-weight: 600; }
   .side.is-open .side-panel { display: block; }
   .toc { margin-top: 16px; }
   .itools { margin-top: 20px; }
-  .itools ul { max-width: 260px; }
+  .itools ul { max-width: 300px; }
   .prefs { margin-top: 20px; }
   .side-foot { padding-top: 20px; }
   .doc { padding: 24px 16px 120px var(--pad-l); background-size: 24px 24px; }
@@ -645,6 +693,8 @@ strong { color: var(--ink); font-weight: 600; }
   .tool-grid, .tool-grid.vl-head, .tool-grid.pt-head { grid-template-columns: 1fr; }
   /* Port-Liste auf dem Handy als Zeilenkarten statt breiter Tabelle */
   .pt-card { padding: 18px 16px; }
+  .pw-opts, .tool-grid.hs-head { grid-template-columns: 1fr; }
+  .pw-val { font-size: 17px; }
   .pt-num { font-size: 28px; }
   .pt-card .pt-name { font-size: 18px; }
   .kv { grid-template-columns: 1fr; gap: 8px; }
@@ -673,7 +723,7 @@ strong { color: var(--ink); font-weight: 600; }
   .side .lbl { text-align: center; }
   .toc ol { width: fit-content; margin: 0 auto; }
   .toc a { grid-template-columns: 12px 30px auto; }
-  .itools ul { width: 212px; margin: 0 auto; }
+  .itools ul { width: 236px; margin: 0 auto; }
   .pref-row { justify-content: center; }
   .side-foot { text-align: center; }
 }
