@@ -100,13 +100,20 @@
         <h2 class="ch-title"><span data-l="de">Subnetzrechner</span><span data-l="en">Subnet calculator</span></h2>
         <span class="ch-rule"></span>
       </div>
-      <p><span data-l="de">Adresse mit Präfix oder Maske eingeben, zum Beispiel <code>192.168.10.77/24</code> oder <code>10.0.0.5 255.255.252.0</code>.</span>
-        <span data-l="en">Enter an address with a prefix or mask, for example <code>192.168.10.77/24</code> or <code>10.0.0.5 255.255.252.0</code>.</span></p>
+      <p><span data-l="de">IP-Adresse und Präfix eingeben, zum Beispiel <code>192.168.10.77</code> und <code>24</code>. Statt des Präfix geht auch eine Maske wie <code>255.255.252.0</code>.</span>
+        <span data-l="en">Enter an IP address and a prefix, for example <code>192.168.10.77</code> and <code>24</code>. A mask such as <code>255.255.252.0</code> also works instead of the prefix.</span></p>
 
       <div class="tool">
-        <div class="field">
-          <label for="sn-in"><span data-l="de">Netz oder Adresse</span><span data-l="en">Network or address</span></label>
-          <input id="sn-in" type="text" value="192.168.10.77/24" spellcheck="false" autocomplete="off" inputmode="decimal">
+        <div class="ip-pair">
+          <div class="field">
+            <label for="sn-in"><span data-l="de">IP-Adresse</span><span data-l="en">IP address</span></label>
+            <input id="sn-in" type="text" value="192.168.10.77" spellcheck="false" autocomplete="off" inputmode="decimal">
+          </div>
+          <span class="ip-slash" aria-hidden="true">/</span>
+          <div class="field">
+            <label for="sn-pfx"><span data-l="de">Präfix</span><span data-l="en">Prefix</span></label>
+            <input id="sn-pfx" type="text" value="24" spellcheck="false" autocomplete="off" inputmode="numeric" maxlength="15" aria-describedby="sn-msg">
+          </div>
         </div>
         <p class="tool-msg" id="sn-msg" role="status" aria-live="polite"></p>
         <dl class="kv" id="sn-out"></dl>
@@ -143,9 +150,16 @@
 
       <div class="tool">
         <div class="tool-grid vl-head">
-          <div class="field">
-            <label for="vl-base"><span data-l="de">Basisnetz</span><span data-l="en">Base network</span></label>
-            <input id="vl-base" type="text" value="10.20.0.0/16" spellcheck="false" autocomplete="off">
+          <div class="ip-pair">
+            <div class="field">
+              <label for="vl-base"><span data-l="de">Basisnetz</span><span data-l="en">Base network</span></label>
+              <input id="vl-base" type="text" value="10.20.0.0" spellcheck="false" autocomplete="off" inputmode="decimal">
+            </div>
+            <span class="ip-slash" aria-hidden="true">/</span>
+            <div class="field">
+              <label for="vl-pfx"><span data-l="de">Präfix</span><span data-l="en">Prefix</span></label>
+              <input id="vl-pfx" type="text" value="16" spellcheck="false" autocomplete="off" inputmode="numeric" maxlength="15">
+            </div>
           </div>
           <div class="field">
             <label for="vl-mode"><span data-l="de">Aufteilung</span><span data-l="en">Layout</span></label>
