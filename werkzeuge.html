@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="de" translate="no" data-theme="light" data-title-de="Werkzeuge · Matija Tasic" data-title-en="Tools · Matija Tasic">
+<html lang="de" translate="no" data-theme="light" data-title-de="Tools · Matija Tasic" data-title-en="Tools · Matija Tasic">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Werkzeuge · Matija Tasic</title>
-  <meta name="description" content="Kleine Werkzeuge für IT-Administration: Subnetzrechner und VLAN-Planer. Alles läuft nur im Browser.">
+  <title>Tools · Matija Tasic</title>
+  <meta name="description" content="Kleine Tools für IT-Administration: Subnetzrechner, VLAN-Planer und Port-Nachschlagewerk. Alles läuft nur im Browser.">
   <meta name="color-scheme" content="light">
   <meta name="google" content="notranslate">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -21,6 +21,7 @@
   </script>
   <script src="assets/js/site.js" defer></script>
   <script src="assets/js/ipcalc.js" defer></script>
+  <script src="assets/js/ports.js" defer></script>
   <script src="assets/js/tools.js" defer></script>
 </head>
 <body>
@@ -48,8 +49,8 @@
           <li><a href="index.html#start"><i class="led"></i><span class="n">00</span><span>Start</span></a></li>
           <li><a href="index.html#profil"><i class="led"></i><span class="n">01</span><span><span data-l="de">Profil</span><span data-l="en">Profile</span></span></a></li>
           <li><a href="index.html#projekte"><i class="led"></i><span class="n">02</span><span><span data-l="de">Projekte</span><span data-l="en">Projects</span></span></a></li>
-          <li><a href="index.html#kontakt"><i class="led"></i><span class="n">03</span><span><span data-l="de">Kontakt</span><span data-l="en">Contact</span></span></a></li>
-          <li><a href="werkzeuge.html" class="is-on is-current" aria-current="page"><i class="led"></i><span class="n">04</span><span><span data-l="de">Werkzeuge</span><span data-l="en">Tools</span></span></a></li>
+          <li><a href="werkzeuge.html" class="is-on is-current" aria-current="page"><i class="led"></i><span class="n">03</span><span>Tools</span></a></li>
+          <li><a href="index.html#kontakt"><i class="led"></i><span class="n">04</span><span><span data-l="de">Kontakt</span><span data-l="en">Contact</span></span></a></li>
         </ol>
       </nav>
 
@@ -85,10 +86,10 @@
     </header>
 
     <section class="chapter">
-      <div class="kicker" data-node data-runtitle data-runtitle-de="Werkzeuge" data-runtitle-en="Tools"><b>00</b><span data-l="de">Werkzeuge</span><span data-l="en">Tools</span></div>
-      <h1><span data-l="de">Werkzeuge</span><span data-l="en">Tools</span><span class="dot">.</span></h1>
-      <p class="lead"><span data-l="de">Zwei kleine Helfer aus meinem Alltag als Admin: Netze berechnen und VLANs planen, mit der fertigen Tabelle für die Dokumentation.</span>
-        <span data-l="en">Two small helpers from my day-to-day work as an admin: calculate networks and plan VLANs, with the finished table for your documentation.</span></p>
+      <div class="kicker" data-node data-runtitle data-runtitle-de="Tools" data-runtitle-en="Tools"><b>00</b><span>Tools</span></div>
+      <h1>Tools<span class="dot">.</span></h1>
+      <p class="lead"><span data-l="de">Drei kleine Helfer aus meinem Alltag als Admin: Netze berechnen, VLANs planen und Ports mit Firewall-Hinweis nachschlagen.</span>
+        <span data-l="en">Three small helpers from my day-to-day work as an admin: calculate networks, plan VLANs and look up ports with a firewall note.</span></p>
       <p class="tool-privacy"><span data-l="de">Alles läuft nur in Ihrem Browser. Eingaben werden nicht gespeichert und nicht übertragen.</span>
         <span data-l="en">Everything runs in your browser only. Nothing you enter is stored or sent anywhere.</span></p>
     </section>
@@ -212,6 +213,43 @@
       </div>
     </section>
 
+    <!-- ===== 03 Port-Nachschlagewerk ===== -->
+    <section class="chapter" id="ports">
+      <div class="ch-head" data-node data-runtitle data-runtitle-de="Port-Nachschlagewerk" data-runtitle-en="Port reference">
+        <span class="ch-num">03</span>
+        <h2 class="ch-title"><span data-l="de">Port-Nachschlagewerk</span><span data-l="en">Port reference</span></h2>
+        <span class="ch-rule"></span>
+      </div>
+      <p><span data-l="de">Wichtige Ports aus Netzwerk, Server und Heimnetz, jeweils mit einem Hinweis für die Firewall. Suche nach Portnummer, Dienst oder Stichwort, zum Beispiel <code>443</code>, <code>dns</code> oder <code>vpn</code>.</span>
+        <span data-l="en">Important ports from networking, servers and home networks, each with a note for the firewall. Search by port number, service or keyword, for example <code>443</code>, <code>dns</code> or <code>vpn</code>.</span></p>
+
+      <div class="tool">
+        <div class="tool-grid pt-head">
+          <div class="field">
+            <label for="pt-q"><span data-l="de">Suche</span><span data-l="en">Search</span></label>
+            <input id="pt-q" type="search" spellcheck="false" autocomplete="off" maxlength="40" data-ph-de="Port, Dienst oder Stichwort" data-ph-en="Port, service or keyword" placeholder="Port, Dienst oder Stichwort">
+          </div>
+          <div class="field">
+            <label for="pt-proto"><span data-l="de">Protokoll</span><span data-l="en">Protocol</span></label>
+            <select id="pt-proto">
+              <option value="" data-de="Alle" data-en="All">Alle</option>
+              <option value="TCP">TCP</option>
+              <option value="UDP">UDP</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pt-cat"><span data-l="de">Bereich</span><span data-l="en">Category</span></label>
+            <select id="pt-cat"></select>
+          </div>
+        </div>
+        <p class="tool-msg" id="pt-msg" role="status" aria-live="polite"></p>
+        <div class="table-wrap">
+          <table class="tool-table pt-table" id="pt-out"></table>
+        </div>
+        <p class="tool-note"><span data-l="de">Standard-Ports laut IANA bzw. Hersteller. Dienste lassen sich umkonfigurieren, die Firewall-Regel richtet sich nach dem tatsächlich genutzten Port.</span><span data-l="en">Default ports according to IANA or the vendor. Services can be reconfigured; the firewall rule follows the port actually in use.</span></p>
+      </div>
+    </section>
+
     <footer class="foot">
       <span>© <span data-year>2026</span> Matija Tasic</span>
       <span><a href="impressum.html">Impressum</a> · <a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a></span>
@@ -222,7 +260,7 @@
   <div class="runfoot" aria-hidden="true">
     <span class="rf-title"></span>
     <span class="rf-bar"><i></i></span>
-    <span class="rf-page">00 / 02</span>
+    <span class="rf-page">00 / 03</span>
   </div>
 </body>
 </html>

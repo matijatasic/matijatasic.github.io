@@ -1,4 +1,4 @@
-/* matija-tasic.de · IPv4-Rechenlogik für die Werkzeuge
+/* matija-tasic.de · IPv4-Rechenlogik für die Tools
    - nur Rechnen, keine Oberfläche; läuft im Browser und in Node (tests/ipcalc.test.js)
    - Adressen werden intern als vorzeichenlose 32-Bit-Zahl geführt
 */
