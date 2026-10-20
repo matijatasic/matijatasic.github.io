@@ -175,8 +175,14 @@
       a.classList.toggle('is-on', i <= current);
       a.classList.toggle('is-current', i === current);
     });
+    // Fortschritt nach Lage des aktuellen Eintrags, denn in der Liste stehen auch Links auf andere Seiten (Tools)
     var tocList = document.querySelector('.toc ol');
-    if (tocList && tocLinks.length > 1) tocList.style.setProperty('--toc-progress', current / (tocLinks.length - 1));
+    if (tocList && tocLinks.length > 1) {
+      var all = tocList.querySelectorAll('a');
+      var y0 = all[0].getBoundingClientRect().top, y1 = all[all.length - 1].getBoundingClientRect().top;
+      var yc = tocLinks[current].getBoundingClientRect().top;
+      tocList.style.setProperty('--toc-progress', y1 > y0 ? (yc - y0) / (y1 - y0) : 0);
+    }
 
     state.current = current;
     updateRunfoot();
@@ -188,9 +194,10 @@
     if (!rf || !chapters.length) return;
     var i = state.current || 0;
     var c = chapters[i];
-    var total = chapters.length - 1;
     var pad = function (n) { return (n < 10 ? '0' : '') + n; };
-    rf.querySelector('.rf-page').textContent = pad(i) + ' / ' + pad(total);
+    // Kapitelnummer aus dem Kapitelkopf, damit Zähler und Seitenleiste dieselbe Nummer zeigen
+    var nr = function (ch, fallback) { var e = ch.querySelector('.ch-num, .kicker b'); return e ? e.textContent.trim() : pad(fallback); };
+    rf.querySelector('.rf-page').textContent = nr(c, i) + ' / ' + nr(chapters[chapters.length - 1], chapters.length - 1);
     var title = c.querySelector('[data-runtitle]');
     var lang = root.lang === 'en' ? 'en' : 'de';
     rf.querySelector('.rf-title').textContent = title ? (title.getAttribute('data-runtitle-' + lang) || title.getAttribute('data-runtitle')) : '';

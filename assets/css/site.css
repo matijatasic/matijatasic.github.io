@@ -509,6 +509,14 @@ strong { color: var(--ink); font-weight: 600; }
 .bits .b-dot { color: var(--line-strong); }
 .bits-key { font: 400 12px/1.5 var(--mono); color: var(--muted); margin: 6px 0 0; }
 
+/* Port-Nachschlagewerk */
+.tool-grid.pt-head { grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr) minmax(0, 1.2fr); }
+.pt-table td { vertical-align: top; }
+.pt-table td.pt-svc { white-space: normal; min-width: 150px; font-weight: 500; }
+.pt-table td.pt-note { white-space: normal; min-width: 220px; color: var(--text); }
+.pt-cat { display: block; margin-top: 3px; font: 400 11px/1.4 var(--mono); letter-spacing: .04em; color: var(--muted); font-weight: 400; }
+.field input[type="search"] { -webkit-appearance: none; appearance: none; }
+
 /* Tabellen (VLAN-Planer) */
 .table-wrap { overflow-x: auto; margin: 4px 0 12px; -webkit-overflow-scrolling: touch; }
 .tool-table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -600,7 +608,13 @@ strong { color: var(--ink); font-weight: 600; }
   .tool { padding: 18px 14px; }
   .ip-pair, .vl-head .ip-pair { grid-template-columns: minmax(0, 1fr) auto 64px; gap: 0 6px; }
   .ip-pair input { padding-left: 10px; padding-right: 10px; }
-  .tool-grid, .tool-grid.vl-head { grid-template-columns: 1fr; }
+  .tool-grid, .tool-grid.vl-head, .tool-grid.pt-head { grid-template-columns: 1fr; }
+  /* Port-Liste auf dem Handy als Zeilenkarten statt breiter Tabelle */
+  .pt-table thead { display: none; }
+  .pt-table tr { display: grid; grid-template-columns: 58px 74px minmax(0, 1fr); align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .pt-table td { border: 0; padding: 0 6px 0 0; white-space: normal; }
+  .pt-table td.pt-svc { min-width: 0; }
+  .pt-table td.pt-note { grid-column: 1 / -1; min-width: 0; padding-top: 6px; font-size: 14px; line-height: 1.5; }
   .kv { grid-template-columns: 1fr; gap: 8px; }
   .kv > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 9px 12px; }
   .kv dt { margin: 0; flex: none; }

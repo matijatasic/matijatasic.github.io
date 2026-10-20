@@ -1,5 +1,5 @@
 /* matija-tasic.de · Werkzeuge (werkzeuge.html)
-   - Subnetzrechner und VLAN-Planer
+   - Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk (Daten in ports.js)
    - Rechenlogik steckt in ipcalc.js; hier nur Oberfläche und Texte
    - nichts wird gespeichert oder übertragen
 */
@@ -334,12 +334,64 @@
   $('vl-md').addEventListener('click', needPlan(function () { download('vlan-plan.md', vlanMarkdown(), 'text/markdown'); }));
   $('vl-csv').addEventListener('click', needPlan(function () { download('vlan-plan.csv', vlanCsv(), 'text/csv'); }));
 
+  /* ======================================================================
+     03 Port-Nachschlagewerk
+     ====================================================================== */
+  var PD = window.PortData;
+  var RANGE = {
+    system: ['System-Port (0–1023), von der IANA fest vergeben', 'system port (0–1023), assigned by IANA'],
+    registered: ['registrierter Port (1024–49151)', 'registered port (1024–49151)'],
+    dynamic: ['dynamischer Port (49152–65535), wird vom Betriebssystem für ausgehende Verbindungen genutzt', 'dynamic port (49152–65535), used by the operating system for outgoing connections']
+  };
+  function pName(p) { return Array.isArray(p[2]) ? t(p[2]) : p[2]; }
+  function fold(s) { return String(s).toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss'); }
+
+  function fillCats() {
+    var sel = $('pt-cat'), cur = sel.value;
+    sel.innerHTML = '<option value="">' + esc(L('Alle', 'All')) + '</option>' +
+      Object.keys(PD.CATEGORIES).map(function (k) { return '<option value="' + k + '">' + esc(t(PD.CATEGORIES[k])) + '</option>'; }).join('');
+    sel.value = cur;
+  }
+
+  function renderPorts() {
+    var q = $('pt-q').value.trim(), proto = $('pt-proto').value, cat = $('pt-cat').value;
+    var msg = $('pt-msg'), out = $('pt-out');
+    var isNum = /^\d+$/.test(q), n = isNum ? Number(q) : null;
+    var words = isNum ? [] : fold(q).split(/\s+/).filter(Boolean);
+    var hits = PD.PORTS.filter(function (p) {
+      if (proto && p[1].indexOf(proto) < 0) return false;
+      if (cat && p[3] !== cat) return false;
+      if (isNum) return p[0] === n;
+      if (!words.length) return true;
+      var hay = fold([p[0], p[1], pName(p), t(PD.CATEGORIES[p[3]]), lang() === 'en' ? p[5] : p[4]].join(' '));
+      return words.every(function (w) { return hay.indexOf(w) >= 0; });
+    });
+
+    if (isNum && n > 65535) { msg.textContent = L('Ports gibt es nur von 0 bis 65535.', 'Ports only exist from 0 to 65535.'); msg.className = 'tool-msg err'; }
+    else if (isNum && !hits.length) {
+      msg.textContent = L('Port ' + n + ' steht nicht in der Liste. Er ist ein ', 'Port ' + n + ' is not in the list. It is a ') + t(RANGE[PD.portRange(n)]) + '.';
+      msg.className = 'tool-msg';
+    } else if (!hits.length) { msg.textContent = L('Keine Treffer. Andere Suche oder Filter probieren.', 'No matches. Try another search or filter.'); msg.className = 'tool-msg warn'; }
+    else { msg.textContent = num(hits.length) + L(' von ', ' of ') + num(PD.PORTS.length) + L(' Einträgen', ' entries'); msg.className = 'tool-msg'; }
+
+    if (!hits.length) { out.innerHTML = ''; return; }
+    var head = ['Port', L('Protokoll', 'Protocol'), L('Dienst', 'Service'), L('Hinweis', 'Note')];
+    out.innerHTML = '<thead><tr>' + head.map(function (h) { return '<th scope="col">' + esc(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      hits.map(function (p) {
+        return '<tr><td><code>' + p[0] + '</code></td><td>' + p[1] + '</td><td class="pt-svc">' + esc(pName(p)) +
+          '<span class="pt-cat">' + esc(t(PD.CATEGORIES[p[3]])) + '</span></td><td class="pt-note">' + esc(lang() === 'en' ? p[5] : p[4]) + '</td></tr>';
+      }).join('') + '</tbody>';
+  }
+
+  if (PD) ['pt-q', 'pt-proto', 'pt-cat'].forEach(function (id) { $(id).addEventListener('input', renderPorts); });
+
   /* ---------- Start und Sprachwechsel ---------- */
   function renderAll() {
     translateOptions();
     renderSubnet();
     renderOverlap();
     renderVlan();
+    if (PD) { fillCats(); renderPorts(); }
   }
   new MutationObserver(renderAll).observe(root, { attributes: true, attributeFilter: ['lang'] });
   renderAll();
