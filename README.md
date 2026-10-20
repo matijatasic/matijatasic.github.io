@@ -11,7 +11,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | Pfad | Inhalt |
 |---|---|
 | `index.html` | Startseite mit allen Kapiteln |
-| `werkzeuge.html` | IT-Tools (in der Seitenleiste als eigener Block verlinkt): Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk |
+| `werkzeuge.html` | IT-Tools (in der Seitenleiste als eigener Block verlinkt): Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk, Passwortgenerator, Hash-Rechner |
 | `tipps.html` | Tipps & Tricks: kurze Hinweise aus dem Admin-Alltag mit Infografiken (Inline-SVG, Texte DE/EN) |
 | `impressum.html`, `datenschutz.html` | Rechtstexte |
 | `404.html` | Fehlerseite |
@@ -19,6 +19,8 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | `assets/js/site.js` | Sprach- und Darstellungsschalter, Leitung, Kontaktformular |
 | `assets/js/ipcalc.js` | IPv4-Rechenlogik der Tools (ohne Oberfläche) |
 | `assets/js/ports.js` | Daten des Port-Lexikons (Beschreibung, Firewall-Hinweis, TCP/UDP, verwandte Ports) |
+| `assets/js/pwgen.js` | Logik des Passwortgenerators (Zufall nur aus Web Crypto) |
+| `assets/js/hash.js` | MD5, SHA-1, SHA-256, SHA-512 blockweise für den Hash-Rechner |
 | `assets/js/tools.js` | Oberfläche und Texte der Tools |
 | `tests/ipcalc.test.js`, `tests/ports.test.js` | Tests der Rechenlogik und der Port-Daten |
 | `assets/js/config.js` | Einstellungen für das Kontaktformular |
@@ -37,6 +39,8 @@ Danach im Browser `http://localhost:8000` öffnen.
 ```sh
 node tests/ipcalc.test.js
 node tests/ports.test.js
+node tests/pwgen.test.js
+node tests/hash.test.js
 ```
 
 Prüft die Rechenlogik der Tools (Subnetze, Masken, VLAN-Aufteilung) und die Port-Liste. Braucht nur Node, keine Pakete.
