@@ -27,6 +27,7 @@
   var PARSE_ERR = {
     empty: ['Bitte ein Netz eingeben.', 'Please enter a network.'],
     format: ['Format nicht erkannt. Beispiel: 192.168.10.0/24', 'Format not recognised. Example: 192.168.10.0/24'],
+    noprefix: ['Bitte das Präfix eingeben (0 bis 32), zum Beispiel 24.', 'Please enter the prefix (0 to 32), for example 24.'],
     ip: ['Keine gültige IPv4-Adresse. Jede Zahl 0 bis 255, ohne führende Null.', 'Not a valid IPv4 address. Each number 0 to 255, no leading zero.'],
     prefix: ['Das Präfix muss zwischen 0 und 32 liegen.', 'The prefix must be between 0 and 32.'],
     mask: ['Die Maske ist ungültig (Einsen müssen zusammenhängen, z. B. 255.255.255.0).', 'The mask is invalid (ones must be contiguous, e.g. 255.255.255.0).']
@@ -86,7 +87,23 @@
   /* ======================================================================
      01 Subnetzrechner
      ====================================================================== */
-  var snIn = $('sn-in'), snTest = $('sn-test'), ovIn = $('ov-in');
+  var snIn = $('sn-in'), snPfx = $('sn-pfx'), snTest = $('sn-test'), ovIn = $('ov-in');
+
+  /* Handy-Ziffernblöcke haben oft ein Komma statt Punkt: als Punkt lesen */
+  function dots(v) { return String(v).replace(/,/g, '.').trim(); }
+
+  /* IP und Präfix stehen in zwei Feldern, damit auf dem Handy kein „/“ nötig ist.
+     Wird „10.0.0.0/24“ ins IP-Feld eingefügt, wandert der Teil hinter „/“ ins Präfixfeld. */
+  function readPair(ipEl, pfxEl) {
+    var ip = dots(ipEl.value);
+    var m = ip.match(/^(\S+)\s*(?:\/|\s)\s*(\S+)$/);
+    if (m) { ip = m[1]; ipEl.value = m[1]; pfxEl.value = m[2]; }
+    var pfx = dots(pfxEl.value).replace(/^\//, '');
+    if (!ip) return { error: 'empty' };
+    if (C.parseIp(ip) === null) return { error: 'ip' };
+    if (!pfx) return { error: 'noprefix' };
+    return C.parseCidr(ip + '/' + pfx);
+  }
 
   function bitsRow(label, value, prefix) {
     var b = C.toBinary(value), out = '', bit = 0;
@@ -99,7 +116,7 @@
   }
 
   function renderSubnet() {
-    var r = C.parseCidr(snIn.value);
+    var r = readPair(snIn, snPfx);
     var msg = $('sn-msg'), out = $('sn-out'), bits = $('sn-bits');
     if (r.error) {
       msg.textContent = t(PARSE_ERR[r.error]); msg.className = 'tool-msg err';
@@ -134,7 +151,7 @@
 
   function renderTest(s) {
     var el = $('sn-test-out');
-    var v = snTest.value.trim();
+    var v = dots(snTest.value);
     if (!v) { el.textContent = ''; el.className = 'tool-msg'; return; }
     var a = C.parseIp(v);
     if (a === null) { el.textContent = t(PARSE_ERR.ip); el.className = 'tool-msg err'; return; }
@@ -177,7 +194,8 @@
   }
 
   snIn.addEventListener('input', renderSubnet);
-  snTest.addEventListener('input', function () { var r = C.parseCidr(snIn.value); if (!r.error) renderTest(C.subnet(r.ip, r.prefix)); });
+  snPfx.addEventListener('input', renderSubnet);
+  snTest.addEventListener('input', function () { var r = readPair(snIn, snPfx); if (!r.error) renderTest(C.subnet(r.ip, r.prefix)); });
   ovIn.addEventListener('input', renderOverlap);
 
   /* ======================================================================
@@ -213,7 +231,7 @@
     var out = $('vl-out'), sum = $('vl-sum');
     lastPlan = null;
 
-    var base = C.parseCidr($('vl-base').value);
+    var base = readPair($('vl-base'), $('vl-pfx'));
     if (base.error) err(L('Basisnetz: ', 'Base network: ') + t(PARSE_ERR[base.error]));
 
     var rows = readRows(), seen = {};
@@ -310,7 +328,7 @@
     e.target.closest('tr').remove();
     renderVlan();
   });
-  ['vl-base', 'vl-mode', 'vl-res'].forEach(function (id) { $(id).addEventListener('input', renderVlan); });
+  ['vl-base', 'vl-pfx', 'vl-mode', 'vl-res'].forEach(function (id) { $(id).addEventListener('input', renderVlan); });
   vlRows.addEventListener('input', renderVlan);
   function needPlan(fn) {
     return function () { if (lastPlan) fn(); else flash($('vl-flash'), L('Erst die Fehler oben beheben.', 'Please fix the errors above first.')); };

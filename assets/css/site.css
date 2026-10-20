@@ -463,7 +463,8 @@ strong { color: var(--ink); font-weight: 600; }
 .tool h3 { margin-top: 32px; }
 .tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 16px; }
 .tool-grid .field-wide { grid-column: 1 / -1; }
-.tool-grid.vl-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, .8fr); }
+.tool-grid.vl-head { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.3fr) minmax(0, .8fr); }
+.vl-head .ip-pair { grid-template-columns: minmax(0, 1fr) auto 68px; }
 .field select {
   width: 100%; font: 400 16px/1.5 var(--sans); color: var(--ink); background: var(--bg);
   border: 1px solid var(--line-strong); border-radius: 8px; padding: 12px 38px 12px 14px;
@@ -474,7 +475,10 @@ strong { color: var(--ink); font-weight: 600; }
 }
 .field input, .field select { font-variant-numeric: tabular-nums; }
 .field select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--glow); }
-#sn-in, #sn-test, #vl-base, #ov-in { font-family: var(--mono); font-size: 15px; }
+#sn-in, #sn-pfx, #sn-test, #vl-base, #vl-pfx, #ov-in { font-family: var(--mono); font-size: 15px; }
+/* IP-Adresse und Präfix nebeneinander: großes Feld links, kleines rechts */
+.ip-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto 92px; gap: 0 8px; align-items: end; }
+.ip-slash { font: 400 22px/1 var(--mono); color: var(--muted); margin-bottom: 30px; }
 
 .tool-msg { font-size: 14px; margin: -4px 0 12px; min-height: 0; color: var(--muted); }
 .tool-msg:empty { display: none; }
