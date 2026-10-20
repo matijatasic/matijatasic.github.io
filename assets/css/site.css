@@ -192,6 +192,19 @@ strong { color: var(--ink); font-weight: 600; }
 .toc a.is-current .n { color: var(--side-chip-text); }
 .toc a.is-current .led { box-shadow: 0 0 0 4px rgba(23,163,152,.22), 0 0 12px var(--glow); }
 
+.itools { margin-top: 40px; }
+.itools ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.itools a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 8px; text-decoration: none;
+  background: var(--side-2); color: var(--side-muted);
+  font: 700 12px/1.2 var(--mono); letter-spacing: .04em;
+  transition: background-color .2s ease, color .2s ease;
+}
+.itools a:hover { color: #fff; }
+.itools a.is-current { background: var(--side-chip); color: var(--side-chip-text); }
+.itools svg { width: 16px; height: 16px; flex: none; }
+
 .prefs { margin-top: 40px; }
 .pref-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .seg { display: inline-flex; background: var(--side-2); border-radius: 8px; padding: 3px; }
@@ -607,6 +620,8 @@ strong { color: var(--ink); font-weight: 600; }
   .side-panel { display: none; padding: 8px 0 12px; }
   .side.is-open .side-panel { display: block; }
   .toc { margin-top: 16px; }
+  .itools { margin-top: 20px; }
+  .itools ul { max-width: 260px; }
   .prefs { margin-top: 20px; }
   .side-foot { padding-top: 20px; }
   .doc { padding: 24px 16px 120px var(--pad-l); background-size: 24px 24px; }
@@ -658,8 +673,17 @@ strong { color: var(--ink); font-weight: 600; }
   .side .lbl { text-align: center; }
   .toc ol { width: fit-content; margin: 0 auto; }
   .toc a { grid-template-columns: 12px 30px auto; }
+  .itools ul { width: 212px; margin: 0 auto; }
   .pref-row { justify-content: center; }
   .side-foot { text-align: center; }
+}
+/* Niedrige Laptop-Bildschirme: Seitenleiste etwas dichter, damit der Fuß sichtbar bleibt */
+@media (min-width: 861px) and (max-height: 820px) {
+  .side { padding-top: 28px; padding-bottom: 20px; }
+  .toc { margin-top: 24px; }
+  .toc a { padding: 7px 0; }
+  .itools, .prefs { margin-top: 24px; }
+  .side-foot { padding-top: 20px; }
 }
 
 /* ==========================================================================

@@ -62,12 +62,30 @@
       var open = side.classList.toggle('is-open');
       menuBtn.setAttribute('aria-expanded', String(open));
     });
-    side.querySelectorAll('.toc a').forEach(function (a) {
+    side.querySelectorAll('.toc a, .itools a').forEach(function (a) {
       a.addEventListener('click', function () {
         side.classList.remove('is-open');
         menuBtn.setAttribute('aria-expanded', 'false');
       });
     });
+  }
+
+  /* ---------------- IT-Tools: aktives Werkzeug (nur auf der Tools-Seite) ---------------- */
+  var toolLinks = Array.prototype.slice.call(document.querySelectorAll('.itools a[href^="#"]'));
+  if (toolLinks.length) {
+    var toolSecs = toolLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var markTool = function () {
+      var cur = -1;
+      toolSecs.forEach(function (sec, i) { if (sec && sec.getBoundingClientRect().top < window.innerHeight * 0.4) cur = i; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) cur = toolLinks.length - 1;
+      toolLinks.forEach(function (a, i) {
+        a.classList.toggle('is-current', i === cur);
+        if (i === cur) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+      });
+    };
+    window.addEventListener('scroll', markTool, { passive: true });
+    window.addEventListener('resize', markTool);
+    markTool();
   }
 
   /* ---------------- Leitung ---------------- */
