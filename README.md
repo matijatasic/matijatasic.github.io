@@ -11,7 +11,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | Pfad | Inhalt |
 |---|---|
 | `index.html` | Startseite mit allen Kapiteln |
-| `werkzeuge.html` | Werkzeuge: Subnetzrechner, VLAN-Planer, Checkliste für Änderungen |
+| `werkzeuge.html` | Werkzeuge: Subnetzrechner und VLAN-Planer |
 | `impressum.html`, `datenschutz.html` | Rechtstexte |
 | `404.html` | Fehlerseite |
 | `assets/css/site.css` | Gestaltung, Farben für hell und dunkel |

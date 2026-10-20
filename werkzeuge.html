@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Werkzeuge · Matija Tasic</title>
-  <meta name="description" content="Kleine Werkzeuge für IT-Administration: Subnetzrechner, VLAN-Planer und Checkliste für Änderungen mit Rückweg. Alles läuft nur im Browser.">
+  <meta name="description" content="Kleine Werkzeuge für IT-Administration: Subnetzrechner und VLAN-Planer. Alles läuft nur im Browser.">
   <meta name="color-scheme" content="light">
   <meta name="google" content="notranslate">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -87,8 +87,8 @@
     <section class="chapter">
       <div class="kicker" data-node data-runtitle data-runtitle-de="Werkzeuge" data-runtitle-en="Tools"><b>00</b><span data-l="de">Werkzeuge</span><span data-l="en">Tools</span></div>
       <h1><span data-l="de">Werkzeuge</span><span data-l="en">Tools</span><span class="dot">.</span></h1>
-      <p class="lead"><span data-l="de">Drei kleine Helfer aus meinem Alltag als Admin: Netze berechnen, VLANs planen und Änderungen so vorbereiten, dass es immer einen Weg zurück gibt.</span>
-        <span data-l="en">Three small helpers from my day-to-day work as an admin: calculate networks, plan VLANs and prepare changes so there is always a way back.</span></p>
+      <p class="lead"><span data-l="de">Zwei kleine Helfer aus meinem Alltag als Admin: Netze berechnen und VLANs planen, mit der fertigen Tabelle für die Dokumentation.</span>
+        <span data-l="en">Two small helpers from my day-to-day work as an admin: calculate networks and plan VLANs, with the finished table for your documentation.</span></p>
       <p class="tool-privacy"><span data-l="de">Alles läuft nur in Ihrem Browser. Eingaben werden nicht gespeichert und nicht übertragen.</span>
         <span data-l="en">Everything runs in your browser only. Nothing you enter is stored or sent anywhere.</span></p>
     </section>
@@ -212,58 +212,6 @@
       </div>
     </section>
 
-    <!-- ===== 03 Checkliste ===== -->
-    <section class="chapter" id="checkliste">
-      <div class="ch-head" data-node data-runtitle data-runtitle-de="Checkliste für Änderungen" data-runtitle-en="Change checklist">
-        <span class="ch-num">03</span>
-        <h2 class="ch-title"><span data-l="de">Checkliste für Änderungen</span><span data-l="en">Change checklist</span></h2>
-        <span class="ch-rule"></span>
-      </div>
-      <p><span data-l="de">So bereite ich jede Änderung vor: erst Ist-Zustand und Sicherung, dann der Rückweg, erst danach die Änderung. Art und Risiko wählen, die Liste passt sich an und lässt sich als Markdown nach Notion oder GitHub übernehmen.</span>
-        <span data-l="en">This is how I prepare every change: first the current state and a backup, then the way back, and only then the change itself. Pick type and risk, the list adapts and can be taken to Notion or GitHub as Markdown.</span></p>
-
-      <div class="tool">
-        <div class="tool-grid">
-          <div class="field field-wide">
-            <label for="cl-title"><span data-l="de">Änderung</span><span data-l="en">Change</span></label>
-            <input id="cl-title" type="text" maxlength="120" data-ph-de="z. B. Gäste-WLAN in eigenes VLAN" data-ph-en="e.g. move guest Wi-Fi to its own VLAN" placeholder="z. B. Gäste-WLAN in eigenes VLAN">
-          </div>
-          <div class="field">
-            <label for="cl-type"><span data-l="de">Art</span><span data-l="en">Type</span></label>
-            <select id="cl-type"></select>
-          </div>
-          <div class="field">
-            <label for="cl-risk"><span data-l="de">Risiko</span><span data-l="en">Risk</span></label>
-            <select id="cl-risk">
-              <option value="low" data-de="gering" data-en="low">gering</option>
-              <option value="mid" data-de="mittel" data-en="medium" selected>mittel</option>
-              <option value="high" data-de="hoch" data-en="high">hoch</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="cl-system">System</label>
-            <input id="cl-system" type="text" maxlength="80" data-ph-de="z. B. OPNsense, Switch" data-ph-en="e.g. OPNsense, switch" placeholder="z. B. OPNsense, Switch">
-          </div>
-          <div class="field">
-            <label for="cl-date"><span data-l="de">Termin</span><span data-l="en">Date</span></label>
-            <input id="cl-date" type="date">
-          </div>
-          <div class="field">
-            <label for="cl-abort"><span data-l="de">Abbruch nach (Min.)</span><span data-l="en">Abort after (min)</span></label>
-            <input id="cl-abort" type="number" min="5" max="480" step="5" value="30">
-          </div>
-        </div>
-
-        <div class="checklist" id="cl-out"></div>
-
-        <div class="tool-actions">
-          <button class="btn btn-primary btn-sm" type="button" id="cl-copy"><span data-l="de">Markdown kopieren</span><span data-l="en">Copy Markdown</span></button>
-          <button class="btn btn-ghost btn-sm" type="button" id="cl-md"><span data-l="de">Als .md speichern</span><span data-l="en">Save as .md</span></button>
-          <span class="tool-flash" id="cl-flash" role="status" aria-live="polite"></span>
-        </div>
-      </div>
-    </section>
-
     <footer class="foot">
       <span>© <span data-year>2026</span> Matija Tasic</span>
       <span><a href="impressum.html">Impressum</a> · <a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a></span>
@@ -274,7 +222,7 @@
   <div class="runfoot" aria-hidden="true">
     <span class="rf-title"></span>
     <span class="rf-bar"><i></i></span>
-    <span class="rf-page">00 / 03</span>
+    <span class="rf-page">00 / 02</span>
   </div>
 </body>
 </html>
