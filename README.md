@@ -12,6 +12,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 |---|---|
 | `index.html` | Startseite mit allen Kapiteln |
 | `werkzeuge.html` | Tools: Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk |
+| `tipps.html` | Tipps & Tricks: kurze Hinweise aus dem Admin-Alltag mit Infografiken (Inline-SVG, Texte DE/EN) |
 | `impressum.html`, `datenschutz.html` | Rechtstexte |
 | `404.html` | Fehlerseite |
 | `assets/css/site.css` | Gestaltung, Farben für hell und dunkel |
