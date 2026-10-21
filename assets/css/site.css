@@ -280,17 +280,33 @@ strong { color: var(--ink); font-weight: 600; }
 .kicker-site { margin-left: auto; color: var(--teal-text); font-weight: 400; letter-spacing: .1em; font-size: 11px; }
 .kicker b { font-weight: 400; letter-spacing: .06em; background: var(--chip-bg); color: var(--side-chip-text); padding: 6px 9px; border-radius: 4px; }
 .hero h1 {
-  font: 800 clamp(56px, 9vw, 128px)/.92 var(--display); letter-spacing: -.045em; color: var(--ink);
-  margin: 0 0 28px;
+  font: 800 clamp(48px, 6.2vw, 92px)/.92 var(--display); letter-spacing: -.045em; color: var(--ink);
+  margin: 0;
 }
+/* Name links, Foto rechts daneben */
+.hero-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; margin-bottom: 24px; }
+.hero-photo { position: relative; width: clamp(150px, 15vw, 210px); aspect-ratio: 1; margin-right: 8px; }
+.hero-photo img { display: block; width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 18px 50px rgba(0,0,0,.28), 0 0 0 1px var(--tint-b); }
+/* Dezenter Ring wie ein Port auf der Leitung */
+.hero-photo::before {
+  content: ''; position: absolute; inset: -10px; border-radius: 50%;
+  border: 2px dashed var(--teal); opacity: .55; animation: spin 40s linear infinite;
+}
+.hero-photo::after {
+  content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%; right: 9%; bottom: 9%;
+  background: var(--teal); border: 3px solid var(--bg); box-shadow: 0 0 10px var(--glow);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 .hero h1 .dot { color: var(--teal); }
 .hero h1 .ln { display: block; overflow: hidden; padding-bottom: .04em; }
 .hero h1 .ln > span { display: inline-block; transform: translateY(105%); animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
 .hero h1 .ln:nth-child(2) > span { animation-delay: .12s; }
 @keyframes rise { to { transform: translateY(0); } }
 .role {
-  font: 300 clamp(22px, 2.4vw, 30px)/1.3 var(--display); color: var(--teal-text); margin: 0 0 28px; letter-spacing: -.01em;
+  font: 300 clamp(20px, 2vw, 26px)/1.3 var(--display); color: var(--teal-text); margin: 0; letter-spacing: -.01em;
 }
+.hero .lead { margin: 28px 0 0; }
+.hero .cta { margin-top: 24px; }
 .role span { color: var(--ink); }
 .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 .btn {
@@ -306,12 +322,12 @@ strong { color: var(--ink); font-weight: 600; }
 .btn-ghost:hover { border-color: var(--teal); color: var(--teal-text); }
 .btn svg { width: 16px; height: 16px; }
 
-.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 56px; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 40px; }
 .tile {
   background: var(--tint); border: 1px solid var(--tint-b); border-top: 4px solid var(--teal);
-  border-radius: 8px; padding: 16px 16px 18px;
+  border-radius: 8px; padding: 13px 16px 14px;
 }
-.tile b { display: block; font: 700 18px/1.2 var(--display); color: var(--ink); margin-bottom: 6px; }
+.tile b { display: block; font: 700 17px/1.2 var(--display); color: var(--ink); margin-bottom: 4px; }
 .tile > span { display: block; font-size: 14px; line-height: 1.45; color: var(--muted); }
 
 /* ---------- Listen / Zeilen (Kompetenzen, Projekte) ---------- */
@@ -658,8 +674,21 @@ strong { color: var(--ink); font-weight: 600; }
   .runhead span:last-child { display: none; }
   .kicker-site { display: none; }
   .hero { min-height: auto; padding-top: 24px; }
-  .hero h1 { font-size: clamp(52px, 15vw, 80px); }
-  .tiles { grid-template-columns: 1fr; margin-top: 40px; }
+  .hero { padding-top: 8px; }
+  .kicker { margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(40px, 12vw, 64px); }
+  .hero-head { gap: 16px; margin-bottom: 16px; }
+  .hero-photo { width: clamp(84px, 24vw, 120px); margin-right: 6px; }
+  .hero-photo::before { inset: -6px; }
+  .hero-photo::after { width: 10px; height: 10px; border-width: 2px; }
+  .role { font-size: 17px; }
+  .hero .lead { margin-top: 16px; font-size: 16px; line-height: 1.55; }
+  .cta { margin-top: 18px; }
+  .cta .btn { padding: 13px 16px; }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 24px; }
+  .tile { padding: 10px 12px 11px; border-top-width: 3px; }
+  .tile b { font-size: 15px; }
+  .tile > span { font-size: 12.5px; }
   .chapter { padding-bottom: 72px; }
   .ch-head { gap: 10px; }
   .ch-title { letter-spacing: .16em; white-space: normal; line-height: 1.5; }
@@ -698,8 +727,7 @@ strong { color: var(--ink); font-weight: 600; }
   /* Profil (Foto, Name, Titel) in der Seitenleiste mittig */
   .side-top { justify-content: center; }
   /* Name und Titel stehen schon im Inhalt */
-  .brand img { width: 128px; height: 128px; margin: 0; }
-  .brand-text { display: none; }
+  .brand img, .brand-text { display: none; }
   /* Ganze Seitenleiste symmetrisch: gleicher Rand links und rechts, alles mittig */
   .side { padding-left: 28px; padding-right: 28px; }
   .side .lbl { text-align: center; }
@@ -711,7 +739,6 @@ strong { color: var(--ink); font-weight: 600; }
 /* Niedrige Laptop-Bildschirme: Seitenleiste dichter, damit keine Scrollleiste entsteht */
 @media (min-width: 861px) and (max-height: 820px) {
   .side { padding-top: 28px; padding-bottom: 20px; }
-  .brand img { width: 112px; height: 112px; }
   .toc, .itools, .knowhow, .prefs { margin-top: 22px; }
   .side .lbl { margin-bottom: 10px; }
   .side-grid a { padding: 9px 12px; }
@@ -719,7 +746,6 @@ strong { color: var(--ink); font-weight: 600; }
 }
 @media (min-width: 861px) and (max-height: 680px) {
   .side { padding-top: 20px; }
-  .brand img { width: 88px; height: 88px; }
   .toc, .itools, .knowhow, .prefs { margin-top: 16px; }
   .side-grid a { padding: 7px 12px; }
   .seg button { padding: 7px 10px; }
@@ -730,6 +756,7 @@ strong { color: var(--ink); font-weight: 600; }
    Weniger Bewegung
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+  .emblem-net .em-packets, .emblem-net .em-lit, .emblem-net .em-halo { display: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .hero h1 .ln > span { transform: none; }
@@ -754,3 +781,35 @@ strong { color: var(--ink); font-weight: 600; }
 @media (max-width: 700px) {
   .tip { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
 }
+
+/* ============ Seitenleiste: Emblem (ersetzt dort das Foto) ============ */
+.emblem { display: block; width: 236px; }
+@media (max-width: 860px) { .emblem { display: none; } }
+/* Niedrige Laptop-Fenster: Start kompakter, damit alle 6 Kacheln ohne Scrollen sichtbar sind */
+@media (min-width: 861px) and (max-height: 820px) {
+  .doc { padding-top: 24px; }
+  .hero .kicker { margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(44px, 5.4vw, 76px); }
+  .hero-photo { width: clamp(130px, 12vw, 170px); }
+  .hero-head { margin-bottom: 16px; }
+  .role { font-size: clamp(18px, 1.7vw, 22px); }
+  .hero .lead { margin-top: 16px; font-size: 17px; }
+  .hero .cta { margin-top: 16px; }
+  .hero .btn { padding: 12px 18px; }
+  .tiles { margin-top: 24px; gap: 10px; }
+  .tile { padding: 10px 14px 11px; border-top-width: 3px; }
+  .tile b { font-size: 16px; margin-bottom: 2px; }
+  .tile > span { font-size: 13px; }
+}
+/* Niedrige Bildschirme: Emblem kleiner, damit die Seitenleiste ohne Scrollleiste bleibt */
+@media (min-width: 861px) and (max-height: 820px) { .emblem { width: 210px; } }
+@media (min-width: 861px) and (max-height: 680px) { .emblem { width: 150px; } }
+/* Kleiner Netzplan: Pakete laufen vom Kern zu den Knoten, die kurz aufleuchten */
+.emblem-net .em-links path { fill: none; stroke: #4a5254; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.emblem-net .em-nodes circle { fill: var(--side); stroke: #5b6466; stroke-width: 2; }
+.emblem-net .em-lit circle { fill: var(--teal); opacity: 0; filter: drop-shadow(0 0 5px var(--teal)); }
+.emblem-net .em-packets circle { fill: #fff; stroke: var(--teal); stroke-width: 2; filter: drop-shadow(0 0 4px var(--teal)); }
+.emblem-net .em-halo { fill: none; stroke: var(--teal); stroke-width: 1.5; }
+.emblem-net .em-core { fill: var(--side-chip); stroke: var(--teal); stroke-width: 2; filter: drop-shadow(0 0 10px rgba(31, 181, 168, .45)); }
+.emblem-net .em-mono { font: 800 22px/1 var(--display); fill: var(--side-chip-text); letter-spacing: -.02em; }
+
