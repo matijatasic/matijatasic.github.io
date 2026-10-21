@@ -300,19 +300,71 @@
   year.forEach(function (y) { y.textContent = new Date().getFullYear(); });
   layout();
   /* ---------------- Seitenleiste: Mini-Terminal ----------------
-     Tippt nur beim ersten Seitenaufruf im Besuch; zeigt die echte Ladezeit. */
+     Tippt nur beim ersten Seitenaufruf im Besuch. Subnetz-Quiz und ein kleines sudo-Easter-Egg. */
   var term = document.querySelector('.term');
   if (term) {
     try {
       if (sessionStorage.getItem('term')) term.classList.add('term-seen');
       else sessionStorage.setItem('term', '1');
     } catch (e) {}
-    window.addEventListener('load', function () {
-      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
-      var sec = (Math.max(nav ? nav.loadEventStart : performance.now(), 10) / 1000).toFixed(2);
-      var de = term.querySelector('[data-loadtime-de]'), en = term.querySelector('[data-loadtime-en]');
-      if (de) de.textContent = sec.replace('.', ',');
-      if (en) en.textContent = sec;
+    // Nach dem Tippen volle Breite, damit Quiz und Easter Egg längere Texte zeigen können
+    term.addEventListener('animationend', function (e) {
+      if (e.target.classList.contains('et-ln')) e.target.classList.add('is-typed');
     });
+
+    var bi = function (de, en) { return '<span data-l="de">' + de + '</span><span data-l="en">' + en + '</span>'; };
+    var maskOf = function (p) {
+      var m = p === 0 ? 0 : (0xffffffff << (32 - p)) >>> 0;
+      return [m >>> 24, (m >>> 16) & 255, (m >>> 8) & 255, m & 255].join('.');
+    };
+    var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
+    // Fragen: Präfix → Hosts, Präfix → Maske, Hosts → Präfix
+    var makeQuiz = function () {
+      var t = Math.floor(Math.random() * 3), p, h;
+      if (t === 0) {
+        p = pick([22, 23, 24, 25, 26, 27, 28, 29, 30]); h = Math.pow(2, 32 - p) - 2;
+        return { key: 'h' + p, q: bi('/' + p + ' → wie viele Hosts?', '/' + p + ' → how many hosts?'), a: bi('= ' + h.toLocaleString('de-DE') + ' Hosts', '= ' + h.toLocaleString('en-US') + ' hosts'), n: 23 };
+      }
+      if (t === 1) {
+        p = pick([24, 25, 26, 27, 28, 29, 30]);
+        return { key: 'm' + p, q: bi('/' + p + ' → welche Maske?', '/' + p + ' → which mask?'), a: '= ' + maskOf(p), n: 19 };
+      }
+      h = pick([2, 6, 14, 30, 62, 126, 254, 510, 1022]); p = 32 - Math.log2(h + 2);
+      return { key: 'p' + h, q: bi(h + ' Hosts → welches Präfix?', h + ' hosts → which prefix?'), a: '= /' + p, n: 25 };
+    };
+    var qEl = term.querySelector('[data-quiz-q]'), aEl = term.querySelector('[data-quiz-a]');
+    var showBtn = term.querySelector('[data-quiz-show]'), newBtn = term.querySelector('[data-quiz-new]');
+    var lastKey = '';
+    var ask = function () {
+      var q;
+      do { q = makeQuiz(); } while (q.key === lastKey);
+      lastKey = q.key;
+      qEl.innerHTML = q.q;
+      qEl.style.setProperty('--n', q.n);
+      aEl.innerHTML = q.a;
+      aEl.hidden = true;
+      showBtn.hidden = false;
+    };
+    if (qEl && aEl && showBtn && newBtn) {
+      ask();
+      showBtn.addEventListener('click', function () { aEl.hidden = false; showBtn.hidden = true; newBtn.focus(); });
+      newBtn.addEventListener('click', ask);
+    }
+
+    // Easter Egg: Klick auf den Prompt
+    var sudo = term.querySelector('[data-sudo]');
+    if (sudo) {
+      var idle = sudo.innerHTML, busy = false;
+      sudo.addEventListener('click', function () {
+        if (busy) return;
+        busy = true;
+        sudo.innerHTML = '$ sudo su';
+        setTimeout(function () {
+          sudo.classList.add('is-denied');
+          sudo.innerHTML = bi('Netter Versuch: verweigert.', 'Nice try: access denied.');
+        }, 600);
+        setTimeout(function () { sudo.classList.remove('is-denied'); sudo.innerHTML = idle; busy = false; }, 3600);
+      });
+    }
   }
 })();

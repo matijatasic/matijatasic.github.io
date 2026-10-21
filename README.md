@@ -12,7 +12,6 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 |---|---|
 | `index.html` | Startseite mit allen Kapiteln |
 | `werkzeuge.html` | IT-Tools (in der Seitenleiste als eigener Block verlinkt): Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk, Passwortgenerator, Hash-Rechner, Befehls-Baukasten |
-| `tipps.html` | Tipps & Tricks: kurze Hinweise aus dem Admin-Alltag mit Infografiken (Inline-SVG, Texte DE/EN) |
 | `impressum.html`, `datenschutz.html` | Rechtstexte |
 | `404.html` | Fehlerseite |
 | `robots.txt`, `sitemap.xml` | Hinweise für Suchmaschinen (Impressum und Datenschutz stehen auf noindex) |
