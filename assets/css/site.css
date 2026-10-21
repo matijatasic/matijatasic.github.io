@@ -664,8 +664,8 @@ strong { color: var(--ink); font-weight: 600; }
   .kicker { margin-bottom: 18px; }
   .hero h1 { font-size: clamp(40px, 12vw, 64px); }
   .hero-head { gap: 16px; margin-bottom: 16px; }
-  .hero-head { justify-content: space-between; }
-  .hero-photo { width: clamp(84px, 24vw, 120px); margin-right: 6px; }
+  /* Handy: Foto steht schon in der Kopfleiste, deshalb hier nicht doppelt */
+  .hero-photo { display: none; }
   .hero .lead { font-size: 16px; line-height: 1.55; }
   .cta { margin-top: 18px; }
   .cta .btn { padding: 13px 16px; }
