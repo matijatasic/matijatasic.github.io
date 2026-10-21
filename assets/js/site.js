@@ -367,9 +367,23 @@
       return { key: 'np' + e[0], n: 26, q: bi('Port ' + e[0] + ' → welcher Dienst?', 'Port ' + e[0] + ' → which service?'),
         a: name, ok: function (v) { return ok.indexOf(norm(v)) !== -1; } };
     };
+    // Binär-Quiz (dritter Punkt): 8 Bit, binär → dezimal und dezimal → binär
+    var bin8 = function (n) { return ('00000000' + n.toString(2)).slice(-8); };
+    var makeBin = function () {
+      var n = 1 + Math.floor(Math.random() * 254), b = bin8(n);
+      if (Math.random() < 0.5) {
+        return { key: 'bd' + n, n: 19, q: bi(b + ' → dezimal?', b + ' → decimal?'),
+          a: String(n), ok: function (v) { return digits(v) === String(n); } };
+      }
+      var q = String(n);
+      return { key: 'db' + n, n: q.length + 18, q: bi(q + ' → binär (8 Bit)?', q + ' → binary (8 bit)?'),
+        a: b, ok: function (v) { var x = v.replace(/[\s.']/g, ''); return /^[01]{1,8}$/.test(x) && parseInt(x, 2) === n; } };
+    };
+    var MODES = { subnetz: makeSubnet, ports: makePort, binaer: makeBin };
+    var CMDS = { subnetz: 'subnetz', ports: 'ports', binaer: 'binär' };
     var mode = 'subnetz';
-    try { if (sessionStorage.getItem('quiz') === 'ports') mode = 'ports'; } catch (e) {}
-    var makeQuiz = function () { return mode === 'ports' ? makePort() : makeSubnet(); };
+    try { var saved = sessionStorage.getItem('quiz'); if (MODES[saved]) mode = saved; } catch (e) {}
+    var makeQuiz = function () { return MODES[mode](); };
     var qEl = term.querySelector('[data-quiz-q]'), form = term.querySelector('[data-quiz-form]');
     var inp = term.querySelector('[data-quiz-in]'), res = term.querySelector('[data-quiz-res]');
     var newBtn = term.querySelector('[data-quiz-new]'), solBtn = term.querySelector('[data-quiz-sol]');
@@ -401,7 +415,7 @@
       });
       newBtn.addEventListener('click', function () { ask(true); });
       if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol'); });
-      // Punkte in der Titelleiste wählen das Quiz: Subnetz oder Ports
+      // Punkte in der Titelleiste wählen das Quiz: Subnetz, Ports oder Binär
       var cmd = term.querySelector('[data-quiz-cmd]'), help = term.querySelector('[data-quiz-help]');
       var dots = term.querySelectorAll('[data-quiz-mode]');
       var setMode = function (m, focus) {
@@ -412,7 +426,7 @@
           d.classList.toggle('is-on', on);
           d.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
-        if (cmd) cmd.textContent = '$ quiz --' + m;
+        if (cmd) cmd.textContent = '$ quiz --' + CMDS[m];
         if (help) help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + (m === 'ports' ? 'ports' : 'subnetz')));
         lastKey = '';
         ask(focus);
