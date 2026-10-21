@@ -284,8 +284,8 @@ strong { color: var(--ink); font-weight: 600; }
   margin: 0;
 }
 /* Name links, Foto rechts daneben */
-.hero-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; margin-bottom: 24px; }
-.hero-photo { position: relative; width: clamp(150px, 15vw, 210px); aspect-ratio: 1; margin-right: 8px; }
+.hero-head { display: flex; align-items: center; gap: clamp(28px, 3vw, 44px); margin-bottom: 24px; }
+.hero-photo { position: relative; flex: none; width: clamp(110px, 10vw, 150px); aspect-ratio: 1; }
 .hero-photo img { display: block; width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 18px 50px rgba(0,0,0,.28), 0 0 0 1px var(--tint-b); }
 /* Dezenter Ring wie ein Port auf der Leitung */
 .hero-photo::before {
@@ -678,6 +678,7 @@ strong { color: var(--ink); font-weight: 600; }
   .kicker { margin-bottom: 18px; }
   .hero h1 { font-size: clamp(40px, 12vw, 64px); }
   .hero-head { gap: 16px; margin-bottom: 16px; }
+  .hero-head { justify-content: space-between; }
   .hero-photo { width: clamp(84px, 24vw, 120px); margin-right: 6px; }
   .hero-photo::before { inset: -6px; }
   .hero-photo::after { width: 10px; height: 10px; border-width: 2px; }
@@ -724,10 +725,9 @@ strong { color: var(--ink); font-weight: 600; }
 }
 @media (min-width: 861px) {
   .side-panel { display: contents; }
-  /* Profil (Foto, Name, Titel) in der Seitenleiste mittig */
-  .side-top { justify-content: center; }
-  /* Name und Titel stehen schon im Inhalt */
-  .brand img, .brand-text { display: none; }
+  /* Kein Profil oben (Foto steht neben dem Namen): Blöcke gleichmäßig über die Höhe verteilt */
+  .side-top { display: none; }
+  .toc, .itools, .knowhow, .prefs, .side-foot { margin-top: auto; }
   /* Ganze Seitenleiste symmetrisch: gleicher Rand links und rechts, alles mittig */
   .side { padding-left: 28px; padding-right: 28px; }
   .side .lbl { text-align: center; }
@@ -735,18 +735,31 @@ strong { color: var(--ink); font-weight: 600; }
   .pref-row { justify-content: center; }
   .side-foot { text-align: center; }
 }
-/* Niedrige Laptop-Bildschirme: Seitenleiste etwas dichter, damit der Fuß sichtbar bleibt */
 /* Niedrige Laptop-Bildschirme: Seitenleiste dichter, damit keine Scrollleiste entsteht */
 @media (min-width: 861px) and (max-height: 820px) {
   .side { padding-top: 28px; padding-bottom: 20px; }
-  .toc, .itools, .knowhow, .prefs { margin-top: 22px; }
   .side .lbl { margin-bottom: 10px; }
   .side-grid a { padding: 9px 12px; }
   .side-foot { padding-top: 18px; }
 }
+/* Niedrige Laptop-Fenster: Start kompakter, damit alle 6 Kacheln ohne Scrollen sichtbar sind */
+@media (min-width: 861px) and (max-height: 820px) {
+  .doc { padding-top: 24px; }
+  .hero .kicker { margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(44px, 5.4vw, 76px); }
+  .hero-photo { width: clamp(96px, 8.5vw, 124px); }
+  .hero-head { margin-bottom: 16px; }
+  .role { font-size: clamp(18px, 1.7vw, 22px); }
+  .hero .lead { margin-top: 16px; font-size: 17px; }
+  .hero .cta { margin-top: 16px; }
+  .hero .btn { padding: 12px 18px; }
+  .tiles { margin-top: 24px; gap: 10px; }
+  .tile { padding: 10px 14px 11px; border-top-width: 3px; }
+  .tile b { font-size: 16px; margin-bottom: 2px; }
+  .tile > span { font-size: 13px; }
+}
 @media (min-width: 861px) and (max-height: 680px) {
   .side { padding-top: 20px; }
-  .toc, .itools, .knowhow, .prefs { margin-top: 16px; }
   .side-grid a { padding: 7px 12px; }
   .seg button { padding: 7px 10px; }
   .theme-btn { padding: 9px 12px; }
@@ -756,7 +769,6 @@ strong { color: var(--ink); font-weight: 600; }
    Weniger Bewegung
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .emblem-net .em-packets, .emblem-net .em-lit, .emblem-net .em-halo { display: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .hero h1 .ln > span { transform: none; }
@@ -781,35 +793,4 @@ strong { color: var(--ink); font-weight: 600; }
 @media (max-width: 700px) {
   .tip { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
 }
-
-/* ============ Seitenleiste: Emblem (ersetzt dort das Foto) ============ */
-.emblem { display: block; width: 236px; }
-@media (max-width: 860px) { .emblem { display: none; } }
-/* Niedrige Laptop-Fenster: Start kompakter, damit alle 6 Kacheln ohne Scrollen sichtbar sind */
-@media (min-width: 861px) and (max-height: 820px) {
-  .doc { padding-top: 24px; }
-  .hero .kicker { margin-bottom: 18px; }
-  .hero h1 { font-size: clamp(44px, 5.4vw, 76px); }
-  .hero-photo { width: clamp(130px, 12vw, 170px); }
-  .hero-head { margin-bottom: 16px; }
-  .role { font-size: clamp(18px, 1.7vw, 22px); }
-  .hero .lead { margin-top: 16px; font-size: 17px; }
-  .hero .cta { margin-top: 16px; }
-  .hero .btn { padding: 12px 18px; }
-  .tiles { margin-top: 24px; gap: 10px; }
-  .tile { padding: 10px 14px 11px; border-top-width: 3px; }
-  .tile b { font-size: 16px; margin-bottom: 2px; }
-  .tile > span { font-size: 13px; }
-}
-/* Niedrige Bildschirme: Emblem kleiner, damit die Seitenleiste ohne Scrollleiste bleibt */
-@media (min-width: 861px) and (max-height: 820px) { .emblem { width: 210px; } }
-@media (min-width: 861px) and (max-height: 680px) { .emblem { width: 150px; } }
-/* Kleiner Netzplan: Pakete laufen vom Kern zu den Knoten, die kurz aufleuchten */
-.emblem-net .em-links path { fill: none; stroke: #4a5254; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.emblem-net .em-nodes circle { fill: var(--side); stroke: #5b6466; stroke-width: 2; }
-.emblem-net .em-lit circle { fill: var(--teal); opacity: 0; filter: drop-shadow(0 0 5px var(--teal)); }
-.emblem-net .em-packets circle { fill: #fff; stroke: var(--teal); stroke-width: 2; filter: drop-shadow(0 0 4px var(--teal)); }
-.emblem-net .em-halo { fill: none; stroke: var(--teal); stroke-width: 1.5; }
-.emblem-net .em-core { fill: var(--side-chip); stroke: var(--teal); stroke-width: 2; filter: drop-shadow(0 0 10px rgba(31, 181, 168, .45)); }
-.emblem-net .em-mono { font: 800 22px/1 var(--display); fill: var(--side-chip-text); letter-spacing: -.02em; }
 
