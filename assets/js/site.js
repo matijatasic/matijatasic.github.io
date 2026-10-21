@@ -318,37 +318,51 @@
       return [m >>> 24, (m >>> 16) & 255, (m >>> 8) & 255, m & 255].join('.');
     };
     var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
-    // Fragen: Präfix → Hosts, Präfix → Maske, Hosts → Präfix
+    // Fragen: Präfix → Hosts, Präfix → Maske, Hosts → Präfix; Antwort wird eingetippt und geprüft
+    var digits = function (v) { return v.replace(/[\s.,']/g, ''); };
     var makeQuiz = function () {
-      var t = Math.floor(Math.random() * 3), p, h;
+      var t = Math.floor(Math.random() * 3), p, h, m;
       if (t === 0) {
         p = pick([22, 23, 24, 25, 26, 27, 28, 29, 30]); h = Math.pow(2, 32 - p) - 2;
-        return { key: 'h' + p, q: bi('/' + p + ' → wie viele Hosts?', '/' + p + ' → how many hosts?'), a: bi('= ' + h.toLocaleString('de-DE') + ' Hosts', '= ' + h.toLocaleString('en-US') + ' hosts'), n: 23 };
+        return { key: 'h' + p, n: 23, q: bi('/' + p + ' → wie viele Hosts?', '/' + p + ' → how many hosts?'),
+          a: h.toLocaleString('de-DE') + ' Hosts', ok: function (v) { return digits(v) === String(h); } };
       }
       if (t === 1) {
-        p = pick([24, 25, 26, 27, 28, 29, 30]);
-        return { key: 'm' + p, q: bi('/' + p + ' → welche Maske?', '/' + p + ' → which mask?'), a: '= ' + maskOf(p), n: 19 };
+        p = pick([24, 25, 26, 27, 28, 29, 30]); m = maskOf(p);
+        return { key: 'm' + p, n: 19, q: bi('/' + p + ' → welche Maske?', '/' + p + ' → which mask?'),
+          a: m, ok: function (v) { return v.replace(/\s/g, '').replace(/,/g, '.') === m; } };
       }
       h = pick([2, 6, 14, 30, 62, 126, 254, 510, 1022]); p = 32 - Math.log2(h + 2);
-      return { key: 'p' + h, q: bi(h + ' Hosts → welches Präfix?', h + ' hosts → which prefix?'), a: '= /' + p, n: 25 };
+      return { key: 'p' + h, n: 25, q: bi(h + ' Hosts → welches Präfix?', h + ' hosts → which prefix?'),
+        a: '/' + p, ok: function (v) { return v.replace(/[\s\/]/g, '') === String(p); } };
     };
-    var qEl = term.querySelector('[data-quiz-q]'), aEl = term.querySelector('[data-quiz-a]');
-    var showBtn = term.querySelector('[data-quiz-show]'), newBtn = term.querySelector('[data-quiz-new]');
-    var lastKey = '';
-    var ask = function () {
+    var qEl = term.querySelector('[data-quiz-q]'), form = term.querySelector('[data-quiz-form]');
+    var inp = term.querySelector('[data-quiz-in]'), res = term.querySelector('[data-quiz-res]');
+    var newBtn = term.querySelector('[data-quiz-new]');
+    var lastKey = '', cur = null;
+    var ask = function (focus) {
       var q;
       do { q = makeQuiz(); } while (q.key === lastKey);
-      lastKey = q.key;
+      lastKey = q.key; cur = q;
       qEl.innerHTML = q.q;
       qEl.style.setProperty('--n', q.n);
-      aEl.innerHTML = q.a;
-      aEl.hidden = true;
-      showBtn.hidden = false;
+      res.hidden = true; res.className = 'et-res';
+      form.hidden = false; inp.value = '';
+      if (focus) inp.focus();
     };
-    if (qEl && aEl && showBtn && newBtn) {
-      ask();
-      showBtn.addEventListener('click', function () { aEl.hidden = false; showBtn.hidden = true; newBtn.focus(); });
-      newBtn.addEventListener('click', ask);
+    if (qEl && form && inp && res && newBtn) {
+      ask(false);
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var v = inp.value.trim();
+        if (!v) return;
+        var right = cur.ok(v);
+        res.innerHTML = right ? '✓ ' + bi('richtig', 'correct') : '✗ = ' + cur.a;
+        res.className = 'et-res ' + (right ? 'is-ok' : 'is-bad');
+        form.hidden = true; res.hidden = false;
+        newBtn.focus();
+      });
+      newBtn.addEventListener('click', function () { ask(true); });
     }
 
     // Glitch: kurze Bildstörung (nicht bei „Bewegung reduzieren“, nicht im Hintergrund-Tab)
