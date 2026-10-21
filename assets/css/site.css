@@ -786,8 +786,18 @@ strong { color: var(--ink); font-weight: 600; }
   font: inherit; line-height: 1.3; padding: 0 6px; border-radius: 4px; cursor: pointer; text-decoration: none;
 }
 .et-act button:hover, .et-act a:hover { border-color: var(--teal); color: #fff; }
-.et-ans { color: #fff; font-weight: 700; }
-.et-act [hidden] { display: none; }
+.et-act button:focus-visible, .et-act a:focus-visible { outline: none; border-color: var(--teal); color: #fff; box-shadow: 0 0 0 2px var(--glow); }
+/* Quiz-Eingabe: sieht aus wie die Kommandozeile */
+.et-form { display: flex; align-items: center; gap: 4px; margin: 0; }
+.et-form input {
+  width: 16ch; padding: 0 4px; margin: 0; border: 0; border-bottom: 1px solid #3d4446; border-radius: 0;
+  background: transparent; color: #fff; font: inherit; line-height: 1.3; caret-color: var(--side-chip-text); outline: none;
+}
+.et-form input:focus { border-bottom-color: var(--teal); }
+.et-res { font-weight: 700; white-space: nowrap; margin-right: 4px; }
+.et-res.is-ok { color: #3ddc84; }
+.et-res.is-bad { color: var(--amber); }
+.et-act [hidden], .et-form[hidden] { display: none; }
 .et-prompt { appearance: none; border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: text; }
 .et-prompt.is-denied { color: var(--amber); }
 .et-cur { display: inline-block; width: 7px; height: 13px; vertical-align: -2px; background: var(--side-chip-text); animation: blink 1s steps(1) infinite; }
