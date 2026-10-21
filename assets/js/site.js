@@ -362,11 +362,8 @@
       if (e.target === term && e.animationName === 'glitch') term.classList.remove('is-glitch');
     });
     if (!reduceMotion) {
-      // einmal zu Beginn, danach jede Minute
-      setTimeout(function () {
-        glitch();
-        setInterval(glitch, 60000);
-      }, term.classList.contains('term-seen') ? 1200 : 4900);
+      // nur einmal pro Seitenaufruf, 30 s nach dem Laden
+      setTimeout(glitch, 30000);
     }
 
     // Easter Egg: Klick auf den Prompt
