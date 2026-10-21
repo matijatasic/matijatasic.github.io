@@ -558,6 +558,19 @@ strong { color: var(--ink); font-weight: 600; }
 .hs-verdict.ok::before { content: '✓  '; }
 .hs-verdict.err::before { content: '✕  '; }
 #hs-out { margin-top: 14px; }
+
+/* Befehls-Baukasten */
+.tool-grid.ck-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ck-checks { margin-top: 2px; }
+.ck-out {
+  margin: 4px 0 12px; padding: 16px 18px; border-radius: 10px; background: #151919; border: 1px solid #2d3434;
+  font: 400 14px/1.6 var(--mono); color: #7fe0d6; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.ck-out::before { content: '$ '; color: #5b6262; }
+.ck-out.ck-win::before { content: '> '; }
+.ck-out code { color: #7fe0d6; font: inherit; }
+.ck-out.is-off { opacity: .35; }
+.ck-notes { color: var(--text); }
 .kv .kv-wide { grid-column: 1 / -1; }
 .kv .kv-wide code { overflow-wrap: anywhere; color: var(--ink); }
 :root[data-theme="dark"] .pw-box { background: rgba(31, 181, 168, .045); border-color: rgba(31, 181, 168, .3); }
@@ -662,7 +675,8 @@ strong { color: var(--ink); font-weight: 600; }
   .tool-grid, .tool-grid.vl-head, .tool-grid.pt-head { grid-template-columns: 1fr; }
   /* Port-Liste auf dem Handy als Zeilenkarten statt breiter Tabelle */
   .pt-card { padding: 18px 16px; }
-  .pw-opts, .tool-grid.hs-head { grid-template-columns: 1fr; }
+  .pw-opts, .tool-grid.hs-head, .tool-grid.ck-grid { grid-template-columns: 1fr; }
+  .ck-out { font-size: 13px; padding: 14px; }
   .pw-val { font-size: 17px; }
   .pt-num { font-size: 28px; }
   .pt-card .pt-name { font-size: 18px; }
