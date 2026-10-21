@@ -1,6 +1,6 @@
 /* matija-tasic.de · Werkzeuge (werkzeuge.html)
    - Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk (Daten in ports.js),
-     Passwortgenerator (pwgen.js), Hash-Rechner (hash.js)
+     Passwortgenerator (pwgen.js), Hash-Rechner (hash.js), Befehls-Baukasten (cmds.js)
    - Rechenlogik steckt in ipcalc.js; hier nur Oberfläche und Texte
    - nichts wird gespeichert oder übertragen
 */
@@ -582,6 +582,83 @@
     $('hs-copy').addEventListener('click', function () { if (hsCurrent) copy(hsCurrent.hex, $('hs-flash')); });
   }
 
+  /* ======================================================================
+     06 Befehls-Baukasten (Vorlagen und Maskieren in cmds.js)
+     ====================================================================== */
+  var CK = window.CmdKit;
+  var ckSel = $('ck-sel'), ckState = {}, ckLast = null;
+
+  function ckTpl() { return CK.byId(ckSel.value) || CK.TEMPLATES[0]; }
+  function ckVals(tpl) {
+    if (!ckState[tpl.id]) ckState[tpl.id] = CK.defaults(tpl);
+    return ckState[tpl.id];
+  }
+
+  function ckFill() {
+    var cur = ckSel.value || CK.TEMPLATES[0].id;
+    ckSel.innerHTML = Object.keys(CK.CATS).map(function (cat) {
+      return '<optgroup label="' + esc(t(CK.CATS[cat])) + '">' + CK.TEMPLATES.filter(function (x) { return x.cat === cat; }).map(function (x) {
+        return '<option value="' + x.id + '">' + esc(t(x.name)) + '</option>';
+      }).join('') + '</optgroup>';
+    }).join('');
+    ckSel.value = cur;
+  }
+
+  /* Felder neu aufbauen (bei Vorlagen- oder Sprachwechsel und wenn sich sichtbare Felder ändern) */
+  function ckFields() {
+    var tpl = ckTpl(), v = ckVals(tpl), grid = '', checks = '';
+    tpl.fields.forEach(function (f) {
+      if (f.show && !f.show(v)) return;
+      var id = 'ck-f-' + f.id, lab = esc(t(f.label));
+      if (f.type === 'check') {
+        checks += '<label class="check"><input type="checkbox" id="' + id + '" data-f="' + f.id + '"' + (v[f.id] ? ' checked' : '') + '><span>' + lab + '</span></label>';
+      } else if (f.type === 'select') {
+        grid += '<div class="field"><label for="' + id + '">' + lab + '</label><select id="' + id + '" data-f="' + f.id + '">' +
+          f.opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (v[f.id] === o[0] ? ' selected' : '') + '>' + esc(t(o[1])) + '</option>'; }).join('') + '</select></div>';
+      } else {
+        grid += '<div class="field"><label for="' + id + '">' + lab + '</label><input id="' + id + '" data-f="' + f.id + '" type="text" spellcheck="false" autocomplete="off"' +
+          (f.type === 'num' ? ' inputmode="numeric"' : '') + ' value="' + esc(v[f.id]) + '"></div>';
+      }
+    });
+    $('ck-fields').innerHTML = '<div class="tool-grid ck-grid">' + grid + '</div>' + (checks ? '<div class="pw-opts ck-checks">' + checks + '</div>' : '');
+    ckOut();
+  }
+
+  function ckOut() {
+    var tpl = ckTpl(), r = CK.run(tpl, Object.assign({}, ckVals(tpl))), msg = $('ck-msg');
+    var li = function (pair, cls) { return '<li' + (cls ? ' class="' + cls + '"' : '') + '>' + esc(t(pair)) + '</li>'; };
+    if (r.err) {
+      msg.textContent = t(r.err); msg.className = 'tool-msg err';
+      $('ck-out').classList.add('is-off'); ckLast = null;
+      $('ck-warn').innerHTML = ''; $('ck-notes').innerHTML = '';
+      return;
+    }
+    msg.textContent = ''; msg.className = 'tool-msg';
+    $('ck-out').classList.remove('is-off');
+    $('ck-out').classList.toggle('ck-win', tpl.shell === 'cmd');
+    $('ck-cmd').textContent = r.cmd; ckLast = r.cmd;
+    $('ck-warn').innerHTML = r.warn.map(function (w) { return li(w, 'warn'); }).join('');
+    $('ck-notes').innerHTML = r.notes.map(function (n) { return li(n); }).join('');
+  }
+
+  if (CK) {
+    ckSel.addEventListener('change', ckFields);
+    $('ck-fields').addEventListener('input', function (e) {
+      var f = e.target.getAttribute('data-f');
+      if (!f) return;
+      var tpl = ckTpl(), v = ckVals(tpl);
+      v[f] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      /* Auswahllisten können andere Felder ein- oder ausblenden */
+      if (e.target.tagName === 'SELECT') ckFields(); else ckOut();
+    });
+    $('ck-copy').addEventListener('click', function () { if (ckLast) copy(ckLast, $('ck-flash')); });
+    $('ck-save').addEventListener('click', function () {
+      if (!ckLast) return;
+      var f = CK.asFile(ckTpl(), ckLast);
+      download(f.name, f.text, 'text/plain');
+    });
+  }
+
   /* ---------- Start und Sprachwechsel ---------- */
   function renderAll() {
     translateOptions();
@@ -591,6 +668,7 @@
     if (PD) { fillPorts(); renderPorts(); }
     if (PW) pwRate();
     if (HC) { hsText(); hsShow(); }
+    if (CK) { ckFill(); ckFields(); }
   }
   new MutationObserver(renderAll).observe(root, { attributes: true, attributeFilter: ['lang'] });
   renderAll();
