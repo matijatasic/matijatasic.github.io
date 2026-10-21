@@ -772,7 +772,8 @@ strong { color: var(--ink); font-weight: 600; }
 .et-bar { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #2a3033; font: 400 10.5px/1 var(--mono); color: var(--side-muted); }
 .et-bar i { width: 8px; height: 8px; border-radius: 50%; background: #4a5254; }
 .et-bar i:first-child { background: var(--teal); }
-.et-bar > span { margin-left: auto; letter-spacing: .04em; }
+.et-title { margin-left: auto; appearance: none; border: 0; background: none; padding: 0; color: inherit; font: inherit; letter-spacing: .04em; white-space: nowrap; cursor: text; }
+.et-title.is-denied { color: var(--amber); }
 .et-body { display: block; padding: 10px 12px 12px; font: 400 11.5px/1.65 var(--mono); }
 /* Zeilen tippen nacheinander (Breite in Zeichen, Mono-Schrift) */
 .et-ln { display: block; width: 0; max-width: max-content; white-space: nowrap; overflow: hidden; animation: type .55s steps(var(--n)) var(--d) forwards; }
@@ -781,6 +782,7 @@ strong { color: var(--ink); font-weight: 600; }
 .et-q { color: var(--side-text); }
 /* Quiz-Knöpfe und Prompt: wie Text im Terminal, nur klickbar */
 .et-act { display: flex; align-items: center; gap: 6px; }
+.et-act.is-typed, .term-seen .et-act { flex-wrap: wrap; row-gap: 4px; }
 .et-act button, .et-act a {
   appearance: none; border: 1px solid #3d4446; background: transparent; color: var(--side-chip-text);
   font: inherit; line-height: 1.3; padding: 0 6px; border-radius: 4px; cursor: pointer; text-decoration: none;
@@ -790,7 +792,7 @@ strong { color: var(--ink); font-weight: 600; }
 /* Quiz-Eingabe: sieht aus wie die Kommandozeile */
 .et-form { display: flex; align-items: center; gap: 4px; margin: 0; }
 .et-form input {
-  width: 16ch; padding: 0 4px; margin: 0; border: 0; border-bottom: 1px solid #3d4446; border-radius: 0;
+  width: 14ch; padding: 0 4px; margin: 0; border: 0; border-bottom: 1px solid #3d4446; border-radius: 0;
   background: transparent; color: #fff; font: inherit; line-height: 1.3; caret-color: var(--side-chip-text); outline: none;
 }
 .et-form input:focus { border-bottom-color: var(--teal); }
@@ -798,11 +800,7 @@ strong { color: var(--ink); font-weight: 600; }
 .et-res.is-ok { color: #3ddc84; }
 .et-res.is-bad { color: var(--amber); }
 .et-act [hidden], .et-form[hidden] { display: none; }
-.et-prompt { appearance: none; border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: text; }
-.et-prompt.is-denied { color: var(--amber); }
-.et-cur { display: inline-block; width: 7px; height: 13px; vertical-align: -2px; background: var(--side-chip-text); animation: blink 1s steps(1) infinite; }
 @keyframes type { to { width: calc(var(--n) * 1ch + 1px); } }
-@keyframes blink { 50% { opacity: 0; } }
 /* Schon im laufenden Besuch getippt oder weniger Bewegung gewünscht: sofort fertig */
 .term-seen .et-ln, .et-ln.is-typed { width: auto; animation: none; }
 @media (prefers-reduced-motion: reduce) { .et-ln { width: auto; } }

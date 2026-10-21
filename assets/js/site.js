@@ -380,7 +380,7 @@
       setTimeout(glitch, 30000);
     }
 
-    // Easter Egg: Klick auf den Prompt
+    // Easter Egg: Klick auf den Titel „matija@tasic:~“
     var sudo = term.querySelector('[data-sudo]');
     if (sudo) {
       var idle = sudo.innerHTML, busy = false;
@@ -390,7 +390,7 @@
         sudo.innerHTML = '$ sudo su';
         setTimeout(function () {
           sudo.classList.add('is-denied');
-          sudo.innerHTML = bi('Netter Versuch: verweigert.', 'Nice try: access denied.');
+          sudo.innerHTML = bi('Netter Versuch: verweigert.', 'Nice try: denied.');
         }, 600);
         setTimeout(function () { sudo.classList.remove('is-denied'); sudo.innerHTML = idle; busy = false; }, 3600);
       });
