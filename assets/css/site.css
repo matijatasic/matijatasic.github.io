@@ -684,13 +684,8 @@ strong { color: var(--ink); font-weight: 600; }
   .side-panel { display: contents; }
   /* Profil (Foto, Name, Titel) in der Seitenleiste mittig */
   .side-top { justify-content: center; }
-  /* Foto quadratisch mit Rahmen; Name und Titel stehen schon im Inhalt */
-  .brand picture { display: block; }
-  .brand img {
-    width: 132px; height: 132px; margin: 0; padding: 4px; border-radius: 12px;
-    background: var(--side-2); border: 1px solid rgba(23, 163, 152, .55);
-    box-shadow: 0 0 0 5px rgba(23, 163, 152, .08), 0 12px 28px rgba(0, 0, 0, .35);
-  }
+  /* Name und Titel stehen schon im Inhalt */
+  .brand img { width: 128px; height: 128px; margin: 0; }
   .brand-text { display: none; }
   /* Ganze Seitenleiste symmetrisch: gleicher Rand links und rechts, alles mittig */
   .side { padding-left: 28px; padding-right: 28px; }
@@ -711,7 +706,7 @@ strong { color: var(--ink); font-weight: 600; }
 }
 @media (min-width: 861px) and (max-height: 680px) {
   .side { padding-top: 20px; }
-  .brand img { width: 88px; height: 88px; padding: 3px; }
+  .brand img { width: 88px; height: 88px; }
   .toc, .itools, .knowhow, .prefs { margin-top: 16px; }
   .side-grid a { padding: 7px 12px; }
   .seg button { padding: 7px 10px; }
