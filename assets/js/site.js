@@ -338,7 +338,7 @@
     };
     var qEl = term.querySelector('[data-quiz-q]'), form = term.querySelector('[data-quiz-form]');
     var inp = term.querySelector('[data-quiz-in]'), res = term.querySelector('[data-quiz-res]');
-    var newBtn = term.querySelector('[data-quiz-new]');
+    var newBtn = term.querySelector('[data-quiz-new]'), solBtn = term.querySelector('[data-quiz-sol]');
     var lastKey = '', cur = null;
     var ask = function (focus) {
       var q;
@@ -350,6 +350,12 @@
       form.hidden = false; inp.value = '';
       if (focus) inp.focus();
     };
+    var show = function (html, cls) {
+      res.innerHTML = html;
+      res.className = 'et-res ' + cls;
+      form.hidden = true; res.hidden = false;
+      newBtn.focus();
+    };
     if (qEl && form && inp && res && newBtn) {
       ask(false);
       form.addEventListener('submit', function (e) {
@@ -357,12 +363,10 @@
         var v = inp.value.trim();
         if (!v) return;
         var right = cur.ok(v);
-        res.innerHTML = right ? '✓ ' + bi('richtig', 'correct') : '✗ = ' + cur.a;
-        res.className = 'et-res ' + (right ? 'is-ok' : 'is-bad');
-        form.hidden = true; res.hidden = false;
-        newBtn.focus();
+        show(right ? '✓ ' + bi('richtig', 'correct') : '✗ = ' + cur.a, right ? 'is-ok' : 'is-bad');
       });
       newBtn.addEventListener('click', function () { ask(true); });
+      if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol'); });
     }
 
     // Glitch: kurze Bildstörung (nicht bei „Bewegung reduzieren“, nicht im Hintergrund-Tab)
