@@ -15,6 +15,8 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | `tipps.html` | Tipps & Tricks: kurze Hinweise aus dem Admin-Alltag mit Infografiken (Inline-SVG, Texte DE/EN) |
 | `impressum.html`, `datenschutz.html` | Rechtstexte |
 | `404.html` | Fehlerseite |
+| `robots.txt`, `sitemap.xml` | Hinweise für Suchmaschinen (Impressum und Datenschutz stehen auf noindex) |
+| `assets/img/og-image.jpg` | Vorschaubild beim Teilen der Seite (1200 × 630) |
 | `assets/css/site.css` | Gestaltung, Farben für hell und dunkel |
 | `assets/js/site.js` | Sprach- und Darstellungsschalter, Leitung, Kontaktformular |
 | `assets/js/ipcalc.js` | IPv4-Rechenlogik der Tools (ohne Oberfläche) |
