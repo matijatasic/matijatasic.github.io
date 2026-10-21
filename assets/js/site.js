@@ -320,7 +320,7 @@
     var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
     // Fragen: Präfix → Hosts, Präfix → Maske, Hosts → Präfix; Antwort wird eingetippt und geprüft
     var digits = function (v) { return v.replace(/[\s.,']/g, ''); };
-    var makeQuiz = function () {
+    var makeSubnet = function () {
       var t = Math.floor(Math.random() * 3), p, h, m;
       if (t === 0) {
         p = pick([22, 23, 24, 25, 26, 27, 28, 29, 30]); h = Math.pow(2, 32 - p) - 2;
@@ -336,6 +336,34 @@
       return { key: 'p' + h, n: 25, q: bi(h + ' Hosts → welches Präfix?', h + ' hosts → which prefix?'),
         a: '/' + p, ok: function (v) { return v.replace(/[\s\/]/g, '') === String(p); } };
     };
+    // Port-Quiz (zweiter Punkt in der Titelleiste): nur bekannte Ports bis 200
+    // [Port, Name DE, Name EN, weitere gültige Antworten]
+    var PORTS = [
+      [20, 'FTP-Daten', 'FTP data', ['ftp', 'ftpdata']], [21, 'FTP-Steuerung', 'FTP control', ['ftp']],
+      [22, 'SSH', 'SSH', ['sftp', 'scp']], [23, 'Telnet', 'Telnet', []], [25, 'SMTP', 'SMTP', []],
+      [53, 'DNS', 'DNS', []], [67, 'DHCP-Server', 'DHCP server', ['dhcp', 'bootps']],
+      [68, 'DHCP-Client', 'DHCP client', ['dhcp', 'bootpc']], [69, 'TFTP', 'TFTP', []],
+      [80, 'HTTP', 'HTTP', []], [88, 'Kerberos', 'Kerberos', []], [110, 'POP3', 'POP3', []],
+      [119, 'NNTP', 'NNTP', []], [123, 'NTP', 'NTP', []], [135, 'RPC', 'RPC', ['msrpc', 'dcom']],
+      [137, 'NetBIOS-Namen', 'NetBIOS names', ['netbios', 'netbiosns']],
+      [139, 'NetBIOS-Sitzung', 'NetBIOS session', ['netbios', 'netbiosssn', 'smb']],
+      [143, 'IMAP', 'IMAP', []], [161, 'SNMP', 'SNMP', []],
+      [162, 'SNMP-Traps', 'SNMP traps', ['snmp', 'snmptrap']], [179, 'BGP', 'BGP', []]
+    ];
+    var norm = function (v) { return v.toLowerCase().replace(/[\s\-_.\/]/g, ''); };
+    var makePort = function () {
+      var e = pick(PORTS), name = bi(e[1], e[2]);
+      if (Math.random() < 0.5) {
+        return { key: 'pn' + e[0], n: e[1].length + 9, q: bi(e[1] + ' → Port?', e[2] + ' → port?'),
+          a: String(e[0]), ok: function (v) { return digits(v) === String(e[0]); } };
+      }
+      var ok = [e[1], e[2]].concat(e[3]).map(norm);
+      return { key: 'np' + e[0], n: 26, q: bi('Port ' + e[0] + ' → welcher Dienst?', 'Port ' + e[0] + ' → which service?'),
+        a: name, ok: function (v) { return ok.indexOf(norm(v)) !== -1; } };
+    };
+    var mode = 'subnetz';
+    try { if (sessionStorage.getItem('quiz') === 'ports') mode = 'ports'; } catch (e) {}
+    var makeQuiz = function () { return mode === 'ports' ? makePort() : makeSubnet(); };
     var qEl = term.querySelector('[data-quiz-q]'), form = term.querySelector('[data-quiz-form]');
     var inp = term.querySelector('[data-quiz-in]'), res = term.querySelector('[data-quiz-res]');
     var newBtn = term.querySelector('[data-quiz-new]'), solBtn = term.querySelector('[data-quiz-sol]');
@@ -367,6 +395,26 @@
       });
       newBtn.addEventListener('click', function () { ask(true); });
       if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol'); });
+      // Punkte in der Titelleiste wählen das Quiz: Subnetz oder Ports
+      var cmd = term.querySelector('[data-quiz-cmd]'), help = term.querySelector('[data-quiz-help]');
+      var dots = term.querySelectorAll('[data-quiz-mode]');
+      var setMode = function (m, focus) {
+        mode = m;
+        try { sessionStorage.setItem('quiz', m); } catch (e) {}
+        dots.forEach(function (d) {
+          var on = d.getAttribute('data-quiz-mode') === m;
+          d.classList.toggle('is-on', on);
+          d.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        if (cmd) cmd.textContent = '$ quiz --' + m;
+        if (help) help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + (m === 'ports' ? 'ports' : 'subnetz')));
+        lastKey = '';
+        ask(focus);
+      };
+      dots.forEach(function (d) {
+        d.addEventListener('click', function () { setMode(d.getAttribute('data-quiz-mode'), true); });
+      });
+      if (mode !== 'subnetz') setMode(mode, false);
     }
 
     // Glitch: kurze Bildstörung (nicht bei „Bewegung reduzieren“, nicht im Hintergrund-Tab)
