@@ -161,7 +161,7 @@ strong { color: var(--ink); font-weight: 600; }
 .menu-btn { display: none; }
 
 /* Kapitel, IT-Tools und Know-how: gleiche Buttons in zwei Spalten */
-.toc, .itools, .knowhow { margin-top: 32px; }
+.toc, .itools { margin-top: 32px; }
 .side-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 /* ungerade Anzahl: letzter Button über die ganze Breite */
 .side-grid li:last-child:nth-child(odd) { grid-column: 1 / -1; }
@@ -302,12 +302,8 @@ strong { color: var(--ink); font-weight: 600; }
 .hero h1 .ln > span { display: inline-block; transform: translateY(105%); animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
 .hero h1 .ln:nth-child(2) > span { animation-delay: .12s; }
 @keyframes rise { to { transform: translateY(0); } }
-.role {
-  font: 300 clamp(20px, 2vw, 26px)/1.3 var(--display); color: var(--teal-text); margin: 0; letter-spacing: -.01em;
-}
-.hero .lead { margin: 28px 0 0; }
+.hero .lead { margin: 0; }
 .hero .cta { margin-top: 24px; }
-.role span { color: var(--ink); }
 .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 .btn {
   display: inline-flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer;
@@ -665,7 +661,7 @@ strong { color: var(--ink); font-weight: 600; }
   .side-panel { display: none; padding: 8px 0 12px; }
   .side.is-open .side-panel { display: block; }
   .toc { margin-top: 16px; }
-  .itools, .knowhow { margin-top: 20px; }
+  .itools { margin-top: 20px; }
   .side-grid { max-width: 300px; }
   .prefs { margin-top: 20px; }
   .side-foot { padding-top: 20px; }
@@ -682,8 +678,7 @@ strong { color: var(--ink); font-weight: 600; }
   .hero-photo { width: clamp(84px, 24vw, 120px); margin-right: 6px; }
   .hero-photo::before { inset: -6px; }
   .hero-photo::after { width: 10px; height: 10px; border-width: 2px; }
-  .role { font-size: 17px; }
-  .hero .lead { margin-top: 16px; font-size: 16px; line-height: 1.55; }
+  .hero .lead { font-size: 16px; line-height: 1.55; }
   .cta { margin-top: 18px; }
   .cta .btn { padding: 13px 16px; }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 24px; }
@@ -727,7 +722,7 @@ strong { color: var(--ink); font-weight: 600; }
   .side-panel { display: contents; }
   /* Kein Profil oben (Foto steht neben dem Namen): Blöcke gleichmäßig über die Höhe verteilt */
   .side-top { display: none; }
-  .toc, .itools, .knowhow, .prefs, .side-foot { margin-top: auto; }
+  .toc, .itools, .prefs, .side-foot { margin-top: auto; }
   /* Ganze Seitenleiste symmetrisch: gleicher Rand links und rechts, alles mittig */
   .side { padding-left: 28px; padding-right: 28px; }
   .side .lbl { text-align: center; }
@@ -749,8 +744,7 @@ strong { color: var(--ink); font-weight: 600; }
   .hero h1 { font-size: clamp(44px, 5.4vw, 76px); }
   .hero-photo { width: clamp(96px, 8.5vw, 124px); }
   .hero-head { margin-bottom: 16px; }
-  .role { font-size: clamp(18px, 1.7vw, 22px); }
-  .hero .lead { margin-top: 16px; font-size: 17px; }
+  .hero .lead { font-size: 17px; }
   .hero .cta { margin-top: 16px; }
   .hero .btn { padding: 12px 18px; }
   .tiles { margin-top: 24px; gap: 10px; }
@@ -781,19 +775,6 @@ strong { color: var(--ink); font-weight: 600; }
   .ip-pair input { padding-left: 8px; padding-right: 8px; }
 }
 
-/* ============ Tipps & Tricks ============ */
-.tip-list { display: flex; flex-direction: column; gap: 18px; margin-top: 28px; }
-.tip { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; background: var(--tint); border: 1px solid var(--tint-b); border-left: 3px solid var(--teal); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
-.tip-img { width: 100%; height: auto; display: block; border-radius: 10px; }
-.tip h3 { font: 700 21px/1.25 var(--display); color: var(--ink); margin: 0 0 8px; letter-spacing: -.01em; }
-.tip p { margin: 0 0 12px; font-size: 16px; }
-.tip .status.done { background: var(--surface); }
-.tip-cmd { margin: 0; padding: 10px 14px; border-radius: 8px; background: var(--chip-bg); color: #7fe0d6; font: 400 14px/1.5 var(--mono); overflow-x: auto; }
-:root[data-theme="dark"] .tip { background: rgba(31, 181, 168, .045); border-top-color: rgba(31, 181, 168, .14); border-right-color: rgba(31, 181, 168, .14); border-bottom-color: rgba(31, 181, 168, .14); }
-@media (max-width: 700px) {
-  .tip { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
-}
-
 /* ============ Seitenleiste: Mini-Terminal (nur Desktop) ============ */
 .term {
   display: block; width: 236px; margin: 0 auto;
@@ -809,12 +790,23 @@ strong { color: var(--ink); font-weight: 600; }
 .et-ln { display: block; width: 0; max-width: max-content; white-space: nowrap; overflow: hidden; animation: type .55s steps(var(--n)) var(--d) forwards; }
 .et-cmd { color: var(--side-text); }
 .et-out { color: var(--side-chip-text); }
-.et-ok { color: #3ddc84; }
+.et-q { color: var(--side-text); }
+/* Quiz-Knöpfe und Prompt: wie Text im Terminal, nur klickbar */
+.et-act { display: flex; align-items: center; gap: 6px; }
+.et-act button, .et-act a {
+  appearance: none; border: 1px solid #3d4446; background: transparent; color: var(--side-chip-text);
+  font: inherit; line-height: 1.3; padding: 0 6px; border-radius: 4px; cursor: pointer; text-decoration: none;
+}
+.et-act button:hover, .et-act a:hover { border-color: var(--teal); color: #fff; }
+.et-ans { color: #fff; font-weight: 700; }
+.et-act [hidden] { display: none; }
+.et-prompt { appearance: none; border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: text; }
+.et-prompt.is-denied { color: var(--amber); }
 .et-cur { display: inline-block; width: 7px; height: 13px; vertical-align: -2px; background: var(--side-chip-text); animation: blink 1s steps(1) infinite; }
 @keyframes type { to { width: calc(var(--n) * 1ch + 1px); } }
 @keyframes blink { 50% { opacity: 0; } }
 /* Schon im laufenden Besuch getippt oder weniger Bewegung gewünscht: sofort fertig */
-.term-seen .et-ln { width: auto; animation: none; }
+.term-seen .et-ln, .et-ln.is-typed { width: auto; animation: none; }
 @media (prefers-reduced-motion: reduce) { .et-ln { width: auto; } }
 @media (max-width: 860px) { .term { display: none; } }
 @media (min-width: 861px) and (max-height: 680px) { .et-body { padding: 6px 12px 8px; line-height: 1.5; } .et-bar { padding: 6px 10px; } }
