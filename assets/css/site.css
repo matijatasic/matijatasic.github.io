@@ -777,7 +777,7 @@ strong { color: var(--ink); font-weight: 600; }
 
 /* ============ Seitenleiste: Mini-Terminal (nur Desktop) ============ */
 .term {
-  display: block; width: 236px; margin: 0 auto;
+  position: relative; display: block; width: 236px; margin: 0 auto;
   background: #1b1f21; border: 1px solid #3d4446; border-radius: 10px; overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(31,181,168,.08);
 }
@@ -809,4 +809,51 @@ strong { color: var(--ink); font-weight: 600; }
 .term-seen .et-ln, .et-ln.is-typed { width: auto; animation: none; }
 @media (prefers-reduced-motion: reduce) { .et-ln { width: auto; } }
 @media (max-width: 860px) { .term { display: none; } }
+/* Glitch: kurze Bildstörung wie in Hackerfilmen (Farbversatz, Zeilensprung, Pixelblöcke) */
+.term::before, .term::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 2; }
+/* Pixelblöcke in Petrol und Magenta */
+.term::before {
+  background:
+    linear-gradient(#1fb5a8, #1fb5a8) 0 0 / 38px 6px no-repeat,
+    linear-gradient(#ff2e88, #ff2e88) 0 0 / 22px 4px no-repeat,
+    linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85)) 0 0 / 14px 3px no-repeat,
+    linear-gradient(#1fb5a8, #1fb5a8) 0 0 / 60px 3px no-repeat,
+    linear-gradient(rgba(255,46,136,.7), rgba(255,46,136,.7)) 0 0 / 9px 9px no-repeat;
+  mix-blend-mode: screen;
+}
+/* Störstreifen */
+.term::after { background: repeating-linear-gradient(0deg, rgba(31,181,168,.16) 0 1px, transparent 1px 3px); }
+.term.is-glitch { animation: glitch .48s steps(1) both; }
+.term.is-glitch::before { animation: glitch-px .48s steps(1) both; }
+.term.is-glitch::after { animation: glitch-scan .48s steps(1) both; }
+@keyframes glitch {
+  0%   { transform: none; filter: none; clip-path: none; }
+  8%   { transform: translate(-3px, 1px) skewX(-6deg); filter: drop-shadow(-3px 0 #ff2e88) drop-shadow(3px 0 #17e3d4); }
+  16%  { transform: translate(4px, 0); clip-path: inset(18% 0 52% 0); }
+  24%  { transform: translate(-2px, -1px); clip-path: inset(62% 0 8% 0); filter: drop-shadow(2px 0 #ff2e88) drop-shadow(-2px 0 #17e3d4); }
+  32%  { transform: none; clip-path: none; filter: none; }
+  48%  { transform: translate(2px, 0) skewX(3deg); filter: drop-shadow(-2px 0 #ff2e88) drop-shadow(2px 0 #17e3d4) contrast(1.4); }
+  56%  { transform: translate(-5px, 0); clip-path: inset(40% 0 35% 0); }
+  64%  { transform: none; clip-path: none; filter: none; }
+  80%  { transform: translate(1px, 0); filter: drop-shadow(-1px 0 #ff2e88) drop-shadow(1px 0 #17e3d4); }
+  100% { transform: none; filter: none; clip-path: none; }
+}
+@keyframes glitch-px {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; background-position: 12px 34px, 150px 60px, 70px 98px, 120px 20px, 196px 110px; }
+  24%  { opacity: 1; background-position: 140px 88px, 30px 120px, 180px 46px, 10px 70px, 60px 18px; }
+  32%  { opacity: 0; }
+  48%  { opacity: 1; background-position: 90px 130px, 200px 30px, 20px 64px, 150px 104px, 110px 52px; }
+  64%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes glitch-scan {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; transform: translateY(0); }
+  24%  { opacity: .8; transform: translateY(2px); }
+  32%  { opacity: 0; }
+  48%  { opacity: 1; transform: translateY(-1px); }
+  64%  { opacity: 0; }
+  100% { opacity: 0; }
+}
 @media (min-width: 861px) and (max-height: 680px) { .et-body { padding: 6px 12px 8px; line-height: 1.5; } .et-bar { padding: 6px 10px; } }
