@@ -160,54 +160,23 @@ strong { color: var(--ink); font-weight: 600; }
 .brand-role { font: 400 12px/1.4 var(--mono); color: var(--side-chip-text); letter-spacing: .04em; }
 .menu-btn { display: none; }
 
-.toc { margin-top: 44px; }
-.toc ol { list-style: none; margin: 0; padding: 0 0 0 0; position: relative; }
-/* Leitung entlang der Kapitel */
-.toc ol::before {
-  content: ''; position: absolute; left: 5px; top: 12px; bottom: 12px; width: 2px;
-  background: var(--side-2); border-radius: 2px;
-}
-.toc ol::after {
-  content: ''; position: absolute; left: 5px; top: 12px; width: 2px; border-radius: 2px;
-  height: calc((100% - 24px) * var(--toc-progress, 0));
-  background: var(--teal); box-shadow: 0 0 8px var(--glow);
-  transition: height .25s linear;
-}
-.toc li { position: relative; }
-.toc a {
-  display: grid; grid-template-columns: 12px 30px 1fr; align-items: center; gap: 12px;
-  padding: 9px 0; text-decoration: none; color: var(--side-muted);
-  font: 500 15px/1.3 var(--sans);
-  transition: color .2s ease;
-}
-.toc a:hover { color: #fff; }
-.toc .n { font: 400 12px/1 var(--mono); color: var(--side-muted); }
-.led {
-  width: 12px; height: 12px; border-radius: 3px; position: relative; z-index: 1;
-  background: var(--side); border: 2px solid #5b6262;
-  transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
-}
-.toc a.is-on .led { background: var(--teal); border-color: var(--teal); }
-.toc a.is-current { color: #fff; }
-.toc a.is-current .n { color: var(--side-chip-text); }
-.toc a.is-current .led { box-shadow: 0 0 0 4px rgba(23,163,152,.22), 0 0 12px var(--glow); }
-
-.itools { margin-top: 40px; }
-.itools ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-/* fünftes Werkzeug über die ganze Breite */
-.itools li:last-child:nth-child(odd) { grid-column: 1 / -1; }
-.itools a {
+/* Kapitel, IT-Tools und Know-how: gleiche Buttons in zwei Spalten */
+.toc, .itools, .knowhow { margin-top: 32px; }
+.side-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+/* ungerade Anzahl: letzter Button über die ganze Breite */
+.side-grid li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.side-grid a {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 12px; border-radius: 8px; text-decoration: none;
   background: var(--side-2); color: var(--side-muted);
   font: 700 12px/1.2 var(--mono); letter-spacing: .04em;
   transition: background-color .2s ease, color .2s ease;
 }
-.itools a:hover { color: #fff; }
-.itools a.is-current { background: var(--side-chip); color: var(--side-chip-text); }
-.itools svg { width: 16px; height: 16px; flex: none; }
+.side-grid a:hover { color: #fff; }
+.side-grid a.is-current { background: var(--side-chip); color: var(--side-chip-text); }
+.side-grid svg { width: 16px; height: 16px; flex: none; }
 
-.prefs { margin-top: 40px; }
+.prefs { margin-top: 32px; }
 .pref-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .seg { display: inline-flex; background: var(--side-2); border-radius: 8px; padding: 3px; }
 .seg button, .theme-btn {
@@ -668,8 +637,8 @@ strong { color: var(--ink); font-weight: 600; }
   .side-panel { display: none; padding: 8px 0 12px; }
   .side.is-open .side-panel { display: block; }
   .toc { margin-top: 16px; }
-  .itools { margin-top: 20px; }
-  .itools ul { max-width: 300px; }
+  .itools, .knowhow { margin-top: 20px; }
+  .side-grid { max-width: 300px; }
   .prefs { margin-top: 20px; }
   .side-foot { padding-top: 20px; }
   .doc { padding: 24px 16px 120px var(--pad-l); background-size: 24px 24px; }
@@ -715,25 +684,38 @@ strong { color: var(--ink); font-weight: 600; }
   .side-panel { display: contents; }
   /* Profil (Foto, Name, Titel) in der Seitenleiste mittig */
   .side-top { justify-content: center; }
-  .brand { align-items: center; text-align: center; }
-  .brand-text { align-items: center; }
-  .brand img { width: 108px; height: 108px; }
+  /* Foto quadratisch mit Rahmen; Name und Titel stehen schon im Inhalt */
+  .brand picture { display: block; }
+  .brand img {
+    width: 132px; height: 132px; margin: 0; padding: 4px; border-radius: 12px;
+    background: var(--side-2); border: 1px solid rgba(23, 163, 152, .55);
+    box-shadow: 0 0 0 5px rgba(23, 163, 152, .08), 0 12px 28px rgba(0, 0, 0, .35);
+  }
+  .brand-text { display: none; }
   /* Ganze Seitenleiste symmetrisch: gleicher Rand links und rechts, alles mittig */
   .side { padding-left: 28px; padding-right: 28px; }
   .side .lbl { text-align: center; }
-  .toc ol { width: fit-content; margin: 0 auto; }
-  .toc a { grid-template-columns: 12px 30px auto; }
-  .itools ul { width: 236px; margin: 0 auto; }
+  .side-grid { width: 236px; margin: 0 auto; }
   .pref-row { justify-content: center; }
   .side-foot { text-align: center; }
 }
 /* Niedrige Laptop-Bildschirme: Seitenleiste etwas dichter, damit der Fuß sichtbar bleibt */
+/* Niedrige Laptop-Bildschirme: Seitenleiste dichter, damit keine Scrollleiste entsteht */
 @media (min-width: 861px) and (max-height: 820px) {
   .side { padding-top: 28px; padding-bottom: 20px; }
-  .toc { margin-top: 24px; }
-  .toc a { padding: 7px 0; }
-  .itools, .prefs { margin-top: 24px; }
-  .side-foot { padding-top: 20px; }
+  .brand img { width: 112px; height: 112px; }
+  .toc, .itools, .knowhow, .prefs { margin-top: 22px; }
+  .side .lbl { margin-bottom: 10px; }
+  .side-grid a { padding: 9px 12px; }
+  .side-foot { padding-top: 18px; }
+}
+@media (min-width: 861px) and (max-height: 680px) {
+  .side { padding-top: 20px; }
+  .brand img { width: 88px; height: 88px; padding: 3px; }
+  .toc, .itools, .knowhow, .prefs { margin-top: 16px; }
+  .side-grid a { padding: 7px 12px; }
+  .seg button { padding: 7px 10px; }
+  .theme-btn { padding: 9px 12px; }
 }
 
 /* ==========================================================================
