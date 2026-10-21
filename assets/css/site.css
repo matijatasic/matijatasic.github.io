@@ -771,7 +771,10 @@ strong { color: var(--ink); font-weight: 600; }
 }
 .et-bar { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #2a3033; font: 400 10.5px/1 var(--mono); color: var(--side-muted); }
 .et-bar i { width: 8px; height: 8px; border-radius: 50%; background: #4a5254; }
-.et-bar i:first-child { background: var(--teal); }
+.et-dot { appearance: none; width: 12px; height: 12px; padding: 2px; margin: -2px; border: 0; border-radius: 50%; background: #4a5254; background-clip: content-box; cursor: pointer; transition: transform .15s; }
+.et-dot.is-on { background-color: var(--teal); }
+.et-dot:hover { transform: scale(1.35); }
+.et-dot:focus-visible { outline: 1px solid var(--teal); outline-offset: 1px; }
 .et-title { margin-left: auto; appearance: none; border: 0; background: none; padding: 0; color: inherit; font: inherit; letter-spacing: .04em; white-space: nowrap; cursor: text; }
 .et-title.is-denied { color: var(--amber); }
 .et-body { display: block; padding: 10px 12px 12px; font: 400 11.5px/1.65 var(--mono); }
