@@ -336,7 +336,7 @@
       return { key: 'p' + h, n: 25, q: bi(h + ' Hosts → welches Präfix?', h + ' hosts → which prefix?'),
         a: '/' + p, ok: function (v) { return v.replace(/[\s\/]/g, '') === String(p); } };
     };
-    // Port-Quiz (zweiter Punkt in der Titelleiste): die wichtigsten Well-known-Ports bis 1023, wie im Port-Lexikon
+    // Port-Quiz (dritter Punkt in der Titelleiste): die wichtigsten Well-known-Ports bis 1023, wie im Port-Lexikon
     // [Port, Name DE, Name EN, weitere gültige Antworten]
     var PORTS = [
       [20, 'FTP-Daten', 'FTP data', ['ftp', 'ftpdata']], [21, 'FTP-Steuerung', 'FTP control', ['ftp']],
@@ -367,7 +367,7 @@
       return { key: 'np' + e[0], n: 26, q: bi('Port ' + e[0] + ' → welcher Dienst?', 'Port ' + e[0] + ' → which service?'),
         a: name, ok: function (v) { return ok.indexOf(norm(v)) !== -1; } };
     };
-    // Binär-Quiz (dritter Punkt): 8 Bit, binär → dezimal und dezimal → binär
+    // Binär-Quiz (erster Punkt, Start): 8 Bit, binär → dezimal und dezimal → binär
     var bin8 = function (n) { return ('00000000' + n.toString(2)).slice(-8); };
     var makeBin = function () {
       var n = 1 + Math.floor(Math.random() * 254), b = bin8(n);
@@ -381,7 +381,7 @@
     };
     var MODES = { subnetz: makeSubnet, ports: makePort, binaer: makeBin };
     var CMDS = { subnetz: 'subnetz', ports: 'ports', binaer: 'binär' };
-    var mode = 'subnetz';
+    var mode = 'binaer';
     try { var saved = sessionStorage.getItem('quiz'); if (MODES[saved]) mode = saved; } catch (e) {}
     var makeQuiz = function () { return MODES[mode](); };
     var qEl = term.querySelector('[data-quiz-q]'), form = term.querySelector('[data-quiz-form]');
@@ -415,7 +415,7 @@
       });
       newBtn.addEventListener('click', function () { ask(true); });
       if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol'); });
-      // Punkte in der Titelleiste wählen das Quiz: Subnetz, Ports oder Binär
+      // Punkte in der Titelleiste wählen das Quiz: Binär (Start), Subnetz oder Ports
       var cmd = term.querySelector('[data-quiz-cmd]'), help = term.querySelector('[data-quiz-help]');
       var dots = term.querySelectorAll('[data-quiz-mode]');
       var setMode = function (m, focus) {
@@ -438,7 +438,7 @@
       dots.forEach(function (d) {
         d.addEventListener('click', function () { setMode(d.getAttribute('data-quiz-mode'), true); });
       });
-      if (mode !== 'subnetz') setMode(mode, false);
+      setMode(mode, false);
     }
 
     // Glitch: kurze Bildstörung (nicht bei „Bewegung reduzieren“, nicht im Hintergrund-Tab)
