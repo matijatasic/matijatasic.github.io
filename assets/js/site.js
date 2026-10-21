@@ -433,6 +433,12 @@
         show(right ? '✓ ' + bi('richtig', 'correct') : '✗ ' + bi('falsch', 'wrong') + ' = ' + cur.a, right ? 'is-ok' : 'is-bad', right);
       });
       newBtn.addEventListener('click', function () { ask(true); });
+      // Enter-Button neben dem Eingabefeld: wie die Eingabetaste
+      var go = term.querySelector('[data-quiz-go]');
+      if (go) go.addEventListener('click', function () {
+        if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true }));
+        if (!form.hidden) inp.focus();
+      });
       // „Lösung“ zählt im Binär-Quiz als nicht gewusst
       if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol', false); });
       // Punkte in der Titelleiste wählen das Quiz: Binär (Start), Subnetz oder Ports
