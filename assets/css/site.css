@@ -801,7 +801,8 @@ strong { color: var(--ink); font-weight: 600; }
 .et-form input:focus { border-bottom-color: var(--teal); }
 .et-res { font-weight: 700; white-space: nowrap; margin-right: 4px; }
 .et-res.is-ok { color: #3ddc84; }
-.et-res.is-bad { color: var(--amber); }
+.et-res.is-bad { color: #ff6b6b; }
+.et-count { color: var(--side-muted); }
 .et-res.is-sol { color: var(--side-chip-text); }
 .et-act [hidden], .et-form[hidden] { display: none; }
 @keyframes type { to { width: calc(var(--n) * 1ch + 1px); } }

@@ -369,18 +369,15 @@
     };
     // Binär-Quiz (erster Punkt, Start): 8 Bit, binär → dezimal und dezimal → binär
     var bin8 = function (n) { return ('00000000' + n.toString(2)).slice(-8); };
+    // Binär-Quiz (erster Punkt, Start): 8 Bit binär → dezimal, Runden zu je 10 Fragen
     var makeBin = function () {
       var n = 1 + Math.floor(Math.random() * 254), b = bin8(n);
-      if (Math.random() < 0.5) {
-        return { key: 'bd' + n, n: 19, q: bi(b + ' → dezimal?', b + ' → decimal?'),
-          a: String(n), ok: function (v) { return digits(v) === String(n); } };
-      }
-      var q = String(n);
-      return { key: 'db' + n, n: q.length + 18, q: bi(q + ' → binär (8 Bit)?', q + ' → binary (8 bit)?'),
-        a: b, ok: function (v) { var x = v.replace(/[\s.']/g, ''); return /^[01]{1,8}$/.test(x) && parseInt(x, 2) === n; } };
+      return { key: 'bd' + n, n: 19, q: bi(b + ' → dezimal?', b + ' → decimal?'),
+        a: String(n), ok: function (v) { return digits(v) === String(n); } };
     };
     var MODES = { subnetz: makeSubnet, ports: makePort, binaer: makeBin };
     var CMDS = { subnetz: 'subnetz', ports: 'ports', binaer: 'binär' };
+    var ROUNDS = 10;
     var mode = 'binaer';
     try { var saved = sessionStorage.getItem('quiz'); if (MODES[saved]) mode = saved; } catch (e) {}
     var makeQuiz = function () { return MODES[mode](); };
@@ -388,20 +385,42 @@
     var inp = term.querySelector('[data-quiz-in]'), res = term.querySelector('[data-quiz-res]');
     var newBtn = term.querySelector('[data-quiz-new]'), solBtn = term.querySelector('[data-quiz-sol]');
     var lastKey = '', cur = null;
+    var cmd = term.querySelector('[data-quiz-cmd]'), help = term.querySelector('[data-quiz-help]');
+    var dots = term.querySelectorAll('[data-quiz-mode]');
+    // Zähler im Binär-Quiz: beantwortete Fragen und Treffer der laufenden Runde
+    var round = 0, score = 0, answered = false;
+    var paint = function () {
+      if (!cmd) return;
+      var c = '$ quiz --' + CMDS[mode];
+      if (mode === 'binaer') {
+        var nr = Math.min(answered ? round : round + 1, ROUNDS);
+        c += ' <span class="et-count">' + nr + '/' + ROUNDS + ' · ✓ ' + score + '</span>';
+      }
+      cmd.innerHTML = c;
+    };
     var ask = function (focus) {
       var q;
+      if (round >= ROUNDS) { round = 0; score = 0; }
       do { q = makeQuiz(); } while (q.key === lastKey);
-      lastKey = q.key; cur = q;
+      lastKey = q.key; cur = q; answered = false;
       qEl.innerHTML = q.q;
       qEl.style.setProperty('--n', q.n);
       res.hidden = true; res.className = 'et-res';
       form.hidden = false; inp.value = '';
+      paint();
       if (focus) inp.focus();
     };
-    var show = function (html, cls) {
+    var show = function (html, cls, right) {
       res.innerHTML = html;
       res.className = 'et-res ' + cls;
       form.hidden = true; res.hidden = false;
+      if (mode === 'binaer' && !answered) {
+        answered = true; round++;
+        if (right) score++;
+        if (round >= ROUNDS) qEl.innerHTML = bi('Ergebnis: ' + score + ' von ' + ROUNDS + ' richtig', 'Result: ' + score + ' of ' + ROUNDS + ' correct');
+      }
+      answered = true;
+      paint();
       newBtn.focus();
     };
     if (qEl && form && inp && res && newBtn) {
@@ -411,13 +430,12 @@
         var v = inp.value.trim();
         if (!v) return;
         var right = cur.ok(v);
-        show(right ? '✓ ' + bi('richtig', 'correct') : '✗ = ' + cur.a, right ? 'is-ok' : 'is-bad');
+        show(right ? '✓ ' + bi('richtig', 'correct') : '✗ ' + bi('falsch', 'wrong') + ' = ' + cur.a, right ? 'is-ok' : 'is-bad', right);
       });
       newBtn.addEventListener('click', function () { ask(true); });
-      if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol'); });
+      // „Lösung“ zählt im Binär-Quiz als nicht gewusst
+      if (solBtn) solBtn.addEventListener('click', function () { show('= ' + cur.a, 'is-sol', false); });
       // Punkte in der Titelleiste wählen das Quiz: Binär (Start), Subnetz oder Ports
-      var cmd = term.querySelector('[data-quiz-cmd]'), help = term.querySelector('[data-quiz-help]');
-      var dots = term.querySelectorAll('[data-quiz-mode]');
       var setMode = function (m, focus) {
         mode = m;
         try { sessionStorage.setItem('quiz', m); } catch (e) {}
@@ -426,12 +444,13 @@
           d.classList.toggle('is-on', on);
           d.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
-        if (cmd) cmd.textContent = '$ quiz --' + CMDS[m];
         if (help) {
           // Binär-Quiz hat kein passendes IT-Tool, daher dort ohne Hilfe
           help.hidden = m === 'binaer';
           help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + (m === 'ports' ? 'ports' : 'subnetz')));
         }
+        // Wechsel des Quiz beginnt eine neue Runde
+        round = 0; score = 0;
         lastKey = '';
         ask(focus);
       };
