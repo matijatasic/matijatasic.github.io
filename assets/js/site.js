@@ -62,7 +62,7 @@
       var open = side.classList.toggle('is-open');
       menuBtn.setAttribute('aria-expanded', String(open));
     });
-    side.querySelectorAll('.toc a, .itools a').forEach(function (a) {
+    side.querySelectorAll('.side-grid a').forEach(function (a) {
       a.addEventListener('click', function () {
         side.classList.remove('is-open');
         menuBtn.setAttribute('aria-expanded', 'false');
