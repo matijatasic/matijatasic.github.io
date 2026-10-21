@@ -299,4 +299,20 @@
   var year = document.querySelectorAll('[data-year]');
   year.forEach(function (y) { y.textContent = new Date().getFullYear(); });
   layout();
+  /* ---------------- Seitenleiste: Mini-Terminal ----------------
+     Tippt nur beim ersten Seitenaufruf im Besuch; zeigt die echte Ladezeit. */
+  var term = document.querySelector('.term');
+  if (term) {
+    try {
+      if (sessionStorage.getItem('term')) term.classList.add('term-seen');
+      else sessionStorage.setItem('term', '1');
+    } catch (e) {}
+    window.addEventListener('load', function () {
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      var sec = (Math.max(nav ? nav.loadEventStart : performance.now(), 10) / 1000).toFixed(2);
+      var de = term.querySelector('[data-loadtime-de]'), en = term.querySelector('[data-loadtime-en]');
+      if (de) de.textContent = sec.replace('.', ',');
+      if (en) en.textContent = sec;
+    });
+  }
 })();
