@@ -40,7 +40,7 @@
   });
 
   /* ---------------- Darstellung ----------------
-     Start immer hell; dunkel gilt nur für den laufenden Besuch (sessionStorage). */
+     Start immer dunkel; hell gilt nur für den laufenden Besuch (sessionStorage). */
   function currentTheme() {
     var t = root.getAttribute('data-theme');
     if (t) return t;

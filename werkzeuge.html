@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de" translate="no" data-theme="light" data-title-de="IT-Tools · Matija Tasic" data-title-en="IT tools · Matija Tasic">
+<html lang="de" translate="no" data-theme="dark" data-title-de="IT-Tools · Matija Tasic" data-title-en="IT tools · Matija Tasic">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>IT-Tools · Matija Tasic</title>
   <meta name="description" content="Kleine Tools für IT-Administration: Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk, Passwortgenerator, Hash-Rechner und Befehls-Baukasten. Alles läuft nur im Browser.">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="dark light">
   <meta name="google" content="notranslate">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -15,7 +15,8 @@
     (function () {
       var d = document.documentElement, t = null, l = null;
       try { t = sessionStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-      if (t === 'dark') d.setAttribute('data-theme', 'dark');
+      // Seite startet dunkel; nur wer im laufenden Besuch Hell gewählt hat, sieht sie hell
+      if (t === 'light') d.setAttribute('data-theme', 'light');
       if (l === 'en') d.lang = 'en';
     })();
   </script>
@@ -92,7 +93,7 @@
       </div>
 
       <div class="side-foot">
-        <a href="https://github.com/matijatasic" rel="me">GitHub</a><span class="sep">·</span><a href="impressum.html">Impressum</a><span class="sep">·</span><a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
+        <a href="https://github.com/matijatasic" target="_blank" rel="noopener me">GitHub</a><span class="sep">·</span><a href="impressum.html">Impressum</a><span class="sep">·</span><a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
       </div>
     </div>
   </aside>
@@ -392,7 +393,7 @@
     <footer class="foot">
       <span>© <span data-year>2026</span> Matija Tasic</span>
       <span><a href="impressum.html">Impressum</a> · <a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a></span>
-      <span><a href="https://github.com/matijatasic/matijatasic.github.io/tree/main/assets/js"><span data-l="de">Quellcode auf GitHub</span><span data-l="en">Source code on GitHub</span></a></span>
+      <span><a href="https://github.com/matijatasic/matijatasic.github.io/tree/main/assets/js" target="_blank" rel="noopener"><span data-l="de">Quellcode auf GitHub</span><span data-l="en">Source code on GitHub</span></a></span>
     </footer>
   </main>
 

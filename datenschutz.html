@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de" translate="no" data-theme="light" data-title-de="Datenschutz · Matija Tasic" data-title-en="Privacy · Matija Tasic">
+<html lang="de" translate="no" data-theme="dark" data-title-de="Datenschutz · Matija Tasic" data-title-en="Privacy · Matija Tasic">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Datenschutz · Matija Tasic</title>
   <meta name="description" content="Datenschutzerklärung der Website von Matija Tasic.">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="dark light">
   <meta name="google" content="notranslate">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -15,7 +15,8 @@
     (function () {
       var d = document.documentElement, t = null, l = null;
       try { t = sessionStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-      if (t === 'dark') d.setAttribute('data-theme', 'dark');
+      // Seite startet dunkel; nur wer im laufenden Besuch Hell gewählt hat, sieht sie hell
+      if (t === 'light') d.setAttribute('data-theme', 'light');
       if (l === 'en') d.lang = 'en';
     })();
   </script>
@@ -86,7 +87,7 @@
       </div>
 
       <div class="side-foot">
-        <a href="https://github.com/matijatasic" rel="me">GitHub</a><span class="sep">·</span><a href="impressum.html">Impressum</a><span class="sep">·</span><a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
+        <a href="https://github.com/matijatasic" target="_blank" rel="noopener me">GitHub</a><span class="sep">·</span><a href="impressum.html">Impressum</a><span class="sep">·</span><a href="datenschutz.html"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
       </div>
     </div>
   </aside>
@@ -136,7 +137,7 @@
       <p><span data-l="de">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes Interesse ist eine sichere und zuverlässige Bereitstellung der Website. Dabei können Daten in die USA übermittelt werden. GitHub ist nach dem EU-US Data Privacy Framework zertifiziert, für das ein Angemessenheitsbeschluss der EU-Kommission besteht (Art. 45 DSGVO).</span>
          <span data-l="en">The legal basis is Art. 6(1)(f) GDPR. My legitimate interest is the secure and reliable provision of the website. Data may be transferred to the USA. GitHub is certified under the EU-US Data Privacy Framework, which is covered by an adequacy decision of the European Commission (Art. 45 GDPR).</span></p>
       <p><span data-l="de">Weitere Informationen:</span><span data-l="en">More information:</span>
-         <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub General Privacy Statement</a></p>
+         <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub General Privacy Statement</a></p>
 
     </section>
 
