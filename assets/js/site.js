@@ -351,7 +351,7 @@
       newBtn.addEventListener('click', ask);
     }
 
-    // Glitch: ab und zu eine kurze Bildstörung (nicht bei „Bewegung reduzieren“, nicht im Hintergrund-Tab)
+    // Glitch: kurze Bildstörung (nicht bei „Bewegung reduzieren“, nicht im Hintergrund-Tab)
     var glitch = function () {
       if (document.hidden) return;
       term.classList.remove('is-glitch');
@@ -362,9 +362,11 @@
       if (e.target === term && e.animationName === 'glitch') term.classList.remove('is-glitch');
     });
     if (!reduceMotion) {
-      var nextGlitch = function () { setTimeout(function () { glitch(); nextGlitch(); }, 7000 + Math.random() * 7000); };
-      setTimeout(glitch, term.classList.contains('term-seen') ? 1200 : 4900);
-      nextGlitch();
+      // einmal zu Beginn, danach jede Minute
+      setTimeout(function () {
+        glitch();
+        setInterval(glitch, 60000);
+      }, term.classList.contains('term-seen') ? 1200 : 4900);
     }
 
     // Easter Egg: Klick auf den Prompt
@@ -376,7 +378,6 @@
         busy = true;
         sudo.innerHTML = '$ sudo su';
         setTimeout(function () {
-          if (!reduceMotion) glitch();
           sudo.classList.add('is-denied');
           sudo.innerHTML = bi('Netter Versuch: verweigert.', 'Nice try: access denied.');
         }, 600);
