@@ -567,7 +567,6 @@ strong { color: var(--ink); font-weight: 600; }
   font: 400 14px/1.6 var(--mono); color: #7fe0d6; white-space: pre-wrap; overflow-wrap: anywhere;
 }
 .ck-out::before { content: '$ '; color: #5b6262; }
-.ck-out.ck-win::before { content: '> '; }
 .ck-out code { color: #7fe0d6; font: inherit; }
 .ck-out.is-off { opacity: .35; }
 .ck-notes { color: var(--text); }

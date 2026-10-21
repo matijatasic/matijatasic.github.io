@@ -21,7 +21,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 | `assets/js/ports.js` | Daten des Port-Lexikons (Beschreibung, Firewall-Hinweis, TCP/UDP, verwandte Ports) |
 | `assets/js/pwgen.js` | Logik des Passwortgenerators (Zufall nur aus Web Crypto) |
 | `assets/js/hash.js` | MD5, SHA-1, SHA-256, SHA-512 blockweise für den Hash-Rechner |
-| `assets/js/cmds.js` | Vorlagen des Befehls-Baukastens (rsync, robocopy, tar, find, SSH, curl, openssl, nmap, tcpdump) und sicheres Maskieren |
+| `assets/js/cmds.js` | 30 Linux-Vorlagen des Befehls-Baukastens (systemctl, journalctl, apt, rsync, ip, ss, dig, ufw, zfs, qm/pct, vzdump u. a.) und sicheres Maskieren |
 | `assets/js/tools.js` | Oberfläche und Texte der Tools |
 | `tests/ipcalc.test.js`, `tests/ports.test.js` | Tests der Rechenlogik und der Port-Daten |
 | `assets/js/config.js` | Einstellungen für das Kontaktformular |

@@ -635,7 +635,6 @@
     }
     msg.textContent = ''; msg.className = 'tool-msg';
     $('ck-out').classList.remove('is-off');
-    $('ck-out').classList.toggle('ck-win', tpl.shell === 'cmd');
     $('ck-cmd').textContent = r.cmd; ckLast = r.cmd;
     $('ck-warn').innerHTML = r.warn.map(function (w) { return li(w, 'warn'); }).join('');
     $('ck-notes').innerHTML = r.notes.map(function (n) { return li(n); }).join('');
