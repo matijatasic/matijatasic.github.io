@@ -336,7 +336,7 @@
       return { key: 'p' + h, n: 25, q: bi(h + ' Hosts → welches Präfix?', h + ' hosts → which prefix?'),
         a: '/' + p, ok: function (v) { return v.replace(/[\s\/]/g, '') === String(p); } };
     };
-    // Port-Quiz (zweiter Punkt in der Titelleiste): nur bekannte Ports bis 200
+    // Port-Quiz (zweiter Punkt in der Titelleiste): die wichtigsten Well-known-Ports bis 1023, wie im Port-Lexikon
     // [Port, Name DE, Name EN, weitere gültige Antworten]
     var PORTS = [
       [20, 'FTP-Daten', 'FTP data', ['ftp', 'ftpdata']], [21, 'FTP-Steuerung', 'FTP control', ['ftp']],
@@ -344,11 +344,17 @@
       [53, 'DNS', 'DNS', []], [67, 'DHCP-Server', 'DHCP server', ['dhcp', 'bootps']],
       [68, 'DHCP-Client', 'DHCP client', ['dhcp', 'bootpc']], [69, 'TFTP', 'TFTP', []],
       [80, 'HTTP', 'HTTP', []], [88, 'Kerberos', 'Kerberos', []], [110, 'POP3', 'POP3', []],
-      [119, 'NNTP', 'NNTP', []], [123, 'NTP', 'NTP', []], [135, 'RPC', 'RPC', ['msrpc', 'dcom']],
+      [123, 'NTP', 'NTP', []], [135, 'RPC', 'RPC', ['msrpc', 'dcom', 'epmap']],
       [137, 'NetBIOS-Namen', 'NetBIOS names', ['netbios', 'netbiosns']],
+      [138, 'NetBIOS-Datagramm', 'NetBIOS datagram', ['netbios', 'netbiosdgm']],
       [139, 'NetBIOS-Sitzung', 'NetBIOS session', ['netbios', 'netbiosssn', 'smb']],
       [143, 'IMAP', 'IMAP', []], [161, 'SNMP', 'SNMP', []],
-      [162, 'SNMP-Traps', 'SNMP traps', ['snmp', 'snmptrap']], [179, 'BGP', 'BGP', []]
+      [162, 'SNMP-Traps', 'SNMP traps', ['snmp', 'snmptrap']], [389, 'LDAP', 'LDAP', []],
+      [443, 'HTTPS', 'HTTPS', []], [445, 'SMB', 'SMB', ['cifs']], [465, 'SMTPS', 'SMTPS', []],
+      [500, 'IPsec IKE', 'IPsec IKE', ['ike', 'ipsec', 'isakmp']], [514, 'Syslog', 'Syslog', []],
+      [547, 'DHCPv6-Server', 'DHCPv6 server', ['dhcpv6']], [587, 'SMTP-Submission', 'SMTP submission', ['submission']],
+      [631, 'IPP (Drucken)', 'IPP (printing)', ['ipp', 'cups']], [636, 'LDAPS', 'LDAPS', []],
+      [853, 'DNS over TLS', 'DNS over TLS', ['dot']], [993, 'IMAPS', 'IMAPS', []], [995, 'POP3S', 'POP3S', []]
     ];
     var norm = function (v) { return v.toLowerCase().replace(/[\s\-_.\/]/g, ''); };
     var makePort = function () {

@@ -22,7 +22,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=2026102111">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026102112">
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
@@ -32,13 +32,13 @@
       if (l === 'en') d.lang = 'en';
     })();
   </script>
-  <script src="assets/js/site.js?v=2026102111" defer></script>
+  <script src="assets/js/site.js?v=2026102112" defer></script>
   <script src="assets/js/ipcalc.js" defer></script>
   <script src="assets/js/ports.js" defer></script>
   <script src="assets/js/pwgen.js" defer></script>
   <script src="assets/js/hash.js" defer></script>
   <script src="assets/js/cmds.js" defer></script>
-  <script src="assets/js/tools.js?v=2026102111" defer></script>
+  <script src="assets/js/tools.js?v=2026102112" defer></script>
 </head>
 <body>
   <a class="skip" href="#inhalt"><span data-l="de">Zum Inhalt springen</span><span data-l="en">Skip to content</span></a>
@@ -66,7 +66,7 @@
           <span class="et-ln et-out" style="--n:25;--d:1s"><span data-l="de">matija · IT-Administrator</span><span data-l="en">matija · IT administrator</span></span>
           <span class="et-ln et-cmd" style="--n:16;--d:1.9s" data-quiz-cmd>$ quiz --subnetz</span>
           <span class="et-ln et-q" style="--n:24;--d:2.7s" data-quiz-q>&nbsp;</span>
-          <span class="et-ln et-out et-act" style="--n:18;--d:3.5s" data-quiz-row><form class="et-form" data-quiz-form autocomplete="off"><span aria-hidden="true">&gt;</span><input type="text" data-quiz-in spellcheck="false" maxlength="15" aria-label="Deine Antwort" data-aria-de="Deine Antwort" data-aria-en="Your answer"></form><span class="et-res" data-quiz-res role="status" aria-live="polite" hidden></span></span>
+          <span class="et-ln et-out et-act" style="--n:18;--d:3.5s" data-quiz-row><form class="et-form" data-quiz-form autocomplete="off"><span aria-hidden="true">&gt;</span><input type="text" data-quiz-in spellcheck="false" maxlength="24" aria-label="Deine Antwort" data-aria-de="Deine Antwort" data-aria-en="Your answer"></form><span class="et-res" data-quiz-res role="status" aria-live="polite" hidden></span></span>
           <span class="et-ln et-out et-act" style="--n:22;--d:4s"><button type="button" data-quiz-sol aria-label="Lösung zeigen" data-aria-de="Lösung zeigen" data-aria-en="Show answer"><span data-l="de">Lösung</span><span data-l="en">Answer</span></button><button type="button" data-quiz-new aria-label="Neue Frage" data-aria-de="Neue Frage" data-aria-en="New question"><span data-l="de">Neu</span><span data-l="en">New</span></button><a data-quiz-help href="werkzeuge.html#subnetz"><span data-l="de">Hilfe</span><span data-l="en">Help</span></a></span>
         </span>
       </div>
@@ -259,8 +259,8 @@
         <h2 class="ch-title"><span data-l="de">Port-Nachschlagewerk</span><span data-l="en">Port reference</span></h2>
         <span class="ch-rule"></span>
       </div>
-      <p><span data-l="de">Ein kleines Lexikon der bekanntesten Ports. Wählen Sie einen Port aus der Liste oder geben Sie eine Nummer ein. Darunter steht, wofür der Port da ist, ob er über TCP, UDP oder beides läuft und worauf in der Firewall zu achten ist.</span>
-        <span data-l="en">A small lexicon of the best-known ports. Pick a port from the list or type a number. Below you see what the port is for, whether it runs over TCP, UDP or both, and what to watch out for in the firewall.</span></p>
+      <p><span data-l="de">Ein kleines Lexikon der wichtigsten Well-known-Ports (0–1023). Wählen Sie einen Port aus der Liste oder geben Sie eine Nummer ein. Darunter steht, wofür der Port da ist, ob er über TCP, UDP oder beides läuft und worauf in der Firewall zu achten ist.</span>
+        <span data-l="en">A small lexicon of the most important well-known ports (0–1023). Pick a port from the list or type a number. Below you see what the port is for, whether it runs over TCP, UDP or both, and what to watch out for in the firewall.</span></p>
 
       <div class="tool">
         <div class="tool-grid pt-head">
@@ -270,12 +270,12 @@
           </div>
           <div class="field">
             <label for="pt-num"><span data-l="de">Oder Portnummer</span><span data-l="en">Or port number</span></label>
-            <input id="pt-num" type="text" inputmode="numeric" maxlength="5" spellcheck="false" autocomplete="off" data-ph-de="z. B. 3389" data-ph-en="e.g. 3389" placeholder="z. B. 3389">
+            <input id="pt-num" type="text" inputmode="numeric" maxlength="5" spellcheck="false" autocomplete="off" data-ph-de="z. B. 445" data-ph-en="e.g. 445" placeholder="z. B. 445">
           </div>
         </div>
         <p class="tool-msg" id="pt-msg" role="status" aria-live="polite"></p>
         <article class="pt-card" id="pt-card" aria-live="polite"></article>
-        <p class="tool-note"><span data-l="de">Standard-Ports laut IANA bzw. Hersteller. Dienste lassen sich umkonfigurieren, die Firewall-Regel richtet sich nach dem tatsächlich genutzten Port.</span><span data-l="en">Default ports according to IANA or the vendor. Services can be reconfigured; the firewall rule follows the port actually in use.</span></p>
+        <p class="tool-note"><span data-l="de">Standard-Ports laut IANA. Dienste lassen sich umkonfigurieren, die Firewall-Regel richtet sich nach dem tatsächlich genutzten Port.</span><span data-l="en">Default ports according to IANA. Services can be reconfigured; the firewall rule follows the port actually in use.</span></p>
       </div>
     </section>
 

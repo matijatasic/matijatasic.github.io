@@ -50,9 +50,13 @@ test('Stichproben', function () {
   assert.ok(find(22).tcp && !find(22).udp, '22 nur TCP');
   assert.ok(find(53).tcp && find(53).udp, '53 TCP und UDP');
   assert.ok(find(443).tcp && find(443).udp, '443 TCP und UDP (QUIC)');
-  assert.ok(!find(51820).tcp && find(51820).udp, '51820 nur UDP');
+  assert.ok(find(445).tcp && !find(445).udp, '445 nur TCP');
   assert.ok(!find(67).tcp && find(67).udp, '67 nur UDP');
-  assert.strictEqual(find(8006).name[0].indexOf('Proxmox VE'), 0);
+  assert.strictEqual(find(135).name[0].indexOf('RPC'), 0);
+});
+
+test('Nur Well-known-Ports bis 1023', function () {
+  d.PORTS.forEach(function (p) { assert.ok(p.port <= 1023, 'Port ' + p.port); });
 });
 
 test('IANA-Bereiche', function () {
