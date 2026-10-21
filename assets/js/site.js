@@ -427,7 +427,11 @@
           d.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
         if (cmd) cmd.textContent = '$ quiz --' + CMDS[m];
-        if (help) help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + (m === 'ports' ? 'ports' : 'subnetz')));
+        if (help) {
+          // Binär-Quiz hat kein passendes IT-Tool, daher dort ohne Hilfe
+          help.hidden = m === 'binaer';
+          help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + (m === 'ports' ? 'ports' : 'subnetz')));
+        }
         lastKey = '';
         ask(focus);
       };
