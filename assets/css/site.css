@@ -1347,3 +1347,10 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 :root[data-theme="dark"] .pf-win i { background: #14171c; }
 :root[data-theme="dark"] .pf-win b { color: var(--cu); }
 @media (max-width: 860px) { .pf-win { grid-template-columns: 1fr; } }
+
+/* Monogramm oben links (11/2026): extrudiertes MT als SVG, ohne Namen daneben */
+.site-head .brand-mk.brand-3d { width: 48px; height: 48px; background: none; box-shadow: none; border-radius: 0; filter: drop-shadow(0 4px 8px rgba(20, 24, 32, .22)); }
+:root[data-theme="dark"] .site-head .brand-mk.brand-3d { background: none; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .5)); }
+.brand-3d svg { display: block; width: 100%; height: 100%; }
+.site-head .brand:focus-visible { outline: 2px solid var(--cu); outline-offset: 4px; border-radius: 14px; }
+@media (max-width: 860px) { .site-head .brand-mk.brand-3d { width: 42px; height: 42px; } }
