@@ -13,6 +13,7 @@
 @font-face { font-family: 'Inter Display'; font-weight: 800; font-style: normal; font-display: swap; src: url('../fonts/inter-display-800.woff2') format('woff2'); }
 @font-face { font-family: 'DejaVu Sans Mono'; font-weight: 400; font-style: normal; font-display: swap; src: url('../fonts/dejavu-mono-400.woff2') format('woff2'); }
 @font-face { font-family: 'DejaVu Sans Mono'; font-weight: 700; font-style: normal; font-display: swap; src: url('../fonts/dejavu-mono-700.woff2') format('woff2'); }
+@font-face { font-family: 'Oxanium'; font-weight: 700; font-style: normal; font-display: swap; src: url('../fonts/oxanium-700.woff2') format('woff2'); }
 
 /* ---------- Farben: hell (Standard) ---------- */
 :root {
@@ -1228,3 +1229,9 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 :root[data-theme="light"] .row .status.done, :root:not([data-theme]) .row .status.done { background: rgba(34,199,217,.16); color: #7fdcea; }
 :root[data-theme="light"] .row .status.plan, :root:not([data-theme]) .row .status.plan { color: #c9ccd2; border-color: #4a5260; }
 :root[data-theme="light"] .row .tags li, :root:not([data-theme]) .row .tags li { background: #f6f1e8; border-color: #e4dccf; color: #3d4552; }
+
+/* Schriftzug oben links: www.matija-tasic.de in Oxanium */
+.site-head .brand-name { font-family: 'Oxanium', var(--sans); font-weight: 700; font-size: 21px; letter-spacing: .01em; color: var(--ink); white-space: nowrap; }
+.site-head .brand-name .bn-w { color: var(--muted); }
+.site-head .brand-name .bn-d { color: var(--cu-d); }
+:root[data-theme="dark"] .site-head .brand-name .bn-d { color: var(--cu); }
