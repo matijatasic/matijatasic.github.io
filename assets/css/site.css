@@ -1327,3 +1327,18 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .lc-title { font-size: 21px; }
   .rp .kt-body { padding: 16px; }
 }
+
+/* ==========================================================================
+   01 Profil (11/2026): drei Fenster mit Eckdaten unter dem Text, im Stil der Projekt-Karten
+   ========================================================================== */
+#profil .profil-grid > div > p:not(.statement):not(.lead) { max-width: 68ch; }
+.pf-win { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
+.pf-win > div { border: 2px solid var(--slate); border-radius: 14px; background: var(--surface); overflow: hidden; padding: 0 16px 14px; }
+.pf-win i { display: block; position: relative; height: 28px; margin: 0 -16px 12px; background: var(--slate); }
+.pf-win i::after { content: ""; position: absolute; left: 14px; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--tq); box-shadow: 13px 0 0 #e0b23a, 26px 0 0 var(--cu); }
+.pf-win b { display: block; font: 800 28px/1.1 var(--display, inherit); letter-spacing: -.01em; color: var(--cu-d); }
+.pf-win > div > span { display: block; margin-top: 4px; font-size: 14px; line-height: 1.4; color: var(--text); }
+:root[data-theme="dark"] .pf-win > div { border: 1px solid var(--line-strong); }
+:root[data-theme="dark"] .pf-win i { background: #14171c; }
+:root[data-theme="dark"] .pf-win b { color: var(--cu); }
+@media (max-width: 860px) { .pf-win { grid-template-columns: 1fr; } }
