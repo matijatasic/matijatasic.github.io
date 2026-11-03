@@ -68,7 +68,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=2026110313">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026110314">
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
@@ -79,7 +79,8 @@
     })();
   </script>
   <script src="assets/js/config.js" defer></script>
-  <script src="assets/js/site.js?v=2026110313" defer></script>
+  <script src="assets/js/site.js?v=2026110314" defer></script>
+  <script src="assets/js/quiz.js?v=2026110314" defer></script>
 </head>
 <body>
   <a class="skip" href="#inhalt"><span data-l="de">Zum Inhalt springen</span><span data-l="en">Skip to content</span></a>
@@ -245,26 +246,31 @@
       </div>
       <div class="iq-grid">
         <div class="iq-info">
-          <p class="iq-kicker"><span data-l="de">Wissensquiz · drei Modi</span><span data-l="en">Knowledge quiz · three modes</span></p>
+          <p class="iq-kicker"><span data-l="de">Netzwerk-Quiz · drei Modi</span><span data-l="en">Network quiz · three modes</span></p>
           <h3 class="iq-title"><span data-l="de">Testen Sie Ihr Netzwerk-Wissen.</span><span data-l="en">Test your networking knowledge.</span></h3>
-          <p class="iq-text"><span data-l="de">Zufallsfragen direkt im Terminal. Über die drei Punkte oben links wählen Sie den Modus, die Antwort tippen Sie ein und bestätigen mit Enter.</span><span data-l="en">Random questions right in the terminal. Pick the mode with the three dots at the top left, type your answer and press Enter.</span></p>
-          <ul class="iq-modes">
-            <li><b><span data-l="de">Binär</span><span data-l="en">Binary</span></b><span><span data-l="de">8-Bit-Zahl ins Dezimalsystem umrechnen, 10 Fragen pro Runde mit Punktestand. Beispiel:</span><span data-l="en">Convert an 8-bit number to decimal, 10 questions per round with a score. Example:</span> <code>10101010 → ?</code></span></li>
-            <li><b><span data-l="de">Subnetze</span><span data-l="en">Subnets</span></b><span><span data-l="de">Präfix, Maske und Anzahl Hosts. Beispiel:</span><span data-l="en">Prefix, mask and number of hosts. Example:</span> <code>/26 → Hosts?</code></span></li>
-            <li><b>Ports</b><span><span data-l="de">Well-known Ports bis 1023. Beispiel:</span><span data-l="en">Well-known ports up to 1023. Example:</span> <code>22 → ?</code></span></li>
+          <p class="iq-text"><span data-l="de">Fünf Fragen pro Runde, je drei Antworten. Klicken Sie die richtige an, bevor die 30 Sekunden ablaufen. Je schneller, desto mehr Punkte.</span><span data-l="en">Five questions per round, three answers each. Click the right one before the 30 seconds run out. The faster, the more points.</span></p>
+          <ul class="iq-facts">
+            <li><b>5</b><span data-l="de">Runden</span><span data-l="en">rounds</span></li>
+            <li><b>30 s</b><span data-l="de">pro Frage</span><span data-l="en">per question</span></li>
+            <li><b>+10</b><span data-l="de">je übrige Sekunde</span><span data-l="en">per second left</span></li>
           </ul>
-          <p class="iq-hint"><span data-l="de">„Lösung“ zeigt die Antwort, „Neu“ stellt die nächste Frage, „Hilfe“ öffnet das passende IT-Tool.</span><span data-l="en">“Answer” shows the solution, “New” asks the next question, “Help” opens the matching IT tool.</span></p>
+          <ul class="iq-modes">
+            <li><b><span data-l="de">Binär</span><span data-l="en">Binary</span></b><span><span data-l="de">8-Bit-Zahl in Dezimal umrechnen</span><span data-l="en">Convert an 8-bit number to decimal</span> <code>10101010</code></span></li>
+            <li><b><span data-l="de">Subnetze</span><span data-l="en">Subnets</span></b><span><span data-l="de">Präfix, Maske und Hosts</span><span data-l="en">Prefix, mask and hosts</span> <code>/26</code></span></li>
+            <li><b>Ports</b><span><span data-l="de">Well-known Ports bis 1023</span><span data-l="en">Well-known ports up to 1023</span> <code>443</code></span></li>
+          </ul>
+          <p class="iq-hint"><span data-l="de">Am Ende sehen Sie Ihre Trefferquote in Prozent. „Hilfe“ öffnet das passende IT-Tool.</span><span data-l="en">At the end you see your score in percent. “Help” opens the matching IT tool.</span></p>
         </div>
         <div class="quiz-card">
-      <div class="term">
-        <span class="et-bar"><button type="button" class="et-dot is-on" data-quiz-mode="binaer" aria-label="Binär-Quiz" data-aria-de="Binär-Quiz" data-aria-en="Binary quiz" aria-pressed="true"></button><button type="button" class="et-dot" data-quiz-mode="subnetz" aria-label="Subnetz-Quiz" data-aria-de="Subnetz-Quiz" data-aria-en="Subnet quiz" aria-pressed="false"></button><button type="button" class="et-dot" data-quiz-mode="ports" aria-label="Port-Quiz" data-aria-de="Port-Quiz" data-aria-en="Port quiz" aria-pressed="false"></button><button type="button" class="et-title" data-sudo aria-label="Terminal">matija@tasic:~</button></span>
-        <span class="et-body">
-          <span class="et-ln et-cmd" style="--n:15;--d:.3s" data-quiz-cmd>$ quiz --binär</span>
-          <span class="et-ln et-q" style="--n:24;--d:.9s" data-quiz-q>&nbsp;</span>
-          <span class="et-ln et-out et-act" style="--n:18;--d:1.5s" data-quiz-row><form class="et-form" data-quiz-form autocomplete="off"><span aria-hidden="true">&gt;</span><input type="text" data-quiz-in spellcheck="false" maxlength="24" aria-label="Deine Antwort" data-aria-de="Deine Antwort" data-aria-en="Your answer"><button type="button" class="et-go" data-quiz-go aria-label="Antwort prüfen" data-aria-de="Antwort prüfen" data-aria-en="Check answer">↵</button></form><span class="et-res" data-quiz-res role="status" aria-live="polite" hidden></span></span>
-          <span class="et-ln et-out et-act et-btns" style="--n:22;--d:1.9s"><button type="button" data-quiz-sol aria-label="Lösung zeigen" data-aria-de="Lösung zeigen" data-aria-en="Show answer"><span data-l="de">Lösung</span><span data-l="en">Answer</span></button><button type="button" data-quiz-new aria-label="Neue Frage" data-aria-de="Neue Frage" data-aria-en="New question"><span data-l="de">Neu</span><span data-l="en">New</span></button><a data-quiz-help href="werkzeuge.html#binaer" target="_blank" rel="noopener"><span data-l="de">Hilfe</span><span data-l="en">Help</span></a></span>
-        </span>
-      </div>
+          <div class="kt" data-quiz>
+            <div class="kt-bar"><span class="kt-ico" aria-hidden="true">▮</span><button type="button" class="kt-title" data-sudo>gast@matija-tasic: ~/quiz</button><span class="kt-ctl" aria-hidden="true"><i>–</i><i>▢</i><i>✕</i></span></div>
+            <div class="kt-body">
+              <div class="kt-modes"><span class="lbl">modus</span><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binär</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports</button><a class="kt-help" data-quiz-help href="werkzeuge.html#binaer" target="_blank" rel="noopener"><span data-l="de">Hilfe</span><span data-l="en">Help</span> ↗</a></div>
+              <div class="kp"><span class="b">┌──(</span><span class="u">gast㉿matija-tasic</span><span class="b">)-[</span><span class="w">~/quiz</span><span class="b">]</span></div>
+              <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>quiz --binär --timer 30</span></div>
+              <div class="kt-view" data-quiz-view></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
