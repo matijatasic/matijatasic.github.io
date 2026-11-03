@@ -1155,3 +1155,8 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 :root[data-theme="light"] .page-tools .toolnav a, :root:not([data-theme]) .page-tools .toolnav a { border-color: #c4cad3; }
 :root[data-theme="light"] .page-tools .toolnav a svg, :root:not([data-theme]) .page-tools .toolnav a svg { color: var(--cu-d); }
 :root[data-theme="light"] .page-tools .toolnav a.is-current svg, :root:not([data-theme]) .page-tools .toolnav a.is-current svg { color: var(--cu); }
+
+/* ---------- Schwerpunkte im Hellmodus: „Schiefer-Rahmen“ (11/2026) ---------- */
+:root[data-theme="light"] .skill, :root:not([data-theme]) .skill { border: 2px solid var(--slate); }
+:root[data-theme="light"] .skill i, :root:not([data-theme]) .skill i { background: var(--slate); color: var(--tq); }
+:root[data-theme="light"] .ki-banner, :root:not([data-theme]) .ki-banner { border: 2px solid var(--slate); border-left: 8px solid var(--cu); }
