@@ -1406,3 +1406,10 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .pf-win > div > span.pf-sub { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font: 400 13px/1.3 var(--mono); color: var(--muted); }
 .pf-sub strong { color: var(--cu-d); font-weight: 700; }
 :root[data-theme="dark"] .pf-sub strong { color: var(--cu); }
+
+/* Startseite: dezentere Überschrift (Layout 1 „Leicht und groß“), 11/2026 */
+.hero-card h1 { font-weight: 300; font-size: clamp(38px, 4.2vw, 62px); letter-spacing: -.03em; line-height: 1.08; }
+.hero-card h1 em { font-weight: 700; }
+/* Kontakt-Button oben rechts in Kupfer (hell und dunkel) */
+.sh-cta, :root[data-theme="dark"] .sh-cta { background: var(--cu); color: #1f1206 !important; }
+.sh-cta:hover, :root[data-theme="dark"] .sh-cta:hover { background: var(--cu-d) !important; color: #fff !important; }
