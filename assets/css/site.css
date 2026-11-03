@@ -1177,3 +1177,41 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .site-head .sh-tools a:hover, .site-head .sh-tools a:focus-visible { background: rgba(255, 255, 255, .08); color: #fff; }
   .site-head .sh-tools svg { color: var(--tq); }
 }
+
+/* ---------- Profil-Foto „Kupferring“ + Bereich Interaktiv (11/2026) ---------- */
+.site-head .brand img { display: none; }
+.profil-grid { grid-template-columns: minmax(0, 1fr) 300px; align-items: center; }
+.pf-ring { margin: 0; justify-self: center; position: relative; width: 240px; height: 240px; display: grid; place-items: center; }
+.pf-ring::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--cu), var(--cu-d), var(--slate), var(--cu)); }
+.pf-ring::after { content: ''; position: absolute; inset: -14px; border-radius: 50%; border: 2px dashed var(--tq); opacity: .6; }
+.pf-ring img { position: relative; width: 216px; height: 216px; border-radius: 50%; object-fit: cover; border: 6px solid var(--bg); }
+
+#interaktiv { background: var(--slate); border-radius: 28px; padding: 44px; color: var(--slate-text); margin-bottom: 72px; }
+:root[data-theme="dark"] #interaktiv { background: var(--surface); border: 1px solid var(--line); }
+#interaktiv .ch-title { color: #fff; }
+#interaktiv .ch-num { background: var(--cu); color: #fff; }
+#interaktiv .ch-rule { background: var(--slate-line); }
+.iq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 44px; align-items: center; }
+.iq-kicker { font: 700 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--cu); margin: 0 0 12px; }
+.iq-title { font: 800 30px/1.15 var(--display); letter-spacing: -.02em; color: #fff; margin: 0 0 12px; text-wrap: balance; }
+.iq-text { color: var(--slate-text); margin: 0 0 20px; }
+.iq-modes { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 10px; }
+.iq-modes li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 12px 14px; border: 1px solid var(--slate-line); border-radius: 14px; background: var(--slate-2); }
+.iq-modes b { font: 700 13px/1.2 var(--mono); color: var(--cu); text-transform: uppercase; letter-spacing: .08em; }
+.iq-modes li > span { font-size: 14.5px; color: var(--slate-text); }
+.iq-modes code { color: var(--tq); }
+.iq-hint { font: 400 12.5px/1.5 var(--mono); color: var(--slate-muted); margin: 0; }
+#interaktiv .quiz-card { background: none; padding: 0; border-radius: 0; }
+#interaktiv .quiz-card .term { box-shadow: 0 18px 40px rgba(0, 0, 0, .3); }
+#interaktiv .quiz-card .et-body { font-size: 16px; line-height: 1.75; padding: 20px 22px 22px; min-height: 0; }
+#interaktiv .quiz-card .et-bar { font-size: 12.5px; padding: 12px 14px; }
+@media (max-width: 860px) {
+  .profil-grid { grid-template-columns: 1fr; }
+  .pf-ring { width: 200px; height: 200px; margin-top: 8px; }
+  .pf-ring img { width: 180px; height: 180px; }
+  #interaktiv { padding: 28px 18px; border-radius: 22px; }
+  .iq-grid { grid-template-columns: 1fr; gap: 24px; }
+  .iq-title { font-size: 25px; }
+  .iq-modes li { grid-template-columns: 1fr; gap: 4px; }
+  #interaktiv .quiz-card .et-body { font-size: 15px; padding: 16px; }
+}
