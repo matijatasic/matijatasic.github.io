@@ -1160,3 +1160,27 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 :root[data-theme="light"] .skill, :root:not([data-theme]) .skill { border: 2px solid var(--slate); }
 :root[data-theme="light"] .skill i, :root:not([data-theme]) .skill i { background: var(--slate); color: var(--tq); }
 :root[data-theme="light"] .ki-banner, :root:not([data-theme]) .ki-banner { border: 2px solid var(--slate); border-left: 8px solid var(--cu); }
+
+/* ---------- Kopfleiste „Schiefer“ (11/2026) ----------
+   Dunkle Leiste mit Kupferlinie, gilt im Hell- und Dunkelmodus. */
+.site-head { background: var(--slate); border-bottom: 3px solid var(--cu); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.site-head.is-scrolled { border-bottom-color: var(--cu); box-shadow: 0 6px 20px rgba(15, 18, 23, .22); }
+.site-head .brand-name { color: #fff; }
+.sh-nav > a, .sh-drop > a { color: var(--slate-text); font-weight: 600; }
+.sh-nav > a:hover, .sh-drop > a:hover, .sh-drop:focus-within > a { color: #fff; background: rgba(255, 255, 255, .08); }
+.sh-nav > a[aria-current="page"], .sh-drop > a[aria-current="page"] { color: #fff; background: rgba(255, 255, 255, .12); }
+.sh-prefs .seg, .sh-prefs .theme-btn { background: rgba(255, 255, 255, .08); }
+.sh-prefs .seg button, .sh-prefs .theme-btn { color: var(--slate-muted); }
+.sh-prefs .seg button[aria-pressed="true"] { background: #fff; color: #1e232b; }
+.sh-prefs .seg button:hover, .sh-prefs .theme-btn:hover { color: #fff; }
+.sh-prefs .seg button[aria-pressed="true"]:hover { color: #1e232b; }
+.sh-cta, :root[data-theme="dark"] .sh-cta { background: var(--cu); color: #fff !important; }
+.sh-cta:hover { background: var(--cu-d) !important; }
+.site-head .menu-btn { background: rgba(255, 255, 255, .1); color: #fff; }
+.site-head :focus-visible { outline-color: var(--cu); }
+@media (max-width: 860px) {
+  .site-head .sh-tools a { color: var(--slate-text); }
+  .site-head .sh-tools a:hover, .site-head .sh-tools a:focus-visible { background: rgba(255, 255, 255, .08); color: #fff; }
+  .site-head .sh-tools svg { color: var(--tq); }
+  .sh-panel { border-top: 1px solid var(--slate-line); }
+}
