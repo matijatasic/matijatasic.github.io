@@ -97,5 +97,24 @@ test('Punkte: 100 + 10 je volle übrige Sekunde, falsch = 0', function () {
   assert.strictEqual(Q.points(false, 25), 0);
 });
 
+test('Stufen: Junior bis 899, Mid-Level 900–1.499, Senior ab 1.500', function () {
+  assert.strictEqual(Q.tierOf(0).de, 'Junior-Admin');
+  assert.strictEqual(Q.tierOf(899).de, 'Junior-Admin');
+  assert.strictEqual(Q.tierOf(900).de, 'Mid-Level-Admin');
+  assert.strictEqual(Q.tierOf(1499).de, 'Mid-Level-Admin');
+  assert.strictEqual(Q.tierOf(1500).de, 'Senior-Admin');
+  assert.strictEqual(Q.tierOf(2000).de, 'Senior-Admin');
+});
+
+test('Bestenliste: höchstens 3 Einträge, absteigend, Platz stimmt', function () {
+  var r = Q.addScore([], 800); assert.deepStrictEqual(r, { top: [800], place: 1 });
+  r = Q.addScore([1840, 1130], 1550); assert.deepStrictEqual(r, { top: [1840, 1550, 1130], place: 2 });
+  r = Q.addScore([1840, 1550, 1130], 1200); assert.deepStrictEqual(r, { top: [1840, 1550, 1200], place: 3 });
+  r = Q.addScore([1840, 1550, 1130], 900); assert.deepStrictEqual(r, { top: [1840, 1550, 1130], place: 0 });
+  r = Q.addScore([1500, 1500], 1500); assert.deepStrictEqual(r, { top: [1500, 1500, 1500], place: 3 });
+  r = Q.addScore([1000], 0); assert.deepStrictEqual(r, { top: [1000], place: 0 });
+  r = Q.addScore(['x', null, 700, 600, 500, 400], 0); assert.deepStrictEqual(r.top, [700, 600, 500]);
+});
+
 console.log('\n' + passed + ' bestanden, ' + failed + ' fehlgeschlagen');
 if (failed) process.exit(1);

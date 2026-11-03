@@ -99,7 +99,25 @@
   // Punkte: richtig = 100 + 10 je volle übrige Sekunde, falsch oder Zeit abgelaufen = 0
   var points = function (right, left) { return right ? BASE + PER_SEC * Math.max(0, Math.floor(left)) : 0; };
 
-  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, MODES: Object.keys(MAKERS), make: make, points: points, maskOf: maskOf, hostsOf: hostsOf };
+  // Stufen nach Punkten (höchstens 5 × 400 = 2.000)
+  var TIERS = [
+    { min: 1500, de: 'Senior-Admin', en: 'Senior admin', range: { de: 'ab 1.500', en: 'from 1,500' }, cls: 's' },
+    { min: 900, de: 'Mid-Level-Admin', en: 'Mid-level admin', range: { de: '900 – 1.499', en: '900 – 1,499' }, cls: 'm' },
+    { min: 0, de: 'Junior-Admin', en: 'Junior admin', range: { de: '0 – 899', en: '0 – 899' }, cls: 'j' }
+  ];
+  var tierOf = function (pts) { for (var i = 0; i < TIERS.length; i++) if (pts >= TIERS[i].min) return TIERS[i]; return TIERS[TIERS.length - 1]; };
+  // Bestenliste: höchstens 3 Punktestände, absteigend. Gibt die neue Liste und den Platz (1–3, sonst 0) zurück.
+  var addScore = function (list, pts) {
+    var top = (list || []).filter(function (x) { return typeof x === 'number' && isFinite(x); }).slice(0, 3);
+    if (!(pts > 0)) return { top: top, place: 0 };
+    var i = 0;
+    while (i < top.length && top[i] >= pts) i++;
+    if (i >= 3) return { top: top, place: 0 };
+    top.splice(i, 0, pts);
+    return { top: top.slice(0, 3), place: i + 1 };
+  };
+
+  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, MODES: Object.keys(MAKERS), TIERS: TIERS, make: make, points: points, tierOf: tierOf, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   global.NetQuiz = api;
 
@@ -110,6 +128,7 @@
   var bi = function (de, en) { return '<span data-l="de">' + de + '</span><span data-l="en">' + en + '</span>'; };
   var tx = function (o) { return o.de === o.en ? o.de : bi(o.de, o.en); };
   var NAMES = { binaer: 'binär', subnetz: 'subnetz', ports: 'ports' };
+  var FILES = { binaer: 'binaer.sh', subnetz: 'subnetz.sh', ports: 'ports.sh' };
   var HELP = { binaer: '#binaer', subnetz: '#subnetz', ports: '#ports' };
   var ORDER = ['binaer', 'subnetz', 'ports'];
   var $ = function (s) { return kt.querySelector(s); };
@@ -118,8 +137,34 @@
 
   var mode = 'binaer';
   try { var s = sessionStorage.getItem('quiz'); if (MAKERS[s]) mode = s; } catch (e) {}
-  var best = function (m) { try { return parseInt(localStorage.getItem('quiz-best-' + m), 10) || 0; } catch (e) { return 0; } };
-  var setBest = function (m, v) { try { localStorage.setItem('quiz-best-' + m, String(v)); } catch (e) {} };
+  // Bestenliste pro Modus, nur im Browser des Besuchers
+  var getTop = function (m) {
+    try { var t = JSON.parse(localStorage.getItem('quiz-top-' + m) || '[]'); return Array.isArray(t) ? addScore(t, 0).top : []; } catch (e) { return []; }
+  };
+  var setTop = function (m, t) { try { localStorage.setItem('quiz-top-' + m, JSON.stringify(t)); } catch (e) {} };
+  var fmt = function (n) { return bi(n.toLocaleString('de-DE'), n.toLocaleString('en-US')); };
+  var pod = document.querySelector('[data-quiz-pod]'), tierBox = document.querySelector('[data-quiz-tiers]');
+  var last = {};
+  // Podium (Platz 1 in der Mitte) und Stufen links neben dem Terminal
+  var board = function () {
+    var top = getTop(mode), mark = last[mode] != null ? last[mode] : top[0];
+    if (pod) {
+      var col = function (place, cls) {
+        var v = top[place - 1];
+        return '<div class="' + cls + (v == null ? ' empty' : '') + (last[mode + 'p'] === place ? ' new' : '') + '"><b>' + place + '</b><span>' + (v == null ? '–' : fmt(v)) + '</span></div>';
+      };
+      pod.innerHTML = '<div class="rk-h">' + bi('Ihre Bestenliste', 'Your leaderboard') + ' · ' + NAMES[mode] + '</div>' +
+        '<div class="podium">' + col(2, 'p2') + col(1, 'p1') + col(3, 'p3') + '</div>';
+    }
+    if (tierBox) {
+      var you = mark != null ? tierOf(mark) : null, h = '<div class="rk-h">' + bi('Stufen', 'Levels') + '</div>';
+      TIERS.forEach(function (t) {
+        h += '<div class="tr-r ' + t.cls + (you === t ? ' you' : '') + '"><b>' + tx(t) + '</b><span>' + bi(t.range.de + ' Punkte', t.range.en + ' points') + '</span>' +
+          (you === t ? '<em>◀ ' + bi('Sie', 'You') + '</em>' : '') + '</div>';
+      });
+      tierBox.innerHTML = h;
+    }
+  };
 
   // Spielstand
   var g = null, timer = 0, next = 0;
@@ -136,7 +181,7 @@
 
   var intro = function () {
     stop(); g = null;
-    var b = best(mode);
+    var b = getTop(mode)[0] || 0;
     view.innerHTML =
       '<div class="kt-out c">' + bi('[*] Bereit: 5 Fragen, je 30 Sekunden.', '[*] Ready: 5 questions, 30 seconds each.') + '</div>' +
       '<div class="kt-out d">' + bi('# Schneller antworten bringt mehr Punkte.', '# Faster answers earn more points.') + '</div>' +
@@ -225,18 +270,25 @@
     stop();
     var right = g.res.filter(function (r) { return r.ok; }).length, pct = Math.round(right / ROUNDS * 100);
     var avg = g.times.reduce(function (a, b) { return a + b; }, 0) / g.times.length;
-    var old = best(mode), rec = g.pts > old;
-    if (rec) setBest(mode, g.pts);
+    var top = getTop(mode), add = addScore(top, g.pts), rec = add.place === 1;
+    setTop(mode, add.top);
+    last[mode] = g.pts; last[mode + 'p'] = add.place;
+    var tier = tierOf(g.pts);
+    board();
     var chips = g.res.map(function (r, i) { return '<span class="' + (r.ok ? 'ok' : 'bad') + '">' + (i + 1) + ' ' + (r.ok ? '✓' : '✗') + '</span>'; }).join('');
     var col = pct >= 80 ? 'g' : (pct >= 40 ? 'y' : 'r');
     var nextMode = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
     view.innerHTML =
       '<div class="kt-res" role="status">' +
       '<div class="kt-out g">[+] ' + bi('Runde beendet', 'Round complete') + '</div>' +
-      '<div class="kt-pct ' + col + '">' + pct + ' %</div><div class="kt-bar2 ' + col + '"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="kt-out">' + bi(right + ' von ' + ROUNDS + ' richtig', right + ' of ' + ROUNDS + ' correct') + '</div>' +
-      '<div class="kt-out y">' + bi('Punkte ' + g.pts + ' · Ø ' + avg.toFixed(1).replace('.', ',') + ' s pro Antwort', 'Points ' + g.pts + ' · avg ' + avg.toFixed(1) + ' s per answer') + '</div>' +
-      '<div class="kt-out ' + (rec ? 'g' : 'd') + '">' + (rec ? '★ ' + bi('Neuer Rekord!', 'New record!') : bi('Rekord: ' + old + ' Punkte', 'Record: ' + old + ' points')) + '</div>' +
+      '<div class="resrow"><div class="kt-pct ' + col + '">' + pct + ' %</div><div class="resinfo">' +
+      '<div class="kt-out">' + bi(right + ' von ' + ROUNDS + ' richtig', right + ' of ' + ROUNDS + ' correct') + ' · ' + bi('Punkte', 'Points') + ' <b class="y">' + fmt(g.pts) + '</b></div>' +
+      '<div class="kt-out g">' + (add.place ? '★ ' + bi('Platz ' + add.place, 'Rank ' + add.place) + ' · ' : '') + tx(tier) + (rec ? ' · ' + bi('Neuer Rekord!', 'New record!') : '') + '</div>' +
+      '</div></div><div class="kt-bar2 ' + col + '"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="kt-out y">' + bi('Ø ' + avg.toFixed(1).replace('.', ',') + ' s pro Antwort', 'avg ' + avg.toFixed(1) + ' s per answer') + '</div>' +
+      '<div class="kt-out d">' + (add.place ? bi('# Neuer Eintrag auf Platz ' + add.place + ' in Ihrer Bestenliste.', '# New entry at rank ' + add.place + ' on your leaderboard.')
+        : (add.top.length < 3 ? bi('# Ohne Punkte kein Eintrag. Gleich nochmal?', '# No points, no entry. Try again?')
+        : bi('# Für die Bestenliste fehlen ' + (add.top[2] - g.pts + 1) + ' Punkte.', '# ' + (add.top[2] - g.pts + 1) + ' more points needed for the leaderboard.'))) + '</div>' +
       '<div class="kt-review">' + chips + '</div>' +
       '<div class="kt-act"><button type="button" class="pri" data-quiz-again>↻ ' + bi('Nochmal', 'Again') + '</button>' +
       '<button type="button" data-quiz-nextmode>' + bi('Nächster Modus', 'Next mode') + ': ' + NAMES[nextMode] + ' →</button></div></div>';
@@ -252,8 +304,9 @@
       b.classList.toggle('on', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    if (cmd) cmd.textContent = 'quiz --' + NAMES[m] + ' --timer ' + SECONDS;
+    if (cmd) cmd.textContent = './' + FILES[m] + ' --timer ' + SECONDS;
     if (help) help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '') + HELP[m]);
+    board();
   };
   modeBtns.forEach(function (b) {
     b.addEventListener('click', function () { setMode(b.getAttribute('data-quiz-mode')); intro(); });
