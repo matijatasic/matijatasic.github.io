@@ -40,7 +40,7 @@
   });
 
   /* ---------------- Darstellung ----------------
-     Start immer dunkel; hell gilt nur für den laufenden Besuch (sessionStorage). */
+     Start immer hell; dunkel gilt nur für den laufenden Besuch (sessionStorage). */
   function currentTheme() {
     var t = root.getAttribute('data-theme');
     if (t) return t;
@@ -54,20 +54,25 @@
     });
   });
 
-  /* ---------------- Menü (Handy) ---------------- */
-  var side = document.querySelector('.side');
-  var menuBtn = document.querySelector('.menu-btn');
-  if (menuBtn && side) {
+  /* ---------------- Kopfleiste: Menü (Handy) und Linie beim Scrollen ---------------- */
+  var head = document.querySelector('.site-head');
+  var menuBtn = head && head.querySelector('.menu-btn');
+  if (menuBtn) {
     menuBtn.addEventListener('click', function () {
-      var open = side.classList.toggle('is-open');
+      var open = head.classList.toggle('is-open');
       menuBtn.setAttribute('aria-expanded', String(open));
     });
-    side.querySelectorAll('.side-grid a').forEach(function (a) {
+    head.querySelectorAll('.sh-panel a').forEach(function (a) {
       a.addEventListener('click', function () {
-        side.classList.remove('is-open');
+        head.classList.remove('is-open');
         menuBtn.setAttribute('aria-expanded', 'false');
       });
     });
+  }
+  if (head) {
+    var markHead = function () { head.classList.toggle('is-scrolled', window.scrollY > 4); };
+    window.addEventListener('scroll', markHead, { passive: true });
+    markHead();
   }
 
   /* ---------------- IT-Tools: aktives Werkzeug (nur auf der Tools-Seite) ---------------- */
