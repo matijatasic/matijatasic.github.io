@@ -26,8 +26,12 @@
   <script>
     (function () {
       var d = document.documentElement, l = null;
-      try { l = localStorage.getItem('lang'); } catch (e) {}
-      // Terminal-Seite startet bei jedem Aufruf dunkel; der Schalter wirkt nur, solange die Seite offen ist
+      try { l = localStorage.getItem('lang'); sessionStorage.removeItem('theme'); } catch (e) {}
+      // Terminal-Seite startet bei jedem Aufruf dunkel; der Schalter wirkt nur, solange die Seite offen ist.
+      // Beim Verlassen wird die Wahl gelöscht, damit die anderen Seiten wieder hell starten.
+      window.addEventListener('pagehide', function () {
+        try { sessionStorage.removeItem('theme'); } catch (e) {}
+      });
       if (l === 'en') d.lang = 'en';
     })();
   </script>
