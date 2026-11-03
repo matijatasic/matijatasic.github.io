@@ -1127,16 +1127,21 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 
 /* ---------- Profil-Foto „Kupferring“ + Bereich Interaktiv (11/2026) ---------- */
 .site-head .brand img { display: none; }
-.profil-grid { grid-template-columns: minmax(0, 1fr) 300px; align-items: center; }
-.pf-ring { margin: 0; justify-self: center; position: relative; width: 240px; height: 240px; display: grid; place-items: center; }
-.pf-ring::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--cu), var(--cu-d), var(--slate), var(--cu)); }
-.pf-ring::after { content: ''; position: absolute; inset: -14px; border-radius: 50%; border: 2px dashed var(--tq); opacity: .6; }
-.pf-ring img { position: relative; width: 216px; height: 216px; border-radius: 50%; object-fit: cover; border: 6px solid var(--bg); }
+/* Profil (11/2026, Layout 3 „Dunkle Seitenkarte“): links dunkle Karte mit Foto, Name, Beruf; rechts der Text */
+.profil-grid.pf3 { grid-template-columns: 250px minmax(0, 1fr); gap: 40px; align-items: stretch; }
+.pf-card { background: var(--slate); border-radius: 18px; padding: 34px 20px 26px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.pf-ph { display: block; width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin-bottom: 18px; box-shadow: 0 0 0 3px var(--slate), 0 0 0 5px var(--cu); }
+/* Das Foto hat einen eingebrannten Türkis-Ring: per clip-path ausblenden */
+.pf-ph img { display: block; width: 100%; height: 100%; clip-path: circle(45.3%); transform: scale(1.105); }
+.pf-name { display: block; font: 700 18px/1.2 var(--display); color: #fff; }
+.pf-role { display: block; margin-top: 4px; font: 500 11px/1.4 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: #b9bec7; }
+.pf-tag { margin-top: auto; padding-top: 20px; font: 500 12px/1.4 ui-monospace, monospace; color: var(--tq); }
+:root[data-theme="dark"] .pf-card { background: #14171c; border: 1px solid var(--line-strong); }
+:root[data-theme="dark"] .pf-ph { box-shadow: 0 0 0 3px #14171c, 0 0 0 5px var(--cu); }
 
 @media (max-width: 860px) {
-  .profil-grid { grid-template-columns: 1fr; }
-  .pf-ring { width: 200px; height: 200px; margin-top: 8px; }
-  .pf-ring img { width: 180px; height: 180px; }
+  .profil-grid.pf3 { grid-template-columns: 1fr; gap: 26px; }
+  .pf-card { width: 100%; max-width: 300px; justify-self: center; padding: 26px 20px 22px; }
 }
 
 /* ==========================================================================
