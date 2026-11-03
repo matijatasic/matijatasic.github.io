@@ -68,7 +68,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=2026110314">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026110315">
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
@@ -79,8 +79,8 @@
     })();
   </script>
   <script src="assets/js/config.js" defer></script>
-  <script src="assets/js/site.js?v=2026110314" defer></script>
-  <script src="assets/js/quiz.js?v=2026110314" defer></script>
+  <script src="assets/js/site.js?v=2026110315" defer></script>
+  <script src="assets/js/quiz.js?v=2026110315" defer></script>
 </head>
 <body>
   <a class="skip" href="#inhalt"><span data-l="de">Zum Inhalt springen</span><span data-l="en">Skip to content</span></a>
@@ -254,20 +254,18 @@
             <li><b>30 s</b><span data-l="de">pro Frage</span><span data-l="en">per question</span></li>
             <li><b>+10</b><span data-l="de">je übrige Sekunde</span><span data-l="en">per second left</span></li>
           </ul>
-          <ul class="iq-modes">
-            <li><b><span data-l="de">Binär</span><span data-l="en">Binary</span></b><span><span data-l="de">8-Bit-Zahl in Dezimal umrechnen</span><span data-l="en">Convert an 8-bit number to decimal</span> <code>10101010</code></span></li>
-            <li><b><span data-l="de">Subnetze</span><span data-l="en">Subnets</span></b><span><span data-l="de">Präfix, Maske und Hosts</span><span data-l="en">Prefix, mask and hosts</span> <code>/26</code></span></li>
-            <li><b>Ports</b><span><span data-l="de">Well-known Ports bis 1023</span><span data-l="en">Well-known ports up to 1023</span> <code>443</code></span></li>
-          </ul>
-          <p class="iq-hint"><span data-l="de">Am Ende sehen Sie Ihre Trefferquote in Prozent. „Hilfe“ öffnet das passende IT-Tool.</span><span data-l="en">At the end you see your score in percent. “Help” opens the matching IT tool.</span></p>
+          <div class="podwrap">
+            <div class="pod" data-quiz-pod><div class="rk-h">Ihre Bestenliste</div><div class="podium"><div class="p2 empty"><b>2</b><span>–</span></div><div class="p1 empty"><b>1</b><span>–</span></div><div class="p3 empty"><b>3</b><span>–</span></div></div></div>
+            <div class="tr card" data-quiz-tiers></div>
+          </div>
         </div>
         <div class="quiz-card">
           <div class="kt" data-quiz>
             <div class="kt-bar"><span class="kt-ico" aria-hidden="true">▮</span><button type="button" class="kt-title" data-sudo>gast@matija-tasic: ~/quiz</button><span class="kt-ctl" aria-hidden="true"><i>–</i><i>▢</i><i>✕</i></span></div>
+            <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button><a class="khelp" data-quiz-help href="werkzeuge.html#binaer" target="_blank" rel="noopener">? <span data-l="de">Hilfe</span><span data-l="en">Help</span></a></div>
             <div class="kt-body">
-              <div class="kt-modes"><span class="lbl">modus</span><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binär</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports</button><a class="kt-help" data-quiz-help href="werkzeuge.html#binaer" target="_blank" rel="noopener"><span data-l="de">Hilfe</span><span data-l="en">Help</span> ↗</a></div>
               <div class="kp"><span class="b">┌──(</span><span class="u">gast㉿matija-tasic</span><span class="b">)-[</span><span class="w">~/quiz</span><span class="b">]</span></div>
-              <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>quiz --binär --timer 30</span></div>
+              <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>./binaer.sh --timer 30</span></div>
               <div class="kt-view" data-quiz-view></div>
             </div>
           </div>
