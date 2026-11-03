@@ -868,9 +868,9 @@ strong { color: var(--ink); font-weight: 600; }
    Steht bewusst am Ende und überschreibt ältere Regeln.
    ========================================================================== */
 :root[data-theme="light"], :root:not([data-theme]) {
-  --bg: #f4f5f7; --surface: #ffffff; --ink: #1e232b; --text: #374151; --muted: #6b7280;
-  --line: #e5e8ee; --line-strong: #cfd5de;
-  --teal: #0e8ea3; --teal-text: #0b7285; --tint: #e8f8fa; --tint-b: #bfe7ee;
+  --bg: #f8f1e7; --surface: #fffcf7; --ink: #1e232b; --text: #374151; --muted: #6b7280;
+  --line: #ece2d3; --line-strong: #dccdb8;
+  --teal: #0e8ea3; --teal-text: #0b7285; --tint: #fbe8db; --tint-b: #f1c9ad;
   --glow: rgba(14, 142, 163, .22); --grid: transparent;
   --shadow: 0 1px 2px rgba(30,35,43,.04), 0 6px 18px rgba(30,35,43,.05);
   --chip-bg: #252a33; --side-chip-text: #7fdcea;
@@ -891,6 +891,7 @@ strong { color: var(--ink); font-weight: 600; }
   --side-text: #e9eded; --side-muted: #a3a8a7;
   --wrap: 1240px;
 }
+:root[data-theme="light"], :root:not([data-theme]) { --cu-t: #fbe3d1; }
 :root[data-theme="dark"] { --slate: #222832; --cu-t: rgba(240,138,75,.1); }
 
 body { display: block; background: var(--bg); }
@@ -1140,7 +1141,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   --teal: #22c7d9; --teal-text: #67dbe8; --glow: rgba(34, 199, 217, .3);
   background: var(--surface); color: var(--text); border: 0; box-shadow: 0 18px 40px rgba(23, 27, 33, .18);
 }
-:root[data-theme="light"] .page-tools, :root:not([data-theme]) .page-tools { --bg: #eef0f3; --ink: #171b21; --text: #2d333c; --muted: #525a66; }
+:root[data-theme="light"] .page-tools, :root:not([data-theme]) .page-tools { --bg: #f3eadd; --ink: #171b21; --text: #2d333c; --muted: #525a66; }
 :root[data-theme="light"] .page-tools .tool .field label, :root[data-theme="light"] .page-tools .tool .kv dt, :root[data-theme="light"] .page-tools .tool .pt-card h4,
 :root:not([data-theme]) .page-tools .tool .field label, :root:not([data-theme]) .page-tools .tool .kv dt, :root:not([data-theme]) .page-tools .tool .pt-card h4 { color: var(--cu); }
 :root[data-theme="light"] .page-tools .tool .pt-num, :root:not([data-theme]) .page-tools .tool .pt-num { color: var(--cu); }
@@ -1152,7 +1153,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 :root[data-theme="light"] .page-tools .chapter:not(.page-hero) .ch-num, :root:not([data-theme]) .page-tools .chapter:not(.page-hero) .ch-num { background: var(--cu); color: #fff; }
 :root[data-theme="light"] .page-tools .chapter:not(.page-hero) .ch-rule, :root:not([data-theme]) .page-tools .chapter:not(.page-hero) .ch-rule { background: var(--cu); opacity: .4; }
 :root[data-theme="light"] .page-tools .chapter > p code, :root:not([data-theme]) .page-tools .chapter > p code { color: var(--cu-d); }
-:root[data-theme="light"] .page-tools .toolnav a, :root:not([data-theme]) .page-tools .toolnav a { border-color: #c4cad3; }
+:root[data-theme="light"] .page-tools .toolnav a, :root:not([data-theme]) .page-tools .toolnav a { border-color: #dcc7ae; }
 :root[data-theme="light"] .page-tools .toolnav a svg, :root:not([data-theme]) .page-tools .toolnav a svg { color: var(--cu-d); }
 :root[data-theme="light"] .page-tools .toolnav a.is-current svg, :root:not([data-theme]) .page-tools .toolnav a.is-current svg { color: var(--cu); }
 
