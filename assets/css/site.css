@@ -1271,7 +1271,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   box-shadow: 0 28px 70px rgba(20, 24, 32, .45);
 }
 .gw-in { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); }
-.lp { background: var(--t-bg2); border-right: 1px solid var(--t-line); display: grid; grid-template-columns: 168px minmax(0, 1fr); min-width: 0; }
+.lp { background: var(--t-bg2); border-right: 1px solid var(--t-line); display: grid; grid-template-columns: 190px minmax(0, 1fr); min-width: 0; }
 .rp { display: flex; flex-direction: column; min-width: 0; }
 .rp .kt-body { padding: 22px 26px; }
 .tree { background: #181a20; border-right: 1px solid var(--t-line); padding: 12px 0; font-size: 12.5px; display: flex; flex-direction: column; }
