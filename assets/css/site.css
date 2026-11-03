@@ -1104,3 +1104,29 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .legal .toolnav a { color: var(--ink); }
 .legal .toolnav a.is-current { color: #fff; }
 @media (max-width: 860px) { .skill:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+
+/* ---------- 07 Binär-Umrechner ---------- */
+.bc-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.6fr); gap: 0 12px; align-items: end; }
+.bc-pair input { font-family: var(--mono); letter-spacing: .02em; }
+.bc-eq { padding-bottom: 12px; font: 400 20px/1 var(--mono); color: var(--muted); }
+.bc-bits { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 6px; }
+.bc-byte { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; flex: 0 1 calc(50% - 6px); }
+.bc-bit { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; transition: border-color .15s ease, background-color .15s ease; }
+.bc-bit b { font: 600 20px/1 var(--mono); }
+.bc-bit span { font: 400 11px/1 var(--mono); color: var(--muted); }
+.bc-bit sup { font-size: 8px; }
+.bc-bit:hover { border-color: var(--teal); }
+.bc-bit:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.bc-bit.is-on { background: var(--slate); border-color: var(--slate); color: #fff; }
+.bc-bit.is-on b { color: var(--tq); }
+.bc-bit.is-on span { color: var(--slate-muted); }
+.bc-sum { margin: 10px 0 16px; font: 400 14px/1.8 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.bc-sum strong { color: var(--ink); font-weight: 700; }
+@media (max-width: 860px) {
+  .bc-pair { grid-template-columns: 1fr; gap: 10px; }
+  .bc-eq { display: none; }
+  .bc-byte { flex-basis: 100%; max-width: none; gap: 4px; }
+  .bc-bit { padding: 8px 0 6px; }
+  .bc-bit b { font-size: 17px; }
+  .bc-bit span { font-size: 9px; }
+}

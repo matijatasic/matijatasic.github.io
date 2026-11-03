@@ -456,9 +456,8 @@
           d.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
         if (help) {
-          // Binär-Quiz hat kein passendes IT-Tool, daher dort ohne Hilfe
-          help.hidden = m === 'binaer';
-          help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + (m === 'ports' ? 'ports' : 'subnetz')));
+          // Hilfe führt zum passenden IT-Tool (öffnet im neuen Tab)
+          help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '#' + ({ ports: 'ports', binaer: 'binaer' }[m] || 'subnetz')));
         }
         // Wechsel des Quiz beginnt eine neue Runde
         round = 0; score = 0;
