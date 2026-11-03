@@ -658,6 +658,77 @@
     });
   }
 
+  /* ======================================================================
+     07 Binär-Umrechner (Logik in binconv.js)
+     ====================================================================== */
+  var BC = window.BinConv;
+  var bcDec = $('bc-dec'), bcBin = $('bc-bin'), bcVal = 170;
+
+  function bcLabel(bit) {
+    var p = Math.pow(2, bit);
+    return p <= 128 ? String(p) : '2<sup>' + bit + '</sup>';
+  }
+  /* Bits, Rechenweg und (außer dem gerade bearbeiteten) beide Felder neu zeichnen */
+  function bcShow(skip) {
+    var w = BC.width(bcVal), bin = BC.toBin(bcVal, w).replace(/ /g, ''), html = '';
+    for (var g = 0; g < w; g += 8) {
+      html += '<div class="bc-byte">';
+      for (var i = g; i < g + 8; i++) {
+        var bit = w - 1 - i, on = bin.charAt(i) === '1';
+        html += '<button type="button" class="bc-bit' + (on ? ' is-on' : '') + '" data-bit="' + bit + '" aria-pressed="' + on + '" aria-label="Bit ' + bit + '">' +
+          '<b>' + (on ? 1 : 0) + '</b><span>' + bcLabel(bit) + '</span></button>';
+      }
+      html += '</div>';
+    }
+    $('bc-bits').innerHTML = html;
+    var parts = BC.parts(bcVal);
+    $('bc-sum').innerHTML = parts.length
+      ? parts.map(function (p) { return '<code>' + num(p) + '</code>'; }).join(' + ') + ' = <strong>' + num(bcVal) + '</strong>'
+      : L('Kein Bit gesetzt = <strong>0</strong>', 'No bit set = <strong>0</strong>');
+    if (skip !== 'dec') bcDec.value = String(bcVal);
+    if (skip !== 'bin') bcBin.value = BC.toBin(bcVal, w);
+  }
+  function bcRead(which) {
+    var raw = which === 'dec' ? bcDec.value : bcBin.value, msg = $('bc-msg');
+    msg.textContent = ''; msg.className = 'tool-msg';
+    if (!raw.trim()) return;
+    var n = which === 'dec' ? BC.parseDec(raw) : BC.parseBin(raw);
+    if (n === null) {
+      msg.textContent = which === 'dec'
+        ? L('Bitte eine ganze Zahl von 0 bis 4.294.967.295 eingeben.', 'Please enter a whole number from 0 to 4,294,967,295.')
+        : L('Binär sind nur 0 und 1 erlaubt, höchstens 32 Stellen.', 'Binary allows only 0 and 1, at most 32 digits.');
+      msg.className = 'tool-msg err';
+      return;
+    }
+    bcVal = n;
+    bcShow(which);
+  }
+  if (BC) {
+    bcDec.addEventListener('input', function () { bcRead('dec'); });
+    bcBin.addEventListener('input', function () { bcRead('bin'); });
+    /* Beim Verlassen eines Feldes die saubere Schreibweise zeigen.
+       Nur die Felder, nicht die Bits: sonst ginge ein Klick auf ein Bit verloren,
+       weil die Knöpfe zwischen mousedown und click neu gezeichnet würden. */
+    [bcDec, bcBin].forEach(function (el) {
+      el.addEventListener('blur', function () {
+        if ($('bc-msg').textContent) return;
+        bcDec.value = String(bcVal);
+        bcBin.value = BC.toBin(bcVal);
+      });
+    });
+    $('bc-bits').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-bit]');
+      if (!b) return;
+      bcVal = BC.toggle(bcVal, Number(b.getAttribute('data-bit')));
+      $('bc-msg').textContent = ''; $('bc-msg').className = 'tool-msg';
+      bcShow();
+      var again = $('bc-bits').querySelector('[data-bit="' + b.getAttribute('data-bit') + '"]');
+      if (again) again.focus();
+    });
+    $('bc-copy').addEventListener('click', function () { copy(BC.toBin(bcVal), $('bc-flash')); });
+    $('bc-clear').addEventListener('click', function () { bcVal = 0; $('bc-msg').textContent = ''; $('bc-msg').className = 'tool-msg'; bcShow(); });
+  }
+
   /* ---------- Start und Sprachwechsel ---------- */
   function renderAll() {
     translateOptions();
@@ -668,6 +739,7 @@
     if (PW) pwRate();
     if (HC) { hsText(); hsShow(); }
     if (CK) { ckFill(); ckFields(); }
+    if (BC) bcShow();
   }
   new MutationObserver(renderAll).observe(root, { attributes: true, attributeFilter: ['lang'] });
   renderAll();
