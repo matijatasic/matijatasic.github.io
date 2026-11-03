@@ -68,7 +68,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=2026110315">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026110316">
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
@@ -79,8 +79,8 @@
     })();
   </script>
   <script src="assets/js/config.js" defer></script>
-  <script src="assets/js/site.js?v=2026110315" defer></script>
-  <script src="assets/js/quiz.js?v=2026110315" defer></script>
+  <script src="assets/js/site.js?v=2026110316" defer></script>
+  <script src="assets/js/quiz.js?v=2026110316" defer></script>
 </head>
 <body>
   <a class="skip" href="#inhalt"><span data-l="de">Zum Inhalt springen</span><span data-l="en">Skip to content</span></a>
@@ -239,29 +239,32 @@
 
     <!-- 03 Interaktiv -->
     <section class="chapter" id="interaktiv">
-      <div class="ch-head" data-node data-runtitle data-runtitle-de="Interaktiv" data-runtitle-en="Interactive">
-        <span class="ch-num">03</span>
-        <h2 class="ch-title"><span data-l="de">Interaktiv</span><span data-l="en">Interactive</span></h2>
-        <span class="ch-rule"></span>
-      </div>
-      <div class="iq-grid">
-        <div class="iq-info">
-          <p class="iq-kicker"><span data-l="de">Netzwerk-Quiz · drei Modi</span><span data-l="en">Network quiz · three modes</span></p>
-          <h3 class="iq-title"><span data-l="de">Testen Sie Ihr Netzwerk-Wissen.</span><span data-l="en">Test your networking knowledge.</span></h3>
-          <p class="iq-text"><span data-l="de">Fünf Fragen pro Runde, je drei Antworten. Klicken Sie die richtige an, bevor die 30 Sekunden ablaufen. Je schneller, desto mehr Punkte.</span><span data-l="en">Five questions per round, three answers each. Click the right one before the 30 seconds run out. The faster, the more points.</span></p>
-          <ul class="iq-facts">
-            <li><b>5</b><span data-l="de">Runden</span><span data-l="en">rounds</span></li>
-            <li><b>30 s</b><span data-l="de">pro Frage</span><span data-l="en">per question</span></li>
-            <li><b>+10</b><span data-l="de">je übrige Sekunde</span><span data-l="en">per second left</span></li>
-          </ul>
-          <div class="podwrap">
-            <div class="pod" data-quiz-pod><div class="rk-h">Ihre Bestenliste</div><div class="podium"><div class="p2 empty"><b>2</b><span>–</span></div><div class="p1 empty"><b>1</b><span>–</span></div><div class="p3 empty"><b>3</b><span>–</span></div></div></div>
-            <div class="tr card" data-quiz-tiers></div>
+      <div class="gw g5" data-quiz>
+        <div class="kt-bar"><span class="kt-ico" aria-hidden="true">▮</span><button type="button" class="kt-title" data-sudo>quiz — Visual Terminal</button><span class="kt-ctl" aria-hidden="true"><i>–</i><i>▢</i><i>✕</i></span></div>
+        <div class="gw-in">
+          <div class="lp">
+            <nav class="tree" aria-label="Quiz-Dateien">
+              <div class="tr-h">EXPLORER · ~/quiz</div>
+              <div class="f d">▾ quiz</div>
+              <button type="button" class="f on" data-quiz-mode="binaer" aria-pressed="true">▸ binaer.sh</button>
+              <button type="button" class="f" data-quiz-mode="subnetz" aria-pressed="false">▸ subnetz.sh</button>
+              <button type="button" class="f" data-quiz-mode="ports" aria-pressed="false">▸ ports.sh</button>
+              <a class="f" href="#iq-board">▤ bestenliste.txt</a>
+              <a class="f" href="#iq-tiers">▤ stufen.txt</a>
+              <a class="f" href="#iq-rules">▤ regeln.md</a>
+            </nav>
+            <div class="lp5-c">
+              <div class="ch-head lc-h" data-node data-runtitle data-runtitle-de="Interaktiv" data-runtitle-en="Interactive"><span class="lc-num">03</span><h2 class="lc-ch"><span data-l="de">Interaktiv</span><span data-l="en">Interactive</span></h2></div>
+              <h3 class="lc-title"><span data-l="de">Testen Sie Ihr <span>Netzwerk-Wissen.</span></span><span data-l="en">Test your <span>networking knowledge.</span></span></h3>
+              <p class="lc-text"><span data-l="de">Fünf Fragen pro Runde, je drei Antworten. Klicken Sie die richtige an, bevor die 30 Sekunden ablaufen. Je schneller, desto mehr Punkte.</span><span data-l="en">Five questions per round, three answers each. Click the right one before the 30 seconds run out. The faster, the more points.</span></p>
+              <div class="lc-rules" id="iq-rules"><div><b>5</b><span><span data-l="de">Runden</span><span data-l="en">rounds</span></span></div><div><b>30 s</b><span><span data-l="de">pro Frage</span><span data-l="en">per question</span></span></div><div><b>+10</b><span><span data-l="de">je Sekunde</span><span data-l="en">per second</span></span></div></div>
+              <div class="lc-cmd" id="iq-board"><span class="u">$</span> cat bestenliste-<span data-quiz-podname>binaer</span>.txt</div>
+              <div class="lc-pod" data-quiz-pod><div class="p2 empty"><b>2</b><span>–</span></div><div class="p1 empty"><b>1</b><span>–</span></div><div class="p3 empty"><b>3</b><span>–</span></div></div>
+              <div class="lc-cmd" id="iq-tiers"><span class="u">$</span> cat stufen.txt</div>
+              <div class="lc-tiers" data-quiz-tiers></div>
+            </div>
           </div>
-        </div>
-        <div class="quiz-card">
-          <div class="kt" data-quiz>
-            <div class="kt-bar"><span class="kt-ico" aria-hidden="true">▮</span><button type="button" class="kt-title" data-sudo>gast@matija-tasic: ~/quiz</button><span class="kt-ctl" aria-hidden="true"><i>–</i><i>▢</i><i>✕</i></span></div>
+          <div class="rp">
             <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button><a class="khelp" data-quiz-help href="werkzeuge.html#binaer" target="_blank" rel="noopener">? <span data-l="de">Hilfe</span><span data-l="en">Help</span></a></div>
             <div class="kt-body">
               <div class="kp"><span class="b">┌──(</span><span class="u">gast㉿matija-tasic</span><span class="b">)-[</span><span class="w">~/quiz</span><span class="b">]</span></div>
