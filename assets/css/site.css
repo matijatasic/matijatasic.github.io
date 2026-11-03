@@ -1368,3 +1368,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .sh-nav > a.brand-c:hover { background: none; }
   .sh-nav > a.brand-c .brand-mk.brand-3d { width: 44px; height: 44px; filter: none; }
 }
+
+/* 01 Profil: Fließtext im Blocksatz, gleiche Breite wie die Fenster darunter (11/2026) */
+#profil .profil-grid > div > p.lead,
+#profil .profil-grid > div > p:not(.statement):not(.lead) { max-width: none; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
