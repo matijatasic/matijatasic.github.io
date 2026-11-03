@@ -143,23 +143,23 @@
   };
   var setTop = function (m, t) { try { localStorage.setItem('quiz-top-' + m, JSON.stringify(t)); } catch (e) {} };
   var fmt = function (n) { return bi(n.toLocaleString('de-DE'), n.toLocaleString('en-US')); };
-  var pod = document.querySelector('[data-quiz-pod]'), tierBox = document.querySelector('[data-quiz-tiers]');
+  var pod = document.querySelector('[data-quiz-pod]'), tierBox = document.querySelector('[data-quiz-tiers]'), podName = document.querySelector('[data-quiz-podname]');
   var last = {};
   // Podium (Platz 1 in der Mitte) und Stufen links neben dem Terminal
   var board = function () {
     var top = getTop(mode), mark = last[mode] != null ? last[mode] : top[0];
+    if (podName) podName.textContent = mode;
     if (pod) {
       var col = function (place, cls) {
         var v = top[place - 1];
         return '<div class="' + cls + (v == null ? ' empty' : '') + (last[mode + 'p'] === place ? ' new' : '') + '"><b>' + place + '</b><span>' + (v == null ? '–' : fmt(v)) + '</span></div>';
       };
-      pod.innerHTML = '<div class="rk-h">' + bi('Ihre Bestenliste', 'Your leaderboard') + ' · ' + NAMES[mode] + '</div>' +
-        '<div class="podium">' + col(2, 'p2') + col(1, 'p1') + col(3, 'p3') + '</div>';
+      pod.innerHTML = col(2, 'p2') + col(1, 'p1') + col(3, 'p3');
     }
     if (tierBox) {
-      var you = mark != null ? tierOf(mark) : null, h = '<div class="rk-h">' + bi('Stufen', 'Levels') + '</div>';
+      var you = mark != null ? tierOf(mark) : null, h = '';
       TIERS.forEach(function (t) {
-        h += '<div class="tr-r ' + t.cls + (you === t ? ' you' : '') + '"><b>' + tx(t) + '</b><span>' + bi(t.range.de + ' Punkte', t.range.en + ' points') + '</span>' +
+        h += '<div class="lt ' + t.cls + (you === t ? ' you' : '') + '"><b>' + tx(t) + '</b><span>' + bi(t.range.de + ' Punkte', t.range.en + ' points') + '</span>' +
           (you === t ? '<em>◀ ' + bi('Sie', 'You') + '</em>' : '') + '</div>';
       });
       tierBox.innerHTML = h;
@@ -185,7 +185,7 @@
     view.innerHTML =
       '<div class="kt-out c">' + bi('[*] Bereit: 5 Fragen, je 30 Sekunden.', '[*] Ready: 5 questions, 30 seconds each.') + '</div>' +
       '<div class="kt-out d">' + bi('# Schneller antworten bringt mehr Punkte.', '# Faster answers earn more points.') + '</div>' +
-      (b ? '<div class="kt-out y">' + bi('Ihr Rekord: ' + b + ' Punkte', 'Your record: ' + b + ' points') + '</div>' : '') +
+      (b ? '<div class="kt-out y">' + bi('Ihr Rekord: ' + b.toLocaleString('de-DE') + ' Punkte', 'Your record: ' + b.toLocaleString('en-US') + ' points') + '</div>' : '') +
       '<div class="kt-act"><button type="button" class="pri" data-quiz-start>▶ ' + bi('Start', 'Start') + '</button></div>';
     view.querySelector('[data-quiz-start]').addEventListener('click', start);
   };
