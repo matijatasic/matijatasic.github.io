@@ -1372,3 +1372,20 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 /* 01 Profil: Fließtext im Blocksatz, gleiche Breite wie die Fenster darunter (11/2026) */
 #profil .profil-grid > div > p.lead,
 #profil .profil-grid > div > p:not(.statement):not(.lead) { max-width: none; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+
+/* 03 Weiterbildungen (11/2026): sechs Themen-Fenster im Stil der Projekt-Karten */
+.wb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
+.wb-win { background: var(--surface); border: 2px solid var(--slate); border-radius: 18px; overflow: hidden; }
+.wb-win header { position: relative; display: flex; align-items: center; gap: 10px; background: var(--slate); padding: 14px 64px 14px 20px; }
+.wb-win header::after { content: ""; position: absolute; right: 18px; top: 50%; margin-top: -4.5px; width: 9px; height: 9px; border-radius: 50%; background: var(--cu); box-shadow: -15px 0 0 #e0b23a, -30px 0 0 var(--tq); }
+.wb-win h3 { margin: 0; font: 700 17px/1.2 var(--display); color: var(--slate-ink); }
+.wb-win small { font: 700 11px/1 var(--mono); color: var(--tq); background: rgba(34, 199, 217, .16); padding: 5px 8px; border-radius: 999px; }
+.wb-win ul { list-style: none; margin: 0; padding: 14px 20px 18px; }
+.wb-win li { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.4; color: var(--ink); }
+.wb-win li:last-child { border-bottom: 0; }
+.wb-win time { font: 400 12px/1.9 var(--mono); color: var(--cu-d); font-variant-numeric: tabular-nums; }
+:root[data-theme="dark"] .wb-win { border: 1px solid var(--line-strong); }
+:root[data-theme="dark"] .wb-win header { background: #14171c; }
+:root[data-theme="dark"] .wb-win time { color: var(--cu); }
+@media (max-width: 1080px) { .wb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .wb-grid { grid-template-columns: 1fr; } }
