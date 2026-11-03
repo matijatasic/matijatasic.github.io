@@ -1373,19 +1373,31 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 #profil .profil-grid > div > p.lead,
 #profil .profil-grid > div > p:not(.statement):not(.lead) { max-width: none; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 
-/* 03 Weiterbildungen (11/2026): sechs Themen-Fenster im Stil der Projekt-Karten */
-.wb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
-.wb-win { background: var(--surface); border: 2px solid var(--slate); border-radius: 18px; overflow: hidden; }
-.wb-win header { position: relative; display: flex; align-items: center; gap: 10px; background: var(--slate); padding: 14px 64px 14px 20px; }
-.wb-win header::after { content: ""; position: absolute; right: 18px; top: 50%; margin-top: -4.5px; width: 9px; height: 9px; border-radius: 50%; background: var(--cu); box-shadow: -15px 0 0 #e0b23a, -30px 0 0 var(--tq); }
-.wb-win h3 { margin: 0; font: 700 17px/1.2 var(--display); color: var(--slate-ink); }
-.wb-win small { font: 700 11px/1 var(--mono); color: var(--tq); background: rgba(34, 199, 217, .16); padding: 5px 8px; border-radius: 999px; }
-.wb-win ul { list-style: none; margin: 0; padding: 14px 20px 18px; }
-.wb-win li { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.4; color: var(--ink); }
-.wb-win li:last-child { border-bottom: 0; }
-.wb-win time { font: 400 12px/1.9 var(--mono); color: var(--cu-d); font-variant-numeric: tabular-nums; }
-:root[data-theme="dark"] .wb-win { border: 1px solid var(--line-strong); }
-:root[data-theme="dark"] .wb-win header { background: #14171c; }
-:root[data-theme="dark"] .wb-win time { color: var(--cu); }
-@media (max-width: 1080px) { .wb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 860px) { .wb-grid { grid-template-columns: 1fr; } }
+/* 02 Weiterbildungen (11/2026): ein großes Fenster „~/weiterbildungen“, zwei Spalten mit sechs Themenfeldern */
+.wb-box { margin-top: 28px; background: var(--surface); border: 2px solid var(--slate); border-radius: 20px; overflow: hidden; }
+.wb-bar { display: flex; align-items: center; gap: 16px; background: var(--slate); padding: 14px 22px; }
+.wb-bar i { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--tq); box-shadow: 15px 0 0 #e0b23a, 30px 0 0 var(--cu); margin-right: 30px; }
+.wb-bar code { font: 400 13px/1 var(--mono); color: var(--slate-ink); }
+.wb-bar > span { margin-left: auto; font: 700 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--tq); }
+.wb-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 56px; padding: 30px 34px 34px; }
+.wb-body h3 { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; font: 700 19px/1.2 var(--display); color: var(--ink); }
+.wb-body h3::before { content: ""; flex: none; width: 12px; height: 12px; border-radius: 3px; background: var(--cu); }
+.wb-body ul { list-style: none; margin: 0; padding: 0; }
+.wb-body li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line-strong); font-size: 16px; line-height: 1.4; color: var(--ink); }
+.wb-body li:last-child { border-bottom: 0; }
+.wb-body time { font: 400 13px/1.75 var(--mono); color: #1b8f9c; font-variant-numeric: tabular-nums; }
+:root[data-theme="dark"] .wb-box { border: 1px solid var(--line-strong); }
+:root[data-theme="dark"] .wb-bar { background: #14171c; }
+:root[data-theme="dark"] .wb-body time { color: var(--tq); }
+@media (max-width: 860px) {
+  .wb-body { grid-template-columns: 1fr; gap: 26px; padding: 22px 18px 24px; }
+  .wb-bar > span { display: none; }
+}
+
+/* Kopfleiste mit 6 Menüpunkten + MT: Texte nie umbrechen, auf schmalen Desktops enger */
+@media (min-width: 861px) { .sh-nav > a, .sh-drop > a { white-space: nowrap; } }
+@media (min-width: 861px) and (max-width: 1080px) {
+  .sh-panel { gap: 12px; }
+  .sh-nav > a, .sh-drop > a { padding: 10px 11px; font-size: 14px; }
+  .sh-nav > a.brand-c { margin: 0 4px; }
+}
