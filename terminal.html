@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" translate="no" data-theme="light" data-title-de="Terminal · Matija Tasic" data-title-en="Terminal · Matija Tasic">
+<html lang="de" translate="no" data-theme="dark" data-title-de="Terminal · Matija Tasic" data-title-en="Terminal · Matija Tasic">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,10 +25,9 @@
   <link rel="stylesheet" href="assets/css/site.css?v=2026110322">
   <script>
     (function () {
-      var d = document.documentElement, t = null, l = null;
-      try { t = sessionStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-      // Seite startet hell; nur wer im laufenden Besuch Dunkel gewählt hat, sieht sie dunkel
-      if (t === 'dark') d.setAttribute('data-theme', 'dark');
+      var d = document.documentElement, l = null;
+      try { l = localStorage.getItem('lang'); } catch (e) {}
+      // Terminal-Seite startet bei jedem Aufruf dunkel; der Schalter wirkt nur, solange die Seite offen ist
       if (l === 'en') d.lang = 'en';
     })();
   </script>
