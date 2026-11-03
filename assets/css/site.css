@@ -1264,6 +1264,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
    Links Dateibaum + Infos + Bestenliste + Stufen, rechts das Quiz. Hell- und Dunkelmodus gleich.
    ========================================================================== */
 #interaktiv { margin-bottom: 72px; }
+.term-page #interaktiv { margin: 28px 0 56px; }
 .gw {
   --t-bg: #23252e; --t-bg2: #1c1e25; --t-line: #3b404c; --t-blue: #3a8dff; --t-green: #3ccf6e; --t-yel: #f5c04a; --t-cy: #7fdcea;
   position: relative; background: var(--t-bg); border: 1px solid var(--t-line); border-radius: 14px; overflow: hidden;
