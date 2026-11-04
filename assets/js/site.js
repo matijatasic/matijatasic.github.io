@@ -13,6 +13,15 @@
   function store(key, value) {
     try { if (value === undefined) return localStorage.getItem(key); localStorage.setItem(key, value); } catch (e) { return null; }
   }
+  /* Sprache: am PC dauerhaft (localStorage), am Handy nur für den laufenden Besuch (sessionStorage),
+     damit jeder neue Besuch am Handy auf Deutsch startet. */
+  function langStore(value) {
+    try {
+      var s = window.matchMedia('(max-width: 860px)').matches ? sessionStorage : localStorage;
+      if (value === undefined) return s.getItem('lang');
+      s.setItem('lang', value);
+    } catch (e) { return null; }
+  }
 
   /* ---------------- Sprache ---------------- */
   function applyLang(lang) {
@@ -34,7 +43,7 @@
   document.querySelectorAll('[data-set-lang]').forEach(function (b) {
     b.addEventListener('click', function () {
       var lang = b.getAttribute('data-set-lang');
-      store('lang', lang);
+      langStore(lang);
       applyLang(lang);
     });
   });
@@ -299,7 +308,7 @@
   }
 
   /* ---------------- Start ---------------- */
-  var saved = store('lang');
+  var saved = langStore();
   applyLang(saved === 'en' ? 'en' : 'de');
   var year = document.querySelectorAll('[data-year]');
   year.forEach(function (y) { y.textContent = new Date().getFullYear(); });
