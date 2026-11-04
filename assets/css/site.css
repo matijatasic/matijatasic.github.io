@@ -1544,3 +1544,25 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .hero-tag::before { background: var(--cu); box-shadow: 0 0 10px var(--cu); }
 .hero-card h1 { font: 300 clamp(36px, 3.7vw, 54px)/1.14 'IBM Plex Sans', var(--sans); letter-spacing: -.015em; }
 .hero-card h1 em { font-weight: 300; color: var(--tq); }
+
+/* 01 Profil „Türkis-Glow“ (11/2026): Kennzahlen als ein dunkles Band mit drei Spalten,
+   abgestimmt auf die Fotokarte links. Akzente im Profil in Türkis statt Kupfer. */
+#profil { --tq-t: #3fd3e2; }
+#profil .pf-card, #profil .pf-band { border-radius: 18px; outline: 1px solid rgba(34, 199, 217, .22); outline-offset: -1px; }
+#profil .pf-card { background: radial-gradient(120% 60% at 50% 22%, rgba(34, 199, 217, .16), transparent 60%), var(--slate); }
+#profil .pf-ph { box-shadow: 0 0 0 3px var(--slate), 0 0 0 5px var(--tq), 0 0 28px rgba(34, 199, 217, .35); }
+#profil .pf-facts dd.cu { color: var(--tq); }
+#profil .pf-chips li.k { color: var(--tq); border-color: rgba(34, 199, 217, .55); background: rgba(34, 199, 217, .14); }
+#profil .pf-band { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 24px; padding: 22px 8px; background: radial-gradient(80% 140% at 0% 100%, rgba(34, 199, 217, .14), transparent 60%), var(--slate); }
+#profil .pf-band > div { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 4px 16px; border: 0; border-radius: 0; background: none; }
+#profil .pf-band > div + div { border-left: 1px solid rgba(255, 255, 255, .16); }
+#profil .pf-band b { display: block; margin-top: 4px; font: 300 34px/1.1 'IBM Plex Sans', var(--sans); letter-spacing: -.01em; color: var(--tq-t); white-space: nowrap; }
+#profil .pf-band .pl { display: block; margin-top: 6px; font-size: 14.5px; line-height: 1.4; color: #f2f2f0; }
+#profil .pf-band .ps { display: block; margin-top: auto; padding-top: 10px; font: 400 12.5px/1.3 var(--mono); letter-spacing: .02em; color: #a9adb5; }
+:root[data-theme="dark"] #profil .pf-card { background: radial-gradient(120% 60% at 50% 22%, rgba(34, 199, 217, .16), transparent 60%), #14171c; }
+:root[data-theme="dark"] #profil .pf-ph { box-shadow: 0 0 0 3px #14171c, 0 0 0 5px var(--tq), 0 0 28px rgba(34, 199, 217, .35); }
+:root[data-theme="dark"] #profil .pf-band { background: radial-gradient(80% 140% at 0% 100%, rgba(34, 199, 217, .14), transparent 60%), #14171c; border: 1px solid var(--line-strong); }
+@media (max-width: 860px) {
+  #profil .pf-band { grid-template-columns: 1fr; }
+  #profil .pf-band > div + div { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .14); margin-top: 12px; padding-top: 16px; }
+}
