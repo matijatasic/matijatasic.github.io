@@ -1509,3 +1509,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .mh-grid a { font-size: 12px; }
   .mh-grid a svg { display: none; }
 }
+
+/* 01 Profil: Fenster „100 von 100 Punkten“ in einer Zeile (11/2026) */
+.pf-win b.pf-pkt { font-size: clamp(19px, 1.7vw, 23px); white-space: nowrap; }
+@media (max-width: 860px) { .pf-win b.pf-pkt { font-size: 24px; } }
