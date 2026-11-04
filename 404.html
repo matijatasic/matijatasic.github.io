@@ -11,7 +11,7 @@
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/site.css?v=2026110334">
+  <link rel="stylesheet" href="/assets/css/site.css?v=2026110335">
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
@@ -24,7 +24,7 @@
       if (l === 'en') d.lang = 'en';
     })();
   </script>
-  <script src="/assets/js/site.js?v=2026110333" defer></script>
+  <script src="/assets/js/site.js?v=2026110335" defer></script>
 </head>
 <body>
   <a class="skip" href="#inhalt"><span data-l="de">Zum Inhalt springen</span><span data-l="en">Skip to content</span></a>
@@ -55,10 +55,10 @@
             <button type="button" data-set-lang="de" aria-pressed="true">DE</button>
             <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
           </div>
-          <button type="button" class="theme-btn" data-toggle-theme aria-label="Hell oder dunkel umschalten" data-aria-de="Hell oder dunkel umschalten" data-aria-en="Toggle light or dark mode">
-            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
-            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-          </button>
+          <div class="seg seg-theme" role="group" aria-label="Ansicht" data-aria-de="Ansicht" data-aria-en="Theme">
+            <button type="button" data-set-theme="light" aria-pressed="true">LIGHT</button>
+            <button type="button" data-set-theme="dark" aria-pressed="false">DARK</button>
+          </div>
         </div>
         <div class="sh-right">
           <nav class="sh-lab" aria-label="Werkzeuge" data-aria-de="Werkzeuge" data-aria-en="Tools">
