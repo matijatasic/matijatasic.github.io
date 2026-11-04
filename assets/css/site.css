@@ -1426,3 +1426,37 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .pf-chips li.k { color: var(--cu); border-color: rgba(240,138,75,.45); background: rgba(240,138,75,.1); }
 /* Inhalt der Karte senkrecht mittig, damit oben und unten gleich viel Luft bleibt */
 @media (min-width: 861px) { .pf-card { justify-content: center; } }
+
+/* Kopfleiste (11/2026, Variante 3 „Werkzeuge beim Kontakt“): MT entfernt, die Kapsel zeigt nur Inhalte über Matija.
+   IT-Tools und Terminal stehen rechts neben Kontakt als dezente Mono-Links (nav.sh-lab in div.sh-right). */
+.sh-lab .sh-drop > a, .sh-lab > a { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; text-decoration: none; }
+.sh-lab svg.ic { width: 15px; height: 15px; flex: none; color: var(--cu-d); }
+:root[data-theme="dark"] .sh-lab svg.ic { color: var(--cu); }
+@media (min-width: 861px) {
+  .sh-right { justify-self: end; display: flex; align-items: center; gap: 6px; }
+  .sh-lab { display: flex; align-items: center; gap: 2px; margin-right: 8px; padding-right: 12px; border-right: 1px solid var(--line-strong); }
+  .sh-lab .sh-drop > a, .sh-lab > a { color: var(--ink); background: none; font: 500 13px/1 var(--mono); padding: 10px; border-radius: 8px; }
+  .sh-lab .sh-drop > a > svg:last-child { display: none; }
+  .sh-lab .sh-drop > a:hover, .sh-lab > a:hover, .sh-lab .sh-drop:focus-within > a { color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  .sh-lab .sh-drop > a[aria-current="page"], .sh-lab > a[aria-current="page"] { color: var(--cu-d); background: color-mix(in srgb, var(--cu) 12%, transparent); }
+  :root[data-theme="dark"] .sh-lab .sh-drop > a[aria-current="page"], :root[data-theme="dark"] .sh-lab > a[aria-current="page"] { color: var(--cu); }
+  .sh-lab .sh-tools { left: auto; right: 0; transform: none; }
+}
+@media (min-width: 861px) and (max-width: 1080px) {
+  .sh-lab { margin-right: 4px; padding-right: 8px; }
+  .sh-lab .sh-drop > a, .sh-lab > a { padding: 10px 7px; font-size: 12.5px; }
+}
+/* Handy: eigener dunkler Block unter dem Hauptmenü, dann Sprache/Ansicht, dann Kontakt */
+@media (max-width: 860px) {
+  .sh-right { display: contents; }
+  .sh-panel > .sh-nav { order: 0; }
+  .sh-lab { order: 1; display: flex; flex-direction: column; align-items: stretch; gap: 2px; background: var(--slate); border-radius: 16px; padding: 8px; }
+  :root[data-theme="dark"] .sh-lab { background: var(--slate-2); border: 1px solid var(--slate-line); }
+  .sh-panel > .sh-prefs { order: 2; }
+  .sh-panel .sh-cta { order: 3; }
+  .sh-lab .sh-drop > a, .sh-lab > a { color: var(--slate-text); font: 500 15px/1 var(--mono); padding: 12px 10px; border-radius: 10px; }
+  .sh-lab .sh-drop > a[aria-current="page"], .sh-lab > a[aria-current="page"] { color: #fff; background: var(--cu); }
+  .sh-lab .sh-drop > a[aria-current="page"] svg.ic, .sh-lab > a[aria-current="page"] svg.ic { color: #fff; }
+  .sh-lab svg.ic { color: var(--cu); }
+  .sh-lab .sh-drop > a > svg.ic { display: inline-block; }
+}
