@@ -1577,17 +1577,16 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   #profil .pf-band > a.pf-link { border-left: 0; border-right: 0; border-top: 1px solid rgba(255, 255, 255, .14); border-bottom: 1px solid rgba(255, 255, 255, .14); margin: 12px 0; padding: 16px; }
 }
 
-/* ---------- Netzplan: korrigierte Topologie mit Management-VLAN, Leitungsfluss, Link zum OPNsense-Projekt ---------- */
-.plan.np .hv { fill: rgba(255,255,255,.025); stroke: rgba(255,255,255,.28); stroke-width: 1.2; stroke-dasharray: 3 3; }
-.plan.np .ifc { fill: rgba(240,138,75,.14); stroke: rgba(240,138,75,.55); stroke-width: 1; }
-.plan.np .zm { fill: rgba(255,255,255,.035); stroke: rgba(255,255,255,.4); stroke-width: 1.3; }
-.plan.np .lock { fill: none; stroke: var(--slate-ink); stroke-width: 1.4; }
-.plan.np .t-h { font-size: 11px; font-weight: 700; fill: var(--slate-text); letter-spacing: .02em; }
-.plan.np .t-w { font-size: 9.5px; fill: var(--cu); }
-.plan.np .ln.rt { opacity: .45; }
-.plan.np .fl.rt { animation-duration: 2.2s; }
+/* ---------- Netzplan: entschlackt (Firewall-VM auf Proxmox, Regeln an der Firewall, Management-VLAN 99), Datenfluss als wandernde Kugeln (SMIL), Link zum OPNsense-Projekt ---------- */
+.plan.np2 .hv { fill: rgba(255,255,255,.025); stroke: rgba(255,255,255,.26); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.plan.np2 .zm { fill: rgba(255,255,255,.04); stroke: rgba(255,255,255,.42); stroke-width: 1.3; }
+.plan.np2 .z { stroke-dasharray: none; stroke: rgba(34,199,217,.32); }
+.plan.np2 .lock { fill: none; stroke: var(--slate-ink); stroke-width: 1.4; }
+.plan.np2 .ln { opacity: .45; }
+.plan.np2 .pk-tq { fill: var(--tq); }
+.plan.np2 .pk-cu { fill: var(--cu); }
+.plan.np2 .pk-h { opacity: .22; }
 .np-link { display: block; color: inherit; text-decoration: none; border-radius: 14px; }
 .np-link:focus-visible { outline: 2px solid var(--cu); outline-offset: 6px; }
 .np-hint { display: block; margin-top: 6px; text-align: right; font: 400 12px/1.4 var(--mono); color: var(--slate-muted); transition: color .2s; }
 .np-link:hover .np-hint, .np-link:focus-visible .np-hint { color: var(--cu); }
-.np-link:hover .plan.np .ln { opacity: 1; }
