@@ -198,7 +198,7 @@
   var ask = function () {
     var q, tries = 0;
     do { q = make(mode); } while (g.used[q.key] && ++tries < 30);
-    g.used[q.key] = 1; g.q = q; g.left = SECONDS; g.t0 = Date.now(); g.done = false;
+    g.used[q.key] = 1; g.q = q; g.left = SECONDS; g.t0 = Date.now(); g.done = false; g.over = false;
     var keys = ['A', 'B', 'C'], o = '';
     q.opts.forEach(function (op, i) {
       o += '<button type="button" class="kt-opt" data-opt="' + i + '"><span class="k">' + keys[i] + '</span><span class="v">' + tx(op) + '</span><span class="m"></span></button>';
@@ -226,7 +226,15 @@
     if (bonus) bonus.textContent = '+' + PER_SEC * Math.floor(left) + ' Bonus';
     var tm = view.querySelector('[data-quiz-timer]');
     if (tm) tm.classList.toggle('is-low', left <= 10);
-    if (left <= 0) answer(-1);
+    // Zeit abgelaufen: Frage bleibt stehen, bis der Spieler wählt (dann ohne Zeitbonus)
+    if (left <= 0 && !g.over) {
+      g.over = true; clearInterval(timer); timer = 0;
+      var w = document.createElement('div');
+      w.className = 'kt-out r'; w.setAttribute('role', 'status');
+      w.innerHTML = '[!] ' + bi('Zeit abgelaufen · Wählen Sie trotzdem eine Antwort (ohne Zeitbonus).', 'Time is up · Pick an answer anyway (no time bonus).');
+      var opts = view.querySelector('.kt-opts');
+      if (opts) opts.parentNode.insertBefore(w, opts);
+    }
   };
 
   // Tab im Hintergrund: Uhr anhalten und beim Zurückkommen weiterlaufen lassen
@@ -252,7 +260,7 @@
     fb.className = 'kt-out ' + (ok ? 'g' : 'r');
     fb.setAttribute('role', 'status');
     fb.innerHTML = ok ? '[+] ' + bi('Richtig', 'Correct') + ': +' + p + ' ' + bi('Punkte', 'points')
-      : (i < 0 ? '[-] ' + bi('Zeit abgelaufen', 'Time is up') : '[-] ' + bi('Falsch', 'Wrong')) + ' · ' + bi('Lösung', 'Answer') + ': ' + tx(g.q.opts[g.q.a]);
+      : '[-] ' + bi('Falsch', 'Wrong') + ' · ' + bi('Lösung', 'Answer') + ': ' + tx(g.q.opts[g.q.a]);
     view.appendChild(fb);
     var nx = document.createElement('div');
     nx.className = 'kt-act';

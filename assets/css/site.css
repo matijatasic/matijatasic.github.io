@@ -1649,8 +1649,6 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .cr-runs + .tool-actions + .tool-note { margin-top: 12px; }
 
 /* ---------- Terminal: Cheatsheet als Hilfe-Highlight (11/2026, Vorlage 2 „Warnbox mit F-Tasten“) ---------- */
-.lp { grid-template-columns: 230px minmax(0, 1fr); }
-.tree.cs { padding: 14px 12px; gap: 8px; }
 .cs-box { border: 2px solid var(--t-yel); border-radius: 10px; background: rgba(245, 192, 74, .07); padding: 12px 12px 10px; box-shadow: 0 0 0 4px rgba(245, 192, 74, .08), 0 0 24px rgba(245, 192, 74, .15); }
 .cs-t { display: flex; align-items: center; gap: 8px; color: var(--t-yel); font-weight: 700; font-size: 13px; letter-spacing: .06em; }
 .cs-t span { background: var(--t-yel); color: #14161b; border-radius: 4px; padding: 0 6px; font-size: 12px; }
@@ -1662,8 +1660,6 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .cs-k.on kbd { background: var(--t-yel); box-shadow: 0 2px 0 #b8892a; }
 .cs-n { color: #8a919c; font-size: 10.5px; letter-spacing: .04em; line-height: 1.5; }
 @media (max-width: 1080px) {
-  .lp { grid-template-columns: 1fr; }
-  .tree.cs { flex-direction: column; flex-wrap: nowrap; padding: 12px; border-right: 0; border-bottom: 1px solid var(--t-line); }
   .cs-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 6px; }
   .cs-t, .cs-p { grid-column: 1 / -1; }
   .cs-p { margin: 4px 0 4px; }
@@ -1674,28 +1670,46 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .cs-k { justify-content: flex-start; padding: 9px 10px; font-size: 14px !important; }
 }
 
-/* Bestenliste links unter dem Cheatsheet (11/2026): füllt die Spalte bis unten */
-.tree.cs { gap: 10px; }
-.cs-pod { flex: 1; display: flex; flex-direction: column; min-height: 200px; border: 1px solid var(--t-line); border-radius: 10px; background: #1c1e25; padding: 10px 10px 0; }
-.cs-pod .lc-cmd { margin: 0 0 10px; font-size: 10.5px; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cs-pod .lc-pod { flex: 1; height: auto; min-height: 150px; gap: 4px; border-bottom: 0; }
-.cs-pod .lc-pod div { font-size: 11px; }
+/* ---------- Terminal: drei Spalten (11/2026) – links So geht’s + Hilfe, Mitte Spielfeld, rechts Rangliste ---------- */
+.gw-in.zg { grid-template-columns: 270px minmax(0, 1fr) 250px; }
+.zg .zc1, .zg .zc3 { display: flex; flex-direction: column; background: var(--t-bg2); min-width: 0; }
+.zg .zc1 { border-right: 1px solid var(--t-line); }
+.zg .zc3 { border-left: 1px solid var(--t-line); }
+.zg .zc2 { display: flex; flex-direction: column; min-width: 0; }
+.zg .zc1 .z-help, .zg .zc3 .z-rank, .zg .z-game { flex: 1; }
+.zg .zone { padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.zg .zone + .zone { border-top: 1px solid var(--t-line); }
+.zg .zh { display: flex; align-items: center; gap: 8px; margin: 0; font: 600 11px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #9aa1ab; }
+.zg .zh i { width: 8px; height: 8px; border-radius: 2px; background: currentColor; }
+.zg .z-help .zh { color: var(--t-yel); } .zg .z-rank .zh { color: var(--t-green); } .zg .z-game .zh { color: var(--t-blue); }
+.zg .z-game { padding: 0; gap: 0; } .zg .z-game > .zh { padding: 16px 20px 0; }
+.zg .rp { flex: 1; } .zg .rp .kt-body { padding: 16px 22px 22px; }
+.zg .lc-h { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.zg .lc-title { font: 700 21px/1.25 var(--sans); letter-spacing: -.01em; } .zg .lc-title::before { content: none; }
+.zg .lc-text, .zg .cs-p, .zg .cs-n, .zg .lt, .zg .lt > span, .zg .lc-rules span, .zg .cs-k, .zg .zsub { font-family: var(--sans); }
+.zg .lc-text { font-size: 13.5px; line-height: 1.55; color: #c3c8d0; }
+.zg .lc-rules { gap: 6px; }
+.zg .lc-rules div { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px; text-align: center; }
+.zg .lc-rules b { font-size: 14px; line-height: 1.1; white-space: nowrap; }
+.zg .lc-rules span { font-size: 11px; line-height: 1.2; white-space: nowrap; }
+.zg .cs-box { box-shadow: none; padding: 12px; }
+.zg .cs-p { margin: 0 0 8px; font-size: 13px; }
+.zg .cs-k { font-size: 13px !important; }
+.zg .cs-n { font-size: 11.5px; letter-spacing: 0; }
+.zg .zsub { font-size: 11px; font-weight: 600; color: #8a919c; margin: 4px 0 -4px; }
+.zg .lc-pod { height: 110px; } .zg .lc-pod div { font-size: 11.5px; }
+.zg .lt { font-size: 12.5px; } .zg .lt > span { font-size: 11.5px; }
 @media (max-width: 1080px) {
-  .cs-pod { flex: none; min-height: 0; }
-  .cs-pod .lc-pod { flex: none; height: 130px; min-height: 0; }
+  .gw-in.zg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .zg .zc2 { grid-column: 1 / -1; grid-row: 1; border-bottom: 1px solid var(--t-line); }
+  .zg .zc1 { border-right: 1px solid var(--t-line); }
+  .zg .zc3 { border-left: 0; }
 }
-
-/* Bestenliste 1/3 niedriger, unten bündig mit der rechten Spalte (11/2026, nur Desktop) */
-@media (min-width: 1081px) {
-  .tree.cs { padding-bottom: 26px; }
-  .cs-pod { flex: none; margin-top: auto; min-height: 0; }
-  .cs-pod .lc-pod { flex: none; height: 132px; min-height: 0; }
-}
-
-/* Regel-Fenster halb so hoch, Zahl + Text mittig (11/2026, nur Desktop) */
-@media (min-width: 1081px) {
-  .lc-rules { gap: 6px; }
-  .lc-rules div { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 7px 6px; text-align: center; }
-  .lc-rules b { font-size: 14px; line-height: 1.1; white-space: nowrap; }
-  .lc-rules span { font-size: 10.5px; line-height: 1.1; white-space: nowrap; }
+@media (max-width: 860px) {
+  .gw-in.zg { grid-template-columns: 1fr; }
+  .zg .zc1 { display: contents; }
+  .zg .z-intro { order: 1; } .zg .zc2 { order: 2; grid-row: auto; } .zg .z-help { order: 3; border-top: 1px solid var(--t-line); } .zg .zc3 { order: 4; border-top: 1px solid var(--t-line); }
+  .zg .z-intro, .zg .z-help { background: var(--t-bg2); }
+  .zg .zone:not(.z-game) { padding: 16px; }
+  .zg .z-game > .zh { padding: 14px 16px 0; }
 }
