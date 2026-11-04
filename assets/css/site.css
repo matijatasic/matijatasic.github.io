@@ -1566,3 +1566,13 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   #profil .pf-band { grid-template-columns: 1fr; }
   #profil .pf-band > div + div { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .14); margin-top: 12px; padding-top: 16px; }
 }
+
+/* 01 Profil: Feld „20 Zertifikate“ führt zu den Weiterbildungen und leuchtet beim Darüberfahren sanft orange (11/2026).
+   Die Trennlinien links und rechts trägt der Link selbst. */
+#profil .pf-band > a.pf-link { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 4px 16px; color: inherit; text-decoration: none; border-left: 1px solid rgba(255, 255, 255, .16); border-right: 1px solid rgba(255, 255, 255, .16); transition: background .3s ease; }
+#profil .pf-band > a.pf-link b { transition: color .3s ease, text-shadow .3s ease; }
+#profil .pf-band > a.pf-link:hover, #profil .pf-band > a.pf-link:focus-visible { background: radial-gradient(70% 90% at 50% 45%, rgba(240, 138, 75, .22), transparent 70%); outline: none; }
+#profil .pf-band > a.pf-link:hover b, #profil .pf-band > a.pf-link:focus-visible b { color: #f5a374; text-shadow: 0 0 18px rgba(240, 138, 75, .55); }
+@media (max-width: 860px) {
+  #profil .pf-band > a.pf-link { border-left: 0; border-right: 0; border-top: 1px solid rgba(255, 255, 255, .14); border-bottom: 1px solid rgba(255, 255, 255, .14); margin: 12px 0; padding: 16px; }
+}
