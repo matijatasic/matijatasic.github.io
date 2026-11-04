@@ -1460,3 +1460,23 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .sh-lab svg.ic { color: var(--cu); }
   .sh-lab .sh-drop > a > svg.ic { display: inline-block; }
 }
+
+/* Sprach-/Theme-Schalter oben links: Terminal-Status (alle Breiten) */
+.sh-prefs{gap:0;font:500 13px/1 var(--mono)}
+.sh-prefs .seg{background:transparent;padding:0;border-radius:0;align-items:center;gap:2px;padding-right:14px;margin-right:14px;border-right:1px solid var(--line-strong)}
+.sh-prefs .seg::before{content:"lang";color:var(--muted);margin-right:8px;font:500 13px/1 var(--mono)}
+.sh-prefs .seg button{font:600 13px/1 var(--mono);color:var(--muted);padding:9px 8px;border-radius:6px;letter-spacing:.04em}
+.sh-prefs .seg button[aria-pressed="true"]{background:transparent;box-shadow:none;color:var(--ink);text-decoration:underline;text-decoration-color:var(--cu);text-decoration-thickness:2px;text-underline-offset:6px}
+.sh-prefs .seg button:hover{color:var(--cu-d)}
+.sh-prefs .theme-btn{background:transparent;padding:9px 8px;color:var(--ink);font:600 13px/1 var(--mono);gap:8px}
+.sh-prefs .theme-btn svg{color:var(--cu)}
+.sh-prefs .theme-btn::after{content:"light";color:var(--ink)}
+:root[data-theme="dark"] .sh-prefs .theme-btn::after{content:"dark"}
+.sh-prefs .theme-btn::before{content:"theme";color:var(--muted);font-weight:500}
+.sh-prefs .theme-btn:hover::after{color:var(--cu-d)}
+:root[data-theme="dark"] .sh-prefs .seg button:hover,:root[data-theme="dark"] .sh-prefs .theme-btn:hover::after{color:var(--cu)}
+@media (min-width: 861px) and (max-width: 1180px){
+.sh-prefs .seg::before,.sh-prefs .theme-btn::before{display:none}
+.sh-prefs .seg{padding-right:8px;margin-right:8px}
+.sh-prefs .seg button{padding:9px 6px}
+}
