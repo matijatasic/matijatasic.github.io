@@ -129,10 +129,9 @@
   var tx = function (o) { return o.de === o.en ? o.de : bi(o.de, o.en); };
   var NAMES = { binaer: 'binär', subnetz: 'subnetz', ports: 'ports' };
   var FILES = { binaer: 'binaer.sh', subnetz: 'subnetz.sh', ports: 'ports.sh' };
-  var HELP = { binaer: '#binaer', subnetz: '#subnetz', ports: '#ports' };
   var ORDER = ['binaer', 'subnetz', 'ports'];
   var $ = function (s) { return kt.querySelector(s); };
-  var view = $('[data-quiz-view]'), cmd = $('[data-quiz-cmd]'), help = $('[data-quiz-help]');
+  var view = $('[data-quiz-view]'), cmd = $('[data-quiz-cmd]'), tools = Array.prototype.slice.call(document.querySelectorAll('[data-quiz-tool]'));
   var modeBtns = kt.querySelectorAll('[data-quiz-mode]');
 
   var mode = 'binaer';
@@ -305,7 +304,8 @@
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (cmd) cmd.textContent = './' + FILES[m] + ' --timer ' + SECONDS;
-    if (help) help.setAttribute('href', help.getAttribute('href').replace(/#.*$/, '') + HELP[m]);
+    // Cheatsheet links: das Werkzeug zur gewählten Runde hervorheben
+    tools.forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-quiz-tool') === m); });
     board();
   };
   modeBtns.forEach(function (b) {

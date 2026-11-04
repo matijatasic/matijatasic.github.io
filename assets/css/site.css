@@ -1251,14 +1251,11 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .ktabs button:focus-visible { outline: 2px solid #3a8dff; outline-offset: -2px; }
 .ktabs .on { background: #23252e; color: #fff; border-color: #3b404c; box-shadow: inset 0 3px 0 #3a8dff; font-weight: 700; position: relative; top: 1px; }
 .ktabs .on::before { content: '▸ '; color: #3a8dff; }
-.khelp { margin-left: auto; align-self: center; margin-bottom: 8px; background: #f5c04a; color: #14161b !important; font-weight: 700; padding: 6px 14px; border-radius: 7px; font-size: 13px; text-decoration: none; box-shadow: 0 0 0 3px rgba(245, 192, 74, .25); white-space: nowrap; }
-.khelp:hover, .khelp:focus-visible { background: #ffd36b; outline: none; box-shadow: 0 0 0 4px rgba(245, 192, 74, .45); }
 .resrow { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .resinfo { display: flex; flex-direction: column; gap: 2px; }
 .kt-pct { white-space: nowrap; }
 @media (max-width: 860px) {
   .ktabs { flex-wrap: wrap; }
-  .ktabs .khelp { order: -1; flex-basis: 100%; margin: 0 0 8px; text-align: center; padding: 7px 10px; }
   .ktabs button { flex: 1; text-align: center; padding: 7px 4px; font-size: 12px !important; }
   .kt-pct { font-size: 40px; }
   .resrow { gap: 12px; }
@@ -1650,3 +1647,29 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .cr-rel { grid-column: 2 / -1; text-align: left; min-width: 0; }
 }
 .cr-runs + .tool-actions + .tool-note { margin-top: 12px; }
+
+/* ---------- Terminal: Cheatsheet als Hilfe-Highlight (11/2026, Vorlage 2 „Warnbox mit F-Tasten“) ---------- */
+.lp { grid-template-columns: 230px minmax(0, 1fr); }
+.tree.cs { padding: 14px 12px; gap: 8px; }
+.cs-box { border: 2px solid var(--t-yel); border-radius: 10px; background: rgba(245, 192, 74, .07); padding: 12px 12px 10px; box-shadow: 0 0 0 4px rgba(245, 192, 74, .08), 0 0 24px rgba(245, 192, 74, .15); }
+.cs-t { display: flex; align-items: center; gap: 8px; color: var(--t-yel); font-weight: 700; font-size: 13px; letter-spacing: .06em; }
+.cs-t span { background: var(--t-yel); color: #14161b; border-radius: 4px; padding: 0 6px; font-size: 12px; }
+.cs-p { color: #e5e7eb; font-size: 12.5px; line-height: 1.5; margin: 8px 0 10px; }
+.cs-k { display: flex; align-items: center; gap: 8px; padding: 6px 7px; margin-top: 4px; border-radius: 7px; border: 1px solid var(--t-line); background: #1c1e25; color: #e5e7eb !important; text-decoration: none; font-size: 12.5px !important; white-space: nowrap; }
+.cs-k:hover, .cs-k:focus-visible { border-color: var(--t-yel); color: #fff !important; outline: none; }
+.cs-k kbd { font: 700 11px 'DejaVu Sans Mono', monospace; color: #14161b; background: #e5e7eb; border-radius: 4px; padding: 1px 5px; box-shadow: 0 2px 0 #8a919c; }
+.cs-k.on { border-color: var(--t-yel); background: rgba(245, 192, 74, .12); font-weight: 700; }
+.cs-k.on kbd { background: var(--t-yel); box-shadow: 0 2px 0 #b8892a; }
+.cs-n { color: #8a919c; font-size: 10.5px; letter-spacing: .04em; line-height: 1.5; }
+@media (max-width: 1080px) {
+  .lp { grid-template-columns: 1fr; }
+  .tree.cs { flex-direction: column; flex-wrap: nowrap; padding: 12px; border-right: 0; border-bottom: 1px solid var(--t-line); }
+  .cs-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 6px; }
+  .cs-t, .cs-p { grid-column: 1 / -1; }
+  .cs-p { margin: 4px 0 4px; }
+  .cs-k { margin: 0; }
+}
+@media (max-width: 560px) {
+  .cs-box { grid-template-columns: 1fr; }
+  .cs-k { justify-content: flex-start; padding: 9px 10px; font-size: 14px !important; }
+}

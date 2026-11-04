@@ -22,7 +22,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=2026110344">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026110347">
   <script>
     (function () {
       var d = document.documentElement, l = null;
@@ -38,7 +38,7 @@
     })();
   </script>
   <script src="assets/js/site.js?v=2026110335" defer></script>
-  <script src="assets/js/quiz.js?v=2026110333" defer></script>
+  <script src="assets/js/quiz.js?v=2026110347" defer></script>
 </head>
 <body class="page-term">
   <a class="skip" href="#inhalt"><span data-l="de">Zum Inhalt springen</span><span data-l="en">Skip to content</span></a>
@@ -97,12 +97,15 @@
         <div class="kt-bar"><span class="kt-ico" aria-hidden="true">▮</span><button type="button" class="kt-title" data-sudo>quiz — Visual Terminal</button><span class="kt-ctl" aria-hidden="true"><i>–</i><i>▢</i><i>✕</i></span></div>
         <div class="gw-in">
           <div class="lp">
-            <nav class="tree" aria-label="Cheatstore">
-              <div class="tr-h">EXPLORER · ~/cheatstore</div>
-              <div class="f d">▾ Cheatstore</div>
-              <a class="f" href="werkzeuge.html#binaer" target="_blank" rel="noopener">▤ <span data-l="de">Binär-Umrechner</span><span data-l="en">Binary converter</span> ↗</a>
-              <a class="f" href="werkzeuge.html#subnetz" target="_blank" rel="noopener">▤ <span data-l="de">Subnetzrechner</span><span data-l="en">Subnet calculator</span> ↗</a>
-              <a class="f" href="werkzeuge.html#ports" target="_blank" rel="noopener">▤ <span data-l="de">Port-Lexikon</span><span data-l="en">Port reference</span> ↗</a>
+            <nav class="tree cs" aria-label="Cheatsheet">
+              <div class="cs-box">
+                <div class="cs-t"><span aria-hidden="true">!</span>CHEATSHEET</div>
+                <p class="cs-p"><span data-l="de">Hängen Sie fest? Ein Hilfswerkzeug verrät den Rechenweg.</span><span data-l="en">Stuck? A helper tool shows you how it works.</span></p>
+                <a class="cs-k on" data-quiz-tool="binaer" href="werkzeuge.html#binaer" target="_blank" rel="noopener"><kbd aria-hidden="true">F1</kbd><span data-l="de">Binär-Umrechner</span><span data-l="en">Binary converter</span> ↗</a>
+                <a class="cs-k" data-quiz-tool="subnetz" href="werkzeuge.html#subnetz" target="_blank" rel="noopener"><kbd aria-hidden="true">F2</kbd><span data-l="de">Subnetzrechner</span><span data-l="en">Subnet calculator</span> ↗</a>
+                <a class="cs-k" data-quiz-tool="ports" href="werkzeuge.html#ports" target="_blank" rel="noopener"><kbd aria-hidden="true">F3</kbd><span data-l="de">Port-Lexikon</span><span data-l="en">Port reference</span> ↗</a>
+              </div>
+              <div class="cs-n"><span data-l="de">öffnet im neuen Tab · Quiz bleibt offen</span><span data-l="en">opens in a new tab · quiz stays open</span></div>
             </nav>
             <div class="lp5-c">
               <div class="ch-head lc-h" data-node data-runtitle data-runtitle-de="Interaktiv" data-runtitle-en="Interactive"><span class="lc-num">00</span><h1 class="lc-ch"><span data-l="de">Interaktiv</span><span data-l="en">Interactive</span></h1></div>
@@ -116,7 +119,7 @@
             </div>
           </div>
           <div class="rp">
-            <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button><a class="khelp" data-quiz-help href="werkzeuge.html#binaer" target="_blank" rel="noopener">? <span data-l="de">Hilfe</span><span data-l="en">Help</span></a></div>
+            <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button></div>
             <div class="kt-body">
               <div class="kp"><span class="b">┌──(</span><span class="u">gast㉿matija-tasic</span><span class="b">)-[</span><span class="w">~/quiz</span><span class="b">]</span></div>
               <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>./binaer.sh --timer 30</span></div>
