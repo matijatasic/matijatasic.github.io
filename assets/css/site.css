@@ -1691,3 +1691,11 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .cs-pod { flex: none; margin-top: auto; min-height: 0; }
   .cs-pod .lc-pod { flex: none; height: 132px; min-height: 0; }
 }
+
+/* Regel-Fenster halb so hoch, Zahl + Text mittig (11/2026, nur Desktop) */
+@media (min-width: 1081px) {
+  .lc-rules { gap: 6px; }
+  .lc-rules div { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 7px 6px; text-align: center; }
+  .lc-rules b { font-size: 14px; line-height: 1.1; white-space: nowrap; }
+  .lc-rules span { font-size: 10.5px; line-height: 1.1; white-space: nowrap; }
+}
