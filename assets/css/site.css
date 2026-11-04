@@ -1610,7 +1610,8 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .plan .ag-sep { stroke: rgba(255,255,255,.1); stroke-width: 1; }
 .plan .ag-live { fill: var(--tq); }
 .plan .ag-r { fill: none; stroke: rgba(34,199,217,.35); stroke-width: 1; }
-.plan .ag-sw { fill: rgba(34,199,217,.22); }
+.plan .ag-sw { fill: rgba(34,199,217,.3); }
+.plan .ag-ln { stroke: var(--tq); stroke-width: 1.5; stroke-linecap: round; }
 @media (max-width: 560px) {
   .np-leg { font-size: 11px; gap: 6px 14px; }
   .np-link .np-hint { font-size: 13px; }
