@@ -1413,3 +1413,16 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 /* Kontakt-Button oben rechts in Kupfer (hell und dunkel) */
 .sh-cta, :root[data-theme="dark"] .sh-cta { background: var(--cu); color: #1f1206 !important; }
 .sh-cta:hover, :root[data-theme="dark"] .sh-cta:hover { background: var(--cu-d) !important; color: #fff !important; }
+
+/* Profilkarte unten: Steckbrief + Werkzeug-Chips (Vorschlag 10, 11/2026) */
+.pf-facts { width: 100%; margin-top: 22px; text-align: left; }
+.pf-facts dl { margin: 0; border-top: 1px solid #3a414d; }
+.pf-facts dl div { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 9px 0; border-bottom: 1px solid #3a414d; }
+.pf-facts dt { font: 500 10.5px/1.5 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: #8d94a0; }
+.pf-facts dd { margin: 0; font: 600 12.5px/1.4 var(--display); color: #fff; text-align: right; }
+.pf-facts dd.cu { color: var(--cu); }
+.pf-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin: 16px 0 0; padding: 0; }
+.pf-chips li { font: 500 11px/1 ui-monospace, monospace; color: var(--tq); border: 1px solid rgba(34,199,217,.35); background: rgba(34,199,217,.08); padding: 5px 8px; border-radius: 999px; }
+.pf-chips li.k { color: var(--cu); border-color: rgba(240,138,75,.45); background: rgba(240,138,75,.1); }
+/* Inhalt der Karte senkrecht mittig, damit oben und unten gleich viel Luft bleibt */
+@media (min-width: 861px) { .pf-card { justify-content: center; } }
