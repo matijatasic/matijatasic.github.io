@@ -1513,3 +1513,15 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 /* 01 Profil: Fenster „100 von 100 Punkten“ in einer Zeile (11/2026) */
 .pf-win b.pf-pkt { font-size: clamp(19px, 1.7vw, 23px); white-space: nowrap; }
 @media (max-width: 860px) { .pf-win b.pf-pkt { font-size: 24px; } }
+
+/* Buttons dezent „Schiefer mit Kupferkante“ (11/2026):
+   Kontakt, Primär-Buttons und aktive Seite im Menü in Schiefer, Kupfer nur als Unterkante. */
+.sh-cta, :root[data-theme="dark"] .sh-cta,
+.btn-primary, :root[data-theme="dark"] .btn-primary { background: var(--slate) !important; color: #fff !important; box-shadow: inset 0 -3px 0 #d08a5f; }
+.sh-cta:hover, :root[data-theme="dark"] .sh-cta:hover,
+.btn-primary:hover, :root[data-theme="dark"] .btn-primary:hover { background: #343b47 !important; color: #fff !important; }
+:root[data-theme="dark"] .sh-cta, :root[data-theme="dark"] .btn-primary { background: #3a4250 !important; box-shadow: inset 0 -3px 0 #d08a5f, inset 0 0 0 1px #4a5361; }
+:root[data-theme="dark"] .sh-cta:hover, :root[data-theme="dark"] .btn-primary:hover { background: #444d5c !important; }
+.sh-nav > a[aria-current="page"], .sh-drop > a[aria-current="page"],
+.mh-grid a[aria-current="page"] { background: rgba(255, 255, 255, .12); color: #fff; box-shadow: inset 0 -3px 0 #d08a5f; }
+.mh-grid a[aria-current="page"] svg { color: var(--tq); }
