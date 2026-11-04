@@ -1586,6 +1586,9 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .plan.np2 .pk-tq { fill: var(--tq); }
 .plan.np2 .pk-cu { fill: var(--cu); }
 .plan.np2 .pk-h { opacity: .22; }
+.plan.np2 .pk-x { fill: #b4bcc6; }
+.plan.np2 .blk-c { fill: var(--slate); stroke: #e5484d; stroke-width: 1.6; }
+.plan.np2 .blk-p { stroke: #e5484d; stroke-width: 2; stroke-linecap: round; }
 .np-link { display: block; color: inherit; text-decoration: none; border-radius: 14px; }
 .np-link:focus-visible { outline: 2px solid var(--cu); outline-offset: 6px; }
 .np-hint { display: block; margin-top: 6px; text-align: right; font: 400 12px/1.4 var(--mono); color: var(--slate-muted); transition: color .2s; }
