@@ -1,6 +1,7 @@
 /* matija-tasic.de · Werkzeuge (werkzeuge.html)
    - Subnetzrechner, VLAN-Planer, Port-Nachschlagewerk (Daten in ports.js),
-     Passwortgenerator (pwgen.js), Hash-Rechner (hash.js), Befehls-Baukasten (cmds.js)
+     Passwortgenerator (pwgen.js), Hash-Rechner (hash.js), Befehls-Baukasten (cmds.js),
+     Binär-Umrechner (binconv.js), Cron-Erklärer (cron.js)
    - Rechenlogik steckt in ipcalc.js; hier nur Oberfläche und Texte
    - nichts wird gespeichert oder übertragen
 */
@@ -729,6 +730,86 @@
     $('bc-clear').addEventListener('click', function () { bcVal = 0; $('bc-msg').textContent = ''; $('bc-msg').className = 'tool-msg'; bcShow(); });
   }
 
+  /* ======================================================================
+     08 Cron-Erklärer (Logik in cron.js)
+     ====================================================================== */
+  var CR = window.CronCalc;
+  var CR_LABEL = { min: ['Minute', 'Minute'], hour: ['Stunde', 'Hour'], dom: ['Tag', 'Day'], mon: ['Monat', 'Month'], dow: ['Wochentag', 'Weekday'] };
+  var CR_RANGE = { min: '0–59', hour: '0–23', dom: '1–31', mon: '1–12', dow: '0–7' };
+  var CR_ERR = {
+    empty: ['Bitte eine Cron-Zeile eingeben, z. B. 30 3 * * *', 'Please enter a cron line, e.g. 30 3 * * *'],
+    count: ['Es fehlen Felder. Cron braucht fünf: Minute Stunde Tag Monat Wochentag.', 'Fields are missing. Cron needs five: minute hour day month weekday.'],
+    macro: ['Unbekanntes Kürzel. Erlaubt: @hourly, @daily, @weekly, @monthly, @yearly, @reboot.', 'Unknown shortcut. Allowed: @hourly, @daily, @weekly, @monthly, @yearly, @reboot.'],
+    format: ['nicht erkannt', 'not recognised'],
+    range: ['liegt außerhalb des erlaubten Bereichs', 'is outside the allowed range'],
+    step: ['Schrittweite muss mindestens 1 sein', 'step must be at least 1']
+  };
+  var CR_HINT = {
+    'dom-or-dow': ['Tag und Wochentag sind beide eingeschränkt. Cron startet dann, wenn EINES von beiden passt, nicht nur wenn beide passen. Das überrascht oft.', 'Day and weekday are both restricted. Cron then runs when EITHER matches, not only when both do. This often surprises people.'],
+    'every-minute': ['Läuft jede Minute. Für Jobs mit Wirkung meist zu oft; vermutlich fehlt eine feste Minute, z. B. 0 statt *.', 'Runs every minute. Usually too often for real jobs; a fixed minute is probably missing, e.g. 0 instead of *.'],
+    sunday7: ['Wochentag 7 ist wie 0 der Sonntag.', 'Weekday 7 is Sunday, same as 0.'],
+    never: ['Dieser Tag kommt in den gewählten Monaten nie vor. Der Job läuft nie.', 'This day never occurs in the chosen months. The job never runs.'],
+    'short-months': ['Monate mit weniger Tagen werden übersprungen, der Job läuft dort nicht.', 'Months with fewer days are skipped, the job does not run there.'],
+    reboot: ['@reboot läuft nur beim Start des cron-Dienstes, also nach dem Hochfahren. Für Dienste ist eine systemd-Unit meist die bessere Wahl.', '@reboot only runs when the cron service starts, i.e. after boot. For services a systemd unit is usually the better choice.']
+  };
+
+  function crRel(d, now) {
+    var min = Math.round((d - now) / 60000);
+    if (min < 60) return L('in ' + min + ' Min.', 'in ' + min + ' min');
+    var h = Math.round(min / 60);
+    if (h < 48) return L('in ' + h + ' Std.', 'in ' + h + ' h');
+    return L('in ' + Math.round(h / 24) + ' Tagen', 'in ' + Math.round(h / 24) + ' days');
+  }
+  function crFieldText(key, r) {
+    var one = r.items.length === 1 && !r.items[0].star && r.items[0].from === r.items[0].to && r.items[0].step === 1 ? r.items[0].from : null;
+    if (one !== null && key === 'min') return L('zur Minute ' + one, 'at minute ' + one);
+    if (one !== null && key === 'hour') return L('um ' + one + ' Uhr', 'at ' + one + ':00 (hour ' + one + ')');
+    if (one !== null && key === 'dom') return L('am ' + one + '. Tag des Monats', 'on day ' + one + ' of the month');
+    return CR.fieldText(key, r, lang());
+  }
+  function crShow() {
+    var raw = $('cr-in').value, p = CR.parse(raw), msg = $('cr-msg');
+    msg.textContent = ''; msg.className = 'tool-msg';
+    var say = $('cr-say'), fl = $('cr-fields'), hl = $('cr-hints'), rl = $('cr-runs');
+    if (p.error) {
+      var e = CR_ERR[p.error] || CR_ERR.format;
+      msg.textContent = p.field ? L(CR_LABEL[p.field][0] + ': „' + p.token + '“ ' + e[0] + ' (' + CR_RANGE[p.field] + ').', CR_LABEL[p.field][1] + ': “' + p.token + '” ' + e[1] + ' (' + CR_RANGE[p.field] + ').') : t(e);
+      msg.className = 'tool-msg err';
+      say.textContent = ''; fl.innerHTML = ''; hl.innerHTML = ''; rl.innerHTML = '';
+      $('cr-runs-h').hidden = true;
+      return;
+    }
+    $('cr-runs-h').hidden = false;
+    say.textContent = CR.describe(p, lang());
+    if (p.reboot) fl.innerHTML = '';
+    else fl.innerHTML = CR.FIELDS.map(function (f) {
+      var r = p.fields[f.key];
+      return '<div class="cr-f"><code>' + esc(r.text) + '</code><b>' + esc(t(CR_LABEL[f.key])) + '</b><span>' + esc(crFieldText(f.key, r)) + '</span></div>';
+    }).join('');
+    var hints = CR.hints(p);
+    if (p.macro && !p.reboot) hints.unshift({ level: 'info', code: 'macro' });
+    hl.innerHTML = hints.map(function (h) {
+      var txt = h.code === 'macro' ? L(p.macro + ' ist ein Kürzel für ' + CR.MACROS[p.macro] + '.', p.macro + ' is short for ' + CR.MACROS[p.macro] + '.') : t(CR_HINT[h.code]);
+      return '<li class="' + (h.level === 'info' ? 'cr-info' : h.level) + '">' + esc(txt) + '</li>';
+    }).join('');
+    var now = new Date(), runs = CR.nextRuns(p, now, 5);
+    var loc = lang() === 'en' ? 'en-GB' : 'de-DE';
+    if (p.reboot) rl.innerHTML = '<li class="cr-none">' + esc(L('Keine festen Zeiten, nur nach dem Systemstart.', 'No fixed times, only after system start.')) + '</li>';
+    else if (!runs.length) rl.innerHTML = '<li class="cr-none">' + esc(L('In den nächsten fünf Jahren keine Ausführung.', 'No run within the next five years.')) + '</li>';
+    else rl.innerHTML = runs.map(function (d) {
+      var day = d.toLocaleDateString(loc, { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+      var tm = d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
+      return '<li><span class="cr-d">' + esc(day) + '</span><code>' + esc(tm) + '</code><span class="cr-rel">' + esc(crRel(d, now)) + '</span></li>';
+    }).join('');
+  }
+  if (CR && $('cr-in')) {
+    $('cr-in').addEventListener('input', function () { $('cr-ex').value = ''; crShow(); });
+    $('cr-ex').addEventListener('change', function () { if ($('cr-ex').value) { $('cr-in').value = $('cr-ex').value; crShow(); } });
+    $('cr-copy').addEventListener('click', function () { copy($('cr-in').value.trim(), $('cr-flash')); });
+  }
+  /* Aufräumen: Die frühere Firewall-Zonen-Matrix hat hier Daten abgelegt; die werden gelöscht. */
+  try { localStorage.removeItem('fw-matrix'); } catch (e) {}
+
   /* ---------- Start und Sprachwechsel ---------- */
   function renderAll() {
     translateOptions();
@@ -740,6 +821,7 @@
     if (HC) { hsText(); hsShow(); }
     if (CK) { ckFill(); ckFields(); }
     if (BC) bcShow();
+    if (CR && $('cr-in')) crShow();
   }
   new MutationObserver(renderAll).observe(root, { attributes: true, attributeFilter: ['lang'] });
   renderAll();
