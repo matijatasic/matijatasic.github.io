@@ -55,13 +55,25 @@
     if (t) return t;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
-  document.querySelectorAll('[data-toggle-theme]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var next = currentTheme() === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { sessionStorage.setItem('theme', next); } catch (e) {}
+  function setTheme(next) {
+    root.setAttribute('data-theme', next);
+    try { sessionStorage.setItem('theme', next); } catch (e) {}
+    syncTheme();
+  }
+  /* Schalter LIGHT | DARK: aktive Ansicht per aria-pressed markieren */
+  function syncTheme() {
+    var t = currentTheme();
+    document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-set-theme') === t ? 'true' : 'false');
     });
+  }
+  document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+    b.addEventListener('click', function () { setTheme(b.getAttribute('data-set-theme')); });
   });
+  document.querySelectorAll('[data-toggle-theme]').forEach(function (b) {
+    b.addEventListener('click', function () { setTheme(currentTheme() === 'dark' ? 'light' : 'dark'); });
+  });
+  syncTheme();
 
   /* ---------------- Kopfleiste: Menü (Handy) und Linie beim Scrollen ---------------- */
   var head = document.querySelector('.site-head');
