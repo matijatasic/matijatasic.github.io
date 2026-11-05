@@ -1773,8 +1773,15 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .zq3-h{display:flex;align-items:center;gap:14px;margin-bottom:12px}.zq3-grid h3{margin:0 0 3px;font:700 18px/1.25 var(--display);color:var(--ink)}
 @media (max-width:1000px){.zq3{grid-template-columns:1fr}.zq3-card{max-width:340px;width:100%;justify-self:center}}@media (max-width:640px){.zq3-grid{grid-template-columns:1fr}}
 
-/* Zertifikate: verlinkte Einträge öffnen das Zertifikat im neuen Tab */
-.zr-cert{color:inherit;text-decoration:none;display:inline;background-image:linear-gradient(var(--cu),var(--cu));background-size:0 1.5px;background-position:0 100%;background-repeat:no-repeat;transition:background-size .25s ease,color .2s ease}
-.zr-cert:hover,.zr-cert:focus-visible{color:var(--cu-d);background-size:100% 1.5px}
-:root[data-theme="dark"] .zr-cert:hover,:root[data-theme="dark"] .zr-cert:focus-visible{color:var(--cu)}
-.zr-cert .zr-ic{width:12px;height:12px;margin-left:6px;vertical-align:-1px;color:var(--cu)}
+/* Zertifikate: verlinkte Einträge öffnen das Zertifikat im neuen Tab (ganze Zeile klickbar, Hover „Ruhige Zeile“) */
+.zr-ul li:has(.zr-cert){position:relative;margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:10px;transition:background-color .2s ease}
+.zr-cert{color:inherit;text-decoration:none}
+.zr-cert::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.zr-cert:focus-visible{outline:none}
+.zr-ul li:has(.zr-cert:focus-visible){outline:2px solid var(--tq);outline-offset:2px}
+.zr-cert .zr-ic{width:12px;height:12px;margin-left:6px;vertical-align:-1px;color:var(--muted);transition:transform .2s ease,color .2s ease}
+.zr-ul li:has(.zr-cert):hover,.zr-ul li:has(.zr-cert:focus-visible){background:rgba(34,199,217,.09)}
+:root[data-theme="dark"] .zr-ul li:has(.zr-cert):hover,:root[data-theme="dark"] .zr-ul li:has(.zr-cert:focus-visible){background:rgba(34,199,217,.12)}
+.zr-ul li:has(.zr-cert):hover + li{border-top-color:transparent}
+.zr-ul li:has(.zr-cert):hover .zr-ic,.zr-ul li:has(.zr-cert:focus-visible) .zr-ic{transform:translate(2px,-2px);color:var(--tq)}
+@media (prefers-reduced-motion:reduce){.zr-ul li:has(.zr-cert),.zr-cert .zr-ic{transition:none}}
