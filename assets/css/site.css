@@ -1709,6 +1709,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .ft1-bot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-top: 18px; font: 400 12px/1.5 var(--mono); color: var(--slate-muted); }
 .ft-ok { display: inline-flex; align-items: center; gap: 8px; }
 .ft-ok i { width: 7px; height: 7px; border-radius: 50%; background: var(--tq); box-shadow: 0 0 0 4px rgba(34, 199, 217, .15); }
+.ft-visits b { font-weight: 700; color: var(--slate-ink); }
 .foot.ft1 .ft-up { display: inline-flex; align-items: center; gap: 8px; color: var(--slate-ink); text-decoration: none; border: 1px solid var(--slate-line); border-radius: 999px; padding: 7px 14px; }
 .ft-up svg { width: 14px; height: 14px; }
 .foot.ft1 .ft-up:hover { border-color: var(--cu); color: var(--cu); }
