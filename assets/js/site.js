@@ -96,6 +96,52 @@
     markHead();
   }
 
+  /* ---------------- Kopfleiste: aktiver Abschnitt (nur Seiten mit Sprunglinks, z. B. Startseite) ----------------
+     Markiert beim Klick sofort den gewählten Link und beim Scrollen den Abschnitt, der gerade oben im Bild ist.
+     Gilt für die PC-Leiste (.sh-nav, Kontakt-Link) und das Handy-Raster (.mh-grid). */
+  var navLinks = head ? Array.prototype.slice.call(head.querySelectorAll('.sh-nav a[href^="#"], .mh-grid a[href^="#"], .sh-cta[href^="#"]')) : [];
+  if (navLinks.length > 1) {
+    var navIds = [];
+    navLinks.forEach(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      if (id === 'top') id = 'start';
+      a.setAttribute('data-sec', id);
+      if (navIds.indexOf(id) < 0 && document.getElementById(id)) navIds.push(id);
+    });
+    navIds.sort(function (x, y) {
+      return document.getElementById(x).compareDocumentPosition(document.getElementById(y)) & 4 ? -1 : 1;
+    });
+    var setNav = function (id) {
+      navLinks.forEach(function (a) {
+        if (a.getAttribute('data-sec') === id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+    };
+    var navLock = null, navTimer = 0;
+    var markNav = function () {
+      if (navLock) return;
+      var line = window.innerHeight * 0.35, cur = navIds[0];
+      navIds.forEach(function (id) { if (document.getElementById(id).getBoundingClientRect().top <= line) cur = id; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) cur = navIds[navIds.length - 1];
+      setNav(cur);
+    };
+    navLinks.forEach(function (a) {
+      a.addEventListener('click', function () {
+        /* sofort markieren und während des sanften Scrollens nicht flackern */
+        navLock = a.getAttribute('data-sec');
+        setNav(navLock);
+        clearTimeout(navTimer);
+        navTimer = setTimeout(function () { navLock = null; }, 1200);
+      });
+    });
+    window.addEventListener('scroll', function () {
+      if (navLock) { clearTimeout(navTimer); navTimer = setTimeout(function () { navLock = null; }, 160); return; }
+      markNav();
+    }, { passive: true });
+    window.addEventListener('resize', markNav);
+    window.addEventListener('load', markNav);
+    markNav();
+  }
+
   /* ---------------- IT-Tools: aktives Werkzeug (nur auf der Tools-Seite) ---------------- */
   var toolLinks = Array.prototype.slice.call(document.querySelectorAll('.itools a[href^="#"]'));
   if (toolLinks.length) {
