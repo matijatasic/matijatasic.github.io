@@ -375,18 +375,14 @@
   /* ---------------- Besucherzähler (GoatCounter, ohne Cookies) ---------------- */
   var visits = document.querySelector('[data-visits]');
   if (visits && window.fetch && /(^|\.)matija-tasic\.de$/.test(location.hostname)) {
-    /* TOTAL liefert bei GoatCounter teils 0, deshalb auch die Startseite abfragen und den größeren Wert zeigen */
-    var gc = function (path) {
-      return fetch('https://matija.goatcounter.com/counter/' + path + '.json')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { return (d && parseInt(String(d.count).replace(/\D/g, ''), 10)) || 0; })
-        .catch(function () { return 0; });
-    };
-    Promise.all([gc('TOTAL'), gc('/')]).then(function (v) {
-      var n = Math.max(v[0], v[1]);
-      if (!n) return;
-      visits.querySelector('[data-visits-n]').textContent = n.toLocaleString('de-DE');
-      visits.hidden = false;
-    });
+    fetch('https://matija.goatcounter.com/counter/TOTAL.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var n = d && parseInt(String(d.count).replace(/\D/g, ''), 10);
+        if (!n) return;
+        visits.querySelector('[data-visits-n]').textContent = n.toLocaleString('de-DE');
+        visits.hidden = false;
+      })
+      .catch(function () {});
   }
 })();
