@@ -1581,7 +1581,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 /* Variante Trennlinie: feine Linie zwischen Plan und Legende, Link in Oxanium */
 .np-foot { gap: 16px; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.12); }
 .np-hint { font: 700 15px/1.2 'Oxanium', var(--mono); letter-spacing: .03em; }
-.np-link:hover .np-hint, .np-link:focus-visible .np-hint { color: var(--cu); }
+.np-hint:hover, .np-hint:focus-visible { color: var(--cu); }
 /* KI-Agent-Fenster (Radar) im Netzplan */
 .plan .aw { fill: rgba(0,0,0,.32); stroke: rgba(255,255,255,.16); stroke-width: 1; }
 .plan .ag-sep { stroke: rgba(255,255,255,.1); stroke-width: 1; }
@@ -1591,7 +1591,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .plan .ag-ln { stroke: var(--tq); stroke-width: 1.5; stroke-linecap: round; }
 @media (max-width: 560px) {
   .np-leg { font-size: 11px; gap: 6px 14px; }
-  .np-link .np-hint { font-size: 13px; }
+  .hero-plan .np-hint { font-size: 13px; }
 }
 
 /* ---------- 08 Cron-Erklärer (11/2026) ---------- */
