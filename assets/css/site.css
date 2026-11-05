@@ -1797,3 +1797,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .kf-s{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 @media (max-width:640px){#kontakt .form{--fp:18px}}
 @media (prefers-reduced-motion:reduce){#kontakt .form .field input,#kontakt .form .field textarea{transition:none}}
+
+/* Kopfleiste: aktiver Abschnitt beim Scrollen (11/2026) – Kontakt-Link in Kupfer, wenn der Kontakt-Abschnitt im Bild ist. */
+.sh-cta[aria-current="page"], :root[data-theme="dark"] .sh-cta[aria-current="page"] { color: var(--cu-d) !important; box-shadow: inset 0 -3px 0 #d08a5f; }
+:root[data-theme="dark"] .sh-cta[aria-current="page"] { color: var(--cu) !important; }
