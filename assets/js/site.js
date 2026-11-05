@@ -325,4 +325,18 @@
   var year = document.querySelectorAll('[data-year]');
   year.forEach(function (y) { y.textContent = new Date().getFullYear(); });
   layout();
+
+  /* ---------------- Besucherzähler (GoatCounter, ohne Cookies) ---------------- */
+  var visits = document.querySelector('[data-visits]');
+  if (visits && window.fetch && /(^|\.)matija-tasic\.de$/.test(location.hostname)) {
+    fetch('https://matija.goatcounter.com/counter/TOTAL.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var n = d && parseInt(String(d.count).replace(/\D/g, ''), 10);
+        if (!n) return;
+        visits.querySelector('[data-visits-n]').textContent = n.toLocaleString('de-DE');
+        visits.hidden = false;
+      })
+      .catch(function () {});
+  }
 })();

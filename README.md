@@ -4,7 +4,7 @@ Persönliche Homepage von Matija Tasic, gehostet mit GitHub Pages.
 
 - Reines HTML, CSS und etwas JavaScript, kein Build-Schritt
 - Deutsch mit Umschalter auf Englisch, helle und dunkle Darstellung
-- Schriften lokal eingebunden (Inter, DejaVu Sans Mono), keine Cookies, kein Tracking
+- Schriften lokal eingebunden (Inter, DejaVu Sans Mono), keine Cookies, Besucherstatistik über GoatCounter (ohne Cookies, Zähler in der Fußzeile)
 
 ## Aufbau
 
