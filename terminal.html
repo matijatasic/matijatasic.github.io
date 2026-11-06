@@ -39,7 +39,7 @@
   </script>
   <script src="assets/js/site.js?v=2026110503" defer></script>
   <script src="assets/js/ports.js?v=2026110610" defer></script>
-  <script src="assets/js/quiz.js?v=2026110612" defer></script>
+  <script src="assets/js/quiz.js?v=2026110613" defer></script>
   <script data-goatcounter="https://matija.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="page-term">
@@ -110,11 +110,10 @@
               <h2 class="zh"><i aria-hidden="true"></i><span data-l="de">Hilfe</span><span data-l="en">Help</span></h2>
               <div class="cs-box">
                 <p class="cs-p"><span data-l="de">Hängen Sie fest? Ein Hilfswerkzeug verrät den Rechenweg.</span><span data-l="en">Stuck? A helper tool shows you how it works.</span></p>
-                <a class="cs-k on" data-quiz-tool="binaer" href="werkzeuge.html#binaer" target="_blank" rel="noopener"><kbd aria-hidden="true">F1</kbd><span data-l="de">Binär-Umrechner</span><span data-l="en">Binary converter</span> ↗</a>
+                <a class="cs-k" data-quiz-tool="binaer" href="werkzeuge.html#binaer" target="_blank" rel="noopener"><kbd aria-hidden="true">F1</kbd><span data-l="de">Binär-Umrechner</span><span data-l="en">Binary converter</span> ↗</a>
                 <a class="cs-k" data-quiz-tool="subnetz" href="werkzeuge.html#subnetz" target="_blank" rel="noopener"><kbd aria-hidden="true">F2</kbd><span data-l="de">Subnetzrechner</span><span data-l="en">Subnet calculator</span> ↗</a>
                 <a class="cs-k" data-quiz-tool="ports" href="werkzeuge.html#ports" target="_blank" rel="noopener"><kbd aria-hidden="true">F3</kbd><span data-l="de">Port-Lexikon</span><span data-l="en">Port reference</span> ↗</a>
                 <a class="cs-k" data-quiz-tool="firewall" href="werkzeuge.html#vlan" target="_blank" rel="noopener"><kbd aria-hidden="true">F4</kbd><span data-l="de">VLAN-Planer</span><span data-l="en">VLAN planner</span> ↗</a>
-                <a class="cs-k" data-quiz-tool="ticket" href="werkzeuge.html#befehle" target="_blank" rel="noopener"><kbd aria-hidden="true">F5</kbd><span data-l="de">Befehls-Baukasten</span><span data-l="en">Command builder</span> ↗</a>
               </div>
               <div class="cs-n"><span data-l="de">öffnet im neuen Tab · Quiz bleibt offen</span><span data-l="en">opens in a new tab · quiz stays open</span></div>
             </section>
@@ -123,10 +122,10 @@
             <section class="zone z-game">
               <h2 class="zh"><i aria-hidden="true"></i><span data-l="de">Spielfeld</span><span data-l="en">Game</span></h2>
               <div class="rp">
-                <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button><button type="button" data-quiz-mode="firewall" aria-pressed="false">firewall.sh</button><button type="button" data-quiz-mode="ticket" aria-pressed="false">ticket.sh</button></div>
+                <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="ticket" aria-pressed="true" class="on">ticket.sh</button><button type="button" data-quiz-mode="binaer" aria-pressed="false">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button><button type="button" data-quiz-mode="firewall" aria-pressed="false">firewall.sh</button></div>
                 <div class="kt-body">
                   <div class="kp"><span class="b">┌──(</span><span class="u">gast㉿matija-tasic</span><span class="b">)-[</span><span class="w">~/quiz</span><span class="b">]</span></div>
-                  <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>./binaer.sh --timer 30</span></div>
+                  <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>./ticket.sh --timer 30</span></div>
                   <div class="kt-view" data-quiz-view></div>
                 </div>
               </div>
@@ -135,7 +134,7 @@
           <div class="zc3">
             <section class="zone z-rank">
               <h2 class="zh"><i aria-hidden="true"></i><span data-l="de">Rangliste</span><span data-l="en">Leaderboard</span></h2>
-              <div class="zsub"><span data-quiz-podname>binaer</span>.sh</div>
+              <div class="zsub"><span data-quiz-podname>ticket</span>.sh</div>
               <div class="rk" data-quiz-board aria-live="polite"></div>
             </section>
             <section class="zone z-pult">
