@@ -1795,7 +1795,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .kq-pi dt { color: #8a919c; font: 400 11.5px 'DejaVu Sans Mono', monospace; padding-top: 2px; } .kq-pi dd { margin: 0; color: #d6d9de; }
 .kq-pi .pi-rs { display: flex; flex-wrap: wrap; gap: 6px; } .kq-pi .pi-r { padding: 1px 7px; border-radius: 6px; background: #2b2e38; font: 400 12px 'DejaVu Sans Mono', monospace; color: #e5e7eb; }
 @media (max-width: 600px) { .kq-pi dl { grid-template-columns: 1fr; gap: 2px; } .kq-pi dd { margin-bottom: 4px; } }
-.kq-pult .kt-opt .v { white-space: nowrap; } .kq-pult .kt-opt .m span { display: none; }
+.kq-pult .kt-opt .v { overflow-wrap: break-word; } .kq-pult .kt-opt .m span { display: none; }
 
 /* ---------- Fußbereich: Schiefer-Block ---------- */
 .foot.ft1 { display: block; margin-top: 8px; background: var(--slate); color: var(--slate-text); border-radius: 28px; padding: 44px 48px 22px; position: relative; overflow: hidden; border: 0; font: 400 14px/1.6 var(--sans, Inter, sans-serif); }
