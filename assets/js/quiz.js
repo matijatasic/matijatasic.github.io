@@ -947,8 +947,8 @@
       ['Geräte können kein WPA3', 'Devices don’t support WPA3'], ['Kennwort falsch', 'Wrong password'], ['Kanal belegt', 'Channel busy'],
       'Ältere Geräte kennen nur WPA2. Übergangsmodus WPA2/WPA3 nutzen oder Geräte tauschen.', 'Older devices only know WPA2. Use WPA2/WPA3 transition mode or replace them.']
   ];
-  var makeTicket = function (rnd) {
-    var i = Math.floor(rnd() * TICKETS.length), t = TICKETS[i];
+  var makeTicket = function (rnd, idx) {
+    var i = idx != null && TICKETS[idx] ? idx : Math.floor(rnd() * TICKETS.length), t = TICKETS[i];
     var o = function (a) { return { de: a[0], en: a[1] }; };
     var q = build('t' + i, { de: 'Ticket {v}: Wo liegt die Ursache?', en: 'Ticket {v}: what is the cause?' },
       same('#' + (48200 + i * 37)), o(t[2]), [o(t[3]), o(t[4])], rnd);
@@ -1099,6 +1099,21 @@
       '<li><span>' + bi('Letzte Runde', 'Last round') + '</span><b>' + (prev != null ? fmt(prev) : '–') + '</b></li></ul>';
   };
 
+  // Störungstickets als gemischter Stapel: zufällige Reihenfolge, und keines kommt doppelt,
+  // bis alle einmal dran waren. Der Stapel bleibt im Browser des Besuchers, auch über Runden hinweg.
+  var nextTicket = function () {
+    var n = TICKETS.length, deck = null;
+    try { deck = JSON.parse(localStorage.getItem('quiz-deck-ticket')); } catch (e) {}
+    if (!Array.isArray(deck) || !deck.length || deck.some(function (x) { return typeof x !== 'number' || x < 0 || x >= n; })) {
+      deck = [];
+      for (var i = 0; i < n; i++) deck.push(i);
+      shuffle(deck, Math.random);
+    }
+    var pick = deck.pop();
+    try { localStorage.setItem('quiz-deck-ticket', JSON.stringify(deck)); } catch (e) {}
+    return pick;
+  };
+
   // Spielstand
   var g = null, timer = 0, next = 0;
   var stop = function () { clearInterval(timer); clearTimeout(next); timer = 0; next = 0; };
@@ -1130,7 +1145,7 @@
 
   var ask = function (warm) {
     var q, tries = 0;
-    do { q = make(mode); } while (g.used[q.key] && ++tries < 30);
+    do { q = mode === 'ticket' ? makeTicket(Math.random, nextTicket()) : make(mode); } while (g.used[q.key] && ++tries < 30);
     g.used[q.key] = 1; g.q = q; g.left = SECONDS; g.t0 = Date.now(); g.done = false; g.over = false; g.warm = !!warm;
     var keys = ['A', 'B', 'C'], o = '';
     q.opts.forEach(function (op, i) {
