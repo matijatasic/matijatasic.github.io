@@ -16,10 +16,10 @@ var N = 3000;
 
 console.log('quiz');
 
-test('Grundwerte: 5 Runden, 30 Sekunden, drei Modi', function () {
+test('Grundwerte: 5 Runden, 30 Sekunden, fünf Modi', function () {
   assert.strictEqual(Q.ROUNDS, 5);
   assert.strictEqual(Q.SECONDS, 30);
-  assert.deepStrictEqual(Q.MODES.sort(), ['binaer', 'ports', 'subnetz']);
+  assert.deepStrictEqual(Q.MODES.slice().sort(), ['binaer', 'firewall', 'ports', 'subnetz', 'ticket']);
 });
 
 test('Jede Frage hat genau 3 verschiedene Antworten und einen gültigen Index', function () {
@@ -114,6 +114,38 @@ test('Bestenliste: höchstens 3 Einträge, absteigend, Platz stimmt', function (
   r = Q.addScore([1500, 1500], 1500); assert.deepStrictEqual(r, { top: [1500, 1500, 1500], place: 3 });
   r = Q.addScore([1000], 0); assert.deepStrictEqual(r, { top: [1000], place: 0 });
   r = Q.addScore(['x', null, 700, 600, 500, 400], 0); assert.deepStrictEqual(r.top, [700, 600, 500]);
+});
+
+test('Firewall: die richtige Antwort ist die erste passende Regel, alle 4 Ausgänge kommen vor', function () {
+  var seen = [0, 0, 0, 0];
+  for (var i = 0; i < N; i++) {
+    var q = Q.make('firewall'), R = q.rules, P = q.packet, hit = R.length;
+    for (var k = 0; k < R.length; k++) {
+      if ((R[k].dst === 'any' || R[k].dst === P.dst) && (R[k].port === '*' || R[k].port === P.port)) { hit = k; break; }
+    }
+    assert.strictEqual(q.hit, hit, 'Treffer');
+    var want = hit < 3 ? 'Regel ' + (hit + 1) + ' · ' + R[hit].act : 'Default deny';
+    assert.strictEqual(q.opts[q.a].de, want);
+    assert.ok(!R.some(function (r) { return r.dst === 'any' && r.port === '*'; }), 'keine Alles-Regel');
+    assert.ok(q.pre && q.pre.de && q.pre.en && q.why && q.why.de && q.why.en, 'Regelwerk und Erklärung');
+    seen[hit]++;
+  }
+  seen.forEach(function (n, i) { assert.ok(n > N / 8, 'Ausgang ' + i + ' zu selten: ' + n); });
+});
+
+test('Ticket: jedes Ticket ist vollständig, zweisprachig und hat 3 verschiedene Antworten', function () {
+  assert.ok(Q.TICKETS.length >= 20);
+  Q.TICKETS.forEach(function (t, i) {
+    assert.strictEqual(t.length, 7, 'Ticket ' + i);
+    [t[0], t[1], t[5], t[6]].forEach(function (x) { assert.ok(typeof x === 'string' && x.length > 10, 'Text ' + i); });
+    [t[2], t[3], t[4]].forEach(function (a) { assert.ok(a.length === 2 && a[0] && a[1] && a[0].length <= 34 && a[1].length <= 34, 'Antwort ' + i + ': ' + a); });
+    assert.strictEqual(new Set([t[2][0], t[3][0], t[4][0]]).size, 3, 'doppelt ' + i);
+  });
+  for (var i = 0; i < N; i++) {
+    var q = Q.make('ticket'), t = Q.TICKETS[+q.key.slice(1)];
+    assert.strictEqual(q.opts[q.a].de, t[2][0]);
+    assert.strictEqual(q.opts[q.a].en, t[2][1]);
+  }
 });
 
 console.log('\n' + passed + ' bestanden, ' + failed + ' fehlgeschlagen');
