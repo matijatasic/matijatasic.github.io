@@ -149,5 +149,16 @@ test('Ticket: jedes Ticket ist vollständig, zweisprachig und hat 3 verschiedene
   }
 });
 
+test('Rechenweg: Summe, Hosts, Präfix und Maske stimmen mit der Lösung', function () {
+  var txt = function (h) { return h.replace(/<span data-l="en">.*?<\/span>/g, '').replace(/<sup>(\d+)<\/sup>/g, '^$1').replace(/<[^>]+>/g, ''); };
+  for (var n = 1; n <= 255; n++) assert.ok(txt(Q.sketch('b' + n)).indexOf('= ' + n) !== -1, 'binär ' + n);
+  for (var p = 22; p <= 30; p++) {
+    assert.ok(txt(Q.sketch('h' + p)).indexOf('= ' + Q.hostsOf(p) + ' Hosts') !== -1, 'hosts ' + p);
+    assert.ok(txt(Q.sketch('p' + p)).indexOf('= /' + p) !== -1, 'präfix ' + p);
+    assert.ok(txt(Q.sketch('m' + p)).indexOf('→ ' + Q.maskOf(p)) !== -1, 'maske ' + p);
+  }
+  assert.strictEqual(Q.sketch('x1'), '');
+});
+
 console.log('\n' + passed + ' bestanden, ' + failed + ' fehlgeschlagen');
 if (failed) process.exit(1);
