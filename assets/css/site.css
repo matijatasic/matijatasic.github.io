@@ -1775,12 +1775,14 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 }
 
 /* Binär: Spickzettel mit Stellenwerten unter der Frage */
-.kq-bh { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 8px 12px; background: #11131a; border: 1px solid #3b404c; border-left: 3px solid #f5c04a; border-radius: 8px; font-family: 'DejaVu Sans Mono', monospace; }
+.kq-bh { display: grid; margin-top: 18px; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 8px 12px; background: #11131a; border: 1px solid #3b404c; border-left: 3px solid #f5c04a; border-radius: 8px; font-family: 'DejaVu Sans Mono', monospace; }
 .kq-bh table { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: center; font-size: 14px; }
 .kq-bh th { padding-bottom: 2px; font: 400 10.5px 'DejaVu Sans Mono', monospace; color: #6b7280; }
 .kq-bh td { padding: 3px 0; } .kq-bh tr.o td { color: #3ccf6e; font-weight: 700; } .kq-bh tr.w td { color: #e5e7eb; border-top: 1px solid #2b2e38; }
 .kq-bh .ex { font-size: 12px; line-height: 1.5; color: #8a919c; white-space: nowrap; } .kq-bh .ex b { color: #f5c04a; } .kq-bh .ex i { font-style: normal; color: #7fdcea; }
-@media (max-width: 600px) { .kq-bh { grid-template-columns: 1fr; gap: 6px; padding: 8px; } .kq-bh table { font-size: 12.5px; } .kq-bh .ex br { display: none; } .kq-bh .ex i { margin: 0 6px; } }
+.kq-bh td.l { width: 74px; text-align: left; font-size: 10.5px; font-weight: 400; color: #6b7280; } .kq-sh tr.c td:not(.l) { color: #7fdcea; }
+.kq-pult .kt-opt .v { white-space: nowrap; } .kq-pult .kt-opt .m span { display: none; }
+@media (max-width: 600px) { .kq-bh { grid-template-columns: 1fr; gap: 6px; padding: 8px; } .kq-bh table { font-size: 12.5px; } .kq-bh .ex br { display: none; } .kq-bh .ex i { margin: 0 6px; } .kq-sh table { font-size: 10.5px; } .kq-sh td.l { width: 40px; font-size: 9px; } .kq-sh td { padding: 3px 0; letter-spacing: -.02em; } }
 
 /* ---------- Fußbereich: Schiefer-Block ---------- */
 .foot.ft1 { display: block; margin-top: 8px; background: var(--slate); color: var(--slate-text); border-radius: 28px; padding: 44px 48px 22px; position: relative; overflow: hidden; border: 0; font: 400 14px/1.6 var(--sans, Inter, sans-serif); }
