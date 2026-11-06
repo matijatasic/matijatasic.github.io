@@ -536,8 +536,9 @@
     nx.querySelector('button').addEventListener('click', go);
     nx.querySelector('button').focus({ preventScroll: true });
     // Automatisch weiter, damit das Spiel im Fluss bleibt (bei falscher Antwort etwas länger zum Lesen)
-    // Mit Erklärung bleibt mehr Zeit zum Lesen.
-    next = setTimeout(go, g.q.why ? (ok ? 3500 : 7000) : (ok ? 1400 : 2600));
+    // Mit Erklärung bleibt mehr Zeit zum Lesen. Beim Störungsticket geht es nur per Klick auf „Weiter“ weiter,
+    // damit man in Ruhe nachlesen und recherchieren kann.
+    if (mode !== 'ticket') next = setTimeout(go, g.q.why ? (ok ? 3500 : 7000) : (ok ? 1400 : 2600));
   };
 
   var result = function () {
