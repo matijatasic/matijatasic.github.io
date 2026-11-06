@@ -475,6 +475,14 @@
     ask();
   };
 
+  // Binär: Spickzettel mit Stellenwerten (2^7 … 2^0) und einem Rechenbeispiel unter der Frage
+  var binHint = function () {
+    var th = '', on = '', val = '';
+    for (var k = 7; k >= 0; k--) { th += '<th>2<sup>' + k + '</sup></th>'; on += '<td>1</td>'; val += '<td>' + (1 << k) + '</td>'; }
+    return '<div class="kq-bh"><table aria-label="' + 'Stellenwerte' + '"><tr>' + th + '</tr><tr class="o">' + on + '</tr><tr class="w">' + val + '</tr></table>' +
+      '<div class="ex"># ' + bi('Beispiel', 'Example') + '<br><i>0000 0101</i><br>= 4 + 1 = <b>5</b></div></div>';
+  };
+
   var ask = function () {
     var q, tries = 0;
     do { q = make(mode); } while (g.used[q.key] && ++tries < 30);
@@ -497,6 +505,7 @@
       '<div class="kq-bar"><i data-quiz-bar></i></div></div>' +
       '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
+      (mode === 'binaer' ? binHint() : '') +
       '<div class="kt-opts">' + o + '</div>';
     g.opts = view.querySelector('.kt-opts'); g.act = null;
     if (pult) pult.innerHTML = '';
