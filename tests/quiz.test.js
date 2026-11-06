@@ -135,7 +135,7 @@ test('Firewall: die richtige Antwort ist die erste passende Regel, alle 4 Ausgä
 });
 
 test('Ticket: jedes Ticket ist vollständig, zweisprachig und hat 3 verschiedene Antworten', function () {
-  assert.ok(Q.TICKETS.length >= 50);
+  assert.ok(Q.TICKETS.length >= 250);
   Q.TICKETS.forEach(function (t, i) {
     assert.strictEqual(t.length, 7, 'Ticket ' + i);
     [t[0], t[1], t[5], t[6]].forEach(function (x) { assert.ok(typeof x === 'string' && x.length > 10, 'Text ' + i); });
