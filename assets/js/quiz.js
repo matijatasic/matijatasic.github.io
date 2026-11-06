@@ -1,5 +1,5 @@
 /* Netzwerk-Quiz im Bereich „03 Interaktiv“ (Kali-Terminal mit Zeitbonus)
-   Drei Modi (Binär, Subnetze, Ports), 5 Runden, je 3 Antworten, 30 Sekunden pro Frage.
+   Fünf Modi (Binär, Subnetze, Ports, Firewall-Richter, Störungsticket), 5 Runden, je 3 Antworten, 30 Sekunden pro Frage.
    Der obere Teil (Fragen erzeugen) ist ohne Browser testbar: node tests/quiz.test.js */
 (function (global) {
   'use strict';
@@ -94,7 +94,184 @@
       { de: e[1], en: e[2] }, others.map(function (o) { return { de: o[1], en: o[2] }; }), rnd);
   };
 
-  var MAKERS = { binaer: makeBin, subnetz: makeSubnet, ports: makePort };
+  /* Firewall-Richter: ein kleines Regelwerk wie in OPNsense (Regeln gelten auf der Schnittstelle,
+     von oben nach unten, die erste passende Regel gewinnt, am Ende „Default deny“) und ein Paket.
+     Gesucht ist die Regel, die greift. Ziele: ein anderes VLAN, die Firewall selbst oder „any“. */
+  var VLANS = { 10: ['Server', 'Servers'], 20: ['Clients', 'Clients'], 30: ['Gäste', 'Guests'], 40: ['IoT', 'IoT'] };
+  var FW_PORTS = [22, 53, 80, 443, 445, 3389];
+  var FW_PNAME = { 22: 'SSH', 53: 'DNS', 80: 'HTTP', 443: 'HTTPS', 445: 'SMB', 3389: 'RDP' };
+  var WAN_IPS = ['1.1.1.1', '8.8.8.8', '9.9.9.9', '140.82.121.4', '185.199.108.153'];
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var pad = function (s, n) { s = String(s); while (s.length < n) s += ' '; return s; };
+  // Passt die Regel auf das Paket? Getrennt nach Ziel und Port, damit die Erklärung zeigen kann, woran es scheitert.
+  var fwDst = function (r, p) { return r.dst === 'any' || r.dst === p.dst; };
+  var fwPort = function (r, p) { return r.port === '*' || r.port === p.port; };
+  var fwHit = function (rules, p) {
+    for (var i = 0; i < rules.length; i++) if (fwDst(rules[i], p) && fwPort(rules[i], p)) return i;
+    return rules.length; // Default deny
+  };
+  var makeFirewall = function (rnd) {
+    var s = pickIn([20, 30, 40], rnd);
+    var dsts = [10, 20, 30, 40].filter(function (v) { return v !== s; }).map(function (v) { return 'VLAN' + v; }).concat(['Firewall']);
+    var rule = function () {
+      return { act: rnd() < 0.5 ? 'pass' : 'block', dst: rnd() < 0.2 ? 'any' : pickIn(dsts, rnd), port: rnd() < 0.3 ? '*' : pickIn(FW_PORTS, rnd) };
+    };
+    var packet = function () {
+      var r = rnd(), dst, ip;
+      if (r < 0.65) { dst = pickIn(dsts.slice(0, 3), rnd); ip = '10.0.' + dst.slice(4) + '.' + (2 + Math.floor(rnd() * 250)); }
+      else if (r < 0.85) { dst = 'Firewall'; ip = '10.0.' + s + '.1'; }
+      else { dst = 'WAN'; ip = pickIn(WAN_IPS, rnd); }
+      return { dst: dst, ip: ip, port: pickIn(FW_PORTS, rnd), src: '10.0.' + s + '.' + (10 + Math.floor(rnd() * 200)) };
+    };
+    var key = function (r) { return r.act + r.dst + r.port; };
+    // Ziel-Antwort (Regel 1–3 oder Default) gleich verteilt wählen und ein passendes, nicht triviales Rätsel suchen:
+    // Vor der richtigen Regel soll eine Regel nur knapp scheitern, oder (bei Regel 1) eine spätere ebenfalls passen.
+    var want = Math.floor(rnd() * 4), best = null;
+    for (var n = 0; n < 400; n++) {
+      var rules = [rule(), rule(), rule()];
+      if (key(rules[0]) === key(rules[1]) || key(rules[1]) === key(rules[2]) || key(rules[0]) === key(rules[2])) continue;
+      // realistisch: keine Regel „alles nach überall“ und mindestens eine pass- und eine block-Regel
+      if (rules.some(function (r) { return r.dst === 'any' && r.port === '*'; })) continue;
+      var acts = rules.map(function (r) { return r.act; }).join();
+      if (acts.indexOf('pass') < 0 || acts.indexOf('block') < 0) continue;
+      var p = packet(), hit = fwHit(rules, p);
+      if (hit !== want) continue;
+      best = { rules: rules, p: p, hit: hit };
+      var tricky = hit === 0 ? fwHit(rules.slice(1), p) < 2 :
+        rules.slice(0, hit).some(function (r) { return fwDst(r, p) !== fwPort(r, p); });
+      if (tricky) break;
+    }
+    if (!best) { // sehr unwahrscheinlich: dann eben irgendein gültiges Rätsel
+      var rr = [rule(), rule(), rule()], pp = packet();
+      best = { rules: rr, p: pp, hit: fwHit(rr, pp) };
+    }
+    var R = best.rules, P = best.p, H = best.hit;
+    var lab = function (i) {
+      return i < 3 ? { de: 'Regel ' + (i + 1) + ' · ' + R[i].act, en: 'Rule ' + (i + 1) + ' · ' + R[i].act } : same('Default deny');
+    };
+    var row = function (no, r, de) {
+      var a = '<span class="' + (r.act === 'pass' ? 'g' : 'r') + '">' + pad(r.act, 7) + '</span>';
+      var port = r.port === '*' ? '*' : r.port + ' <span class="d">' + FW_PNAME[r.port] + '</span>';
+      return '<span class="y">' + pad(no, 3) + '</span>' + a + pad(r.dst, 10) + port + (no === '*' ? ' <span class="d">' + (de ? '(Standard)' : '(default)') + '</span>' : '');
+    };
+    var table = function (de) {
+      var v = VLANS[s][de ? 0 : 1];
+      var h = '<span class="d"># ' + (de ? 'Regeln auf VLAN' + s + ' (' + v + ')' : 'Rules on VLAN' + s + ' (' + v + ')') + '</span>\n' +
+        '<span class="d"># ' + (de ? 'erste passende Regel gewinnt' : 'first matching rule wins') + '</span>\n' +
+        '<span class="d">' + pad('#', 3) + pad(de ? 'Aktion' : 'Action', 7) + pad(de ? 'Ziel' : 'Dest', 10) + 'Port</span>\n';
+      R.forEach(function (r, i) { h += row(String(i + 1), r, de) + '\n'; });
+      h += row('*', { act: 'block', dst: 'any', port: '*' }, de) + '\n';
+      h += '<span class="d"># VLANxx = 10.0.xx.0/24</span>\n<span class="d"># Firewall = 10.0.' + s + '.1</span>';
+      return h;
+    };
+    // Erklärung: Regel für Regel, woran sie scheitert, bis zur ersten passenden
+    var why = function (de) {
+      var parts = [];
+      for (var i = 0; i < Math.min(H + 1, 3); i++) {
+        var d = fwDst(R[i], P), o = fwPort(R[i], P);
+        parts.push((i + 1) + (d && o ? ' ✓' : ' ✗ ' + (!d ? (de ? 'Ziel' : 'dest') : 'Port')));
+      }
+      if (H === 3) parts.push(de ? 'keine passt → Default deny' : 'none matches → default deny');
+      else parts[parts.length - 1] += ' → ' + R[H].act;
+      return (de ? 'Regel ' : 'Rule ') + parts.join(' · ');
+    };
+    var q = build('fw' + s + R.map(key).join('|') + P.dst + P.port + P.ip,
+      { de: 'Welche Regel greift für {v}?', en: 'Which rule matches {v}?' },
+      same(P.src + ' → ' + P.ip + ':' + P.port),
+      lab(H), [0, 1, 2, 3].filter(function (i) { return i !== H; }).map(lab), rnd);
+    q.pre = { de: table(true), en: table(false) };
+    q.why = { de: why(true), en: why(false) };
+    q.hit = H; q.rules = R; q.packet = P;
+    return q;
+  };
+
+  /* Störungsticket: ein Symptom wie aus dem Helpdesk, gesucht ist die wahrscheinlichste Ursache.
+     Feste Liste: [Symptom DE, Symptom EN, richtig [DE, EN], falsch 1 [DE, EN], falsch 2 [DE, EN], Erklärung DE, Erklärung EN] */
+  var TICKETS = [
+    ['Internet geht nicht. ping 8.8.8.8 klappt, ping google.de nicht.', 'No internet. ping 8.8.8.8 works, ping google.com does not.',
+      ['DNS', 'DNS'], ['Default-Gateway', 'Default gateway'], ['Netzwerkkabel', 'Network cable'],
+      'IP-Adressen sind erreichbar, nur Namen nicht: Die Namensauflösung fehlt.', 'IP addresses are reachable, names are not: name resolution is broken.'],
+    ['Neuer PC hat die IP 169.254.12.7 und kein Netz.', 'New PC has IP 169.254.12.7 and no network.',
+      ['DHCP antwortet nicht', 'DHCP not answering'], ['DNS-Server falsch', 'Wrong DNS server'], ['Proxy-Einstellung', 'Proxy setting'],
+      '169.254.x.x (APIPA) vergibt Windows selbst, wenn kein DHCP-Server antwortet.', 'Windows assigns 169.254.x.x (APIPA) itself when no DHCP server answers.'],
+    ['PC erreicht alles im eigenen Netz, aber nichts außerhalb.', 'PC reaches everything in its own subnet, nothing outside.',
+      ['Default-Gateway', 'Default gateway'], ['DNS', 'DNS'], ['Switch-Port', 'Switch port'],
+      'Für alles außerhalb des eigenen Subnetzes braucht der PC ein gültiges Gateway.', 'Anything outside the own subnet needs a valid gateway.'],
+    ['Nach Umzug an einen anderen Platz: kein Netz, Link-LED am PC ist aus.', 'After moving desks: no network, link LED on the PC is off.',
+      ['Kabel, Dose oder Switch-Port', 'Cable, wall jack or switch port'], ['DHCP-Server', 'DHCP server'], ['DNS', 'DNS'],
+      'Keine Link-LED heißt: Schicht 1. Ohne Verbindung kommt DHCP gar nicht erst zum Zug.', 'No link LED means layer 1. Without a link DHCP never even starts.'],
+    ['Zwei Geräte verlieren abwechselnd das Netz, Windows meldet einen Adresskonflikt.', 'Two devices drop off in turns, Windows reports an address conflict.',
+      ['Doppelte statische IP', 'Duplicate static IP'], ['WLAN-Störung', 'Wi-Fi interference'], ['DNS-Cache', 'DNS cache'],
+      'Zwei Geräte mit derselben IP überschreiben sich gegenseitig im ARP-Cache.', 'Two devices with the same IP keep overwriting each other in the ARP cache.'],
+    ['Anmeldung an der Domäne schlägt fehl: „Uhrzeit weicht ab“.', 'Domain logon fails: “clock skew too great”.',
+      ['Uhrzeit / NTP', 'Time / NTP'], ['Passwort abgelaufen', 'Password expired'], ['Benutzerprofil defekt', 'Corrupt user profile'],
+      'Kerberos erlaubt standardmäßig höchstens 5 Minuten Zeitabweichung.', 'By default Kerberos allows at most 5 minutes of clock skew.'],
+    ['Nach Passwortänderung wird das Konto alle paar Minuten gesperrt.', 'After a password change the account locks every few minutes.',
+      ['Altes Passwort auf einem Gerät', 'Old password on a device'], ['Angriff von außen', 'Attack from outside'], ['AD-Replikation', 'AD replication'],
+      'Typisch: Ein Gerät (Handy, Laufwerk, Dienst) meldet sich immer wieder mit dem alten Passwort an.', 'Typical: a device (phone, mapped drive, service) keeps logging on with the old password.'],
+    ['Laptop im Gäste-WLAN erreicht den Bürodrucker nicht, Internet geht.', 'Laptop on guest Wi-Fi cannot reach the office printer, internet works.',
+      ['Gewollte VLAN-Trennung', 'Intended VLAN isolation'], ['Druckertreiber', 'Printer driver'], ['DHCP', 'DHCP'],
+      'Das Gästenetz ist absichtlich vom Büronetz getrennt. Das ist kein Fehler, sondern Sicherheit.', 'The guest network is isolated from the office on purpose. That is security, not a fault.'],
+    ['Nur auf einem PC zeigen alle HTTPS-Seiten Zertifikatsfehler.', 'On one PC only, every HTTPS site shows a certificate error.',
+      ['Systemuhr falsch', 'Wrong system clock'], ['Zertifikate abgelaufen', 'Certificates expired'], ['Firewall sperrt 443', 'Firewall blocks 443'],
+      'Betrifft es alle Seiten, aber nur einen PC, liegt es am PC. Mit falscher Uhr scheint jedes Zertifikat ungültig.', 'All sites but only one PC points to the PC. With a wrong clock every certificate looks invalid.'],
+    ['Linux-Server: df -h zeigt 40 % frei, trotzdem „No space left on device“.', 'Linux server: df -h shows 40 % free, yet “No space left on device”.',
+      ['Keine Inodes mehr frei', 'Out of inodes'], ['Festplatte defekt', 'Failed disk'], ['Fehlende Schreibrechte', 'Missing write permission'],
+      'Viele kleine Dateien verbrauchen alle Inodes. Prüfen mit df -i.', 'Lots of small files use up every inode. Check with df -i.'],
+    ['Webdienst lief, ist nach dem Server-Neustart aber weg.', 'Web service ran fine but is gone after a server reboot.',
+      ['Autostart nicht aktiviert', 'Autostart not enabled'], ['DNS', 'DNS'], ['Zertifikat', 'Certificate'],
+      'Der Dienst wurde nur gestartet, nicht aktiviert: systemctl enable fehlt.', 'The service was started but not enabled: systemctl enable is missing.'],
+    ['Neues VLAN 30 angelegt, Gerät am Access-Port bekommt keine IP.', 'New VLAN 30 created, device on the access port gets no IP.',
+      ['Kein DHCP im neuen VLAN', 'No DHCP in the new VLAN'], ['DNS-Server fehlt', 'DNS server missing'], ['Falsche Subnetzmaske am Client', 'Wrong subnet mask on client'],
+      'Jedes VLAN braucht einen eigenen DHCP-Bereich oder ein DHCP-Relay.', 'Every VLAN needs its own DHCP scope or a DHCP relay.'],
+    ['Ganzes Stockwerk extrem langsam, alle Switch-LEDs blinken im Dauerfeuer.', 'Whole floor extremely slow, all switch LEDs blink non-stop.',
+      ['Netzwerkschleife', 'Network loop'], ['Internetanbieter', 'Internet provider'], ['DNS langsam', 'Slow DNS'],
+      'Eine Schleife ohne Spanning Tree erzeugt einen Broadcast-Sturm.', 'A loop without spanning tree causes a broadcast storm.'],
+    ['ssh zum Server: sofort „Connection refused“.', 'ssh to the server: instant “Connection refused”.',
+      ['SSH-Dienst läuft nicht', 'SSH service not running'], ['Firewall verwirft Pakete', 'Firewall drops packets'], ['Falsches Passwort', 'Wrong password'],
+      '„Refused“ heißt: Der Server antwortet, aber auf dem Port lauscht nichts. Ein Firewall-Drop würde hängen.', '“Refused” means the host answers but nothing listens on the port. A firewall drop would hang.'],
+    ['ssh zum Server hängt lange, dann „Connection timed out“.', 'ssh to the server hangs, then “Connection timed out”.',
+      ['Firewall verwirft Pakete', 'Firewall drops packets'], ['Falsches Passwort', 'Wrong password'], ['SSH-Schlüssel abgelaufen', 'SSH key expired'],
+      'Keine Antwort bis zum Timeout: Die Pakete kommen nicht an oder werden verworfen.', 'No answer until the timeout: packets never arrive or are dropped.'],
+    ['Ping auf den Server geht nicht, RDP auf denselben Server klappt.', 'Ping to the server fails, RDP to the same server works.',
+      ['ICMP wird geblockt', 'ICMP is blocked'], ['Server ist aus', 'Server is off'], ['Falsche IP', 'Wrong IP'],
+      'RDP geht, also lebt der Server. Die Windows-Firewall blockt Ping oft standardmäßig.', 'RDP works, so the server is alive. Windows Firewall often blocks ping by default.'],
+    ['Seit dem Domainwechsel landen unsere Mails beim Kunden im Spam.', 'Since the domain change our mails land in the customer’s spam.',
+      ['SPF/DKIM fehlen', 'SPF/DKIM missing'], ['MX-Eintrag falsch', 'Wrong MX record'], ['Postfach voll', 'Mailbox full'],
+      'SPF und DKIM beweisen, dass wir senden dürfen. Der MX-Eintrag betrifft nur eingehende Mails.', 'SPF and DKIM prove we may send. The MX record only affects incoming mail.'],
+    ['Webseiten laden, aber große Downloads und das VPN brechen ab.', 'Web pages load, but large downloads and the VPN keep breaking.',
+      ['MTU / Fragmentierung', 'MTU / fragmentation'], ['DNS', 'DNS'], ['DHCP-Lease', 'DHCP lease'],
+      'Kleine Pakete gehen durch, große nicht: klassisches MTU-Problem, oft durch VPN oder PPPoE.', 'Small packets pass, big ones don’t: a classic MTU issue, often caused by VPN or PPPoE.'],
+    ['Drucker druckt nach Wochen nicht mehr, am Gerät steht eine neue IP.', 'Printer stops printing after weeks, the device shows a new IP.',
+      ['Keine DHCP-Reservierung', 'No DHCP reservation'], ['Druckertreiber', 'Printer driver'], ['Toner leer', 'Toner empty'],
+      'Der Drucker hat per DHCP eine neue Adresse bekommen, die PCs drucken an die alte.', 'The printer got a new address via DHCP, the PCs still print to the old one.'],
+    ['Skript läuft manuell im Terminal, per cron aber nicht.', 'Script runs manually in the terminal but not from cron.',
+      ['Andere Umgebung (PATH)', 'Different environment (PATH)'], ['Festplatte voll', 'Disk full'], ['Falsches Passwort', 'Wrong password'],
+      'cron startet mit minimalem PATH und ohne die Variablen der Shell. Volle Pfade verwenden.', 'cron starts with a minimal PATH and none of your shell variables. Use full paths.'],
+    ['Nach einem Update erreicht ein PC das alte NAS nicht mehr, alle anderen schon.', 'After an update one PC can’t reach the old NAS, all others can.',
+      ['SMB1 wurde deaktiviert', 'SMB1 was disabled'], ['NAS ist aus', 'NAS is off'], ['DNS', 'DNS'],
+      'Neue Windows-Versionen schalten das unsichere SMB1 ab. Lösung: NAS auf SMB2/3 umstellen.', 'Newer Windows versions disable insecure SMB1. Fix: switch the NAS to SMB2/3.'],
+    ['Über VPN geht intranet.firma.local nicht, per IP-Adresse schon.', 'Over VPN intranet.company.local fails, by IP address it works.',
+      ['VPN nutzt nicht den internen DNS', 'VPN doesn’t use internal DNS'], ['Firewall sperrt das Intranet', 'Firewall blocks the intranet'], ['Zertifikat', 'Certificate'],
+      'Per IP geht es, also stimmen Route und Firewall. Nur der interne Name wird nicht aufgelöst.', 'By IP it works, so routing and firewall are fine. Only the internal name isn’t resolved.'],
+    ['Nach Firewall-Tausch: Internet geht, der Webserver ist von außen nicht erreichbar.', 'After a firewall swap: internet works, the web server is unreachable from outside.',
+      ['Portweiterleitung fehlt', 'Port forward missing'], ['Gateway der Clients', 'Clients’ gateway'], ['DHCP', 'DHCP'],
+      'Ausgehend klappt NAT automatisch, eingehend braucht es eine Portweiterleitung (DNAT).', 'Outbound NAT is automatic, inbound needs a port forward (DNAT).'],
+    ['„Zugriff verweigert“ auf einen Ordner, obwohl die Freigabe „Jeder: Vollzugriff“ hat.', '“Access denied” on a folder although the share says “Everyone: full control”.',
+      ['NTFS-Rechte', 'NTFS permissions'], ['Freigabename falsch', 'Wrong share name'], ['Netzwerkkabel', 'Network cable'],
+      'Es gilt immer die strengere Regel von Freigabe- und NTFS-Rechten.', 'The stricter of share and NTFS permissions always applies.']
+  ];
+  var makeTicket = function (rnd) {
+    var i = Math.floor(rnd() * TICKETS.length), t = TICKETS[i];
+    var o = function (a) { return { de: a[0], en: a[1] }; };
+    var q = build('t' + i, { de: 'Ticket {v}: Wo liegt die Ursache?', en: 'Ticket {v}: what is the cause?' },
+      same('#' + (48200 + i * 37)), o(t[2]), [o(t[3]), o(t[4])], rnd);
+    q.pre = { de: '„' + esc(t[0]) + '“', en: '“' + esc(t[1]) + '”' };
+    q.why = { de: t[5], en: t[6] };
+    return q;
+  };
+
+  var MAKERS = { binaer: makeBin, subnetz: makeSubnet, ports: makePort, firewall: makeFirewall, ticket: makeTicket };
   var make = function (mode, rnd) { return MAKERS[mode](rnd || Math.random); };
   // Punkte: richtig = 100 + 10 je volle übrige Sekunde, falsch oder Zeit abgelaufen = 0
   var points = function (right, left) { return right ? BASE + PER_SEC * Math.max(0, Math.floor(left)) : 0; };
@@ -117,7 +294,7 @@
     return { top: top.slice(0, 3), place: i + 1 };
   };
 
-  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, MODES: Object.keys(MAKERS), TIERS: TIERS, make: make, points: points, tierOf: tierOf, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf };
+  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, TICKETS: TICKETS, fwHit: fwHit, MODES: Object.keys(MAKERS), TIERS: TIERS, make: make, points: points, tierOf: tierOf, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   global.NetQuiz = api;
 
@@ -127,9 +304,9 @@
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var bi = function (de, en) { return '<span data-l="de">' + de + '</span><span data-l="en">' + en + '</span>'; };
   var tx = function (o) { return o.de === o.en ? o.de : bi(o.de, o.en); };
-  var NAMES = { binaer: 'binär', subnetz: 'subnetz', ports: 'ports' };
-  var FILES = { binaer: 'binaer.sh', subnetz: 'subnetz.sh', ports: 'ports.sh' };
-  var ORDER = ['binaer', 'subnetz', 'ports'];
+  var NAMES = { binaer: 'binär', subnetz: 'subnetz', ports: 'ports', firewall: 'firewall', ticket: 'ticket' };
+  var FILES = { binaer: 'binaer.sh', subnetz: 'subnetz.sh', ports: 'ports.sh', firewall: 'firewall.sh', ticket: 'ticket.sh' };
+  var ORDER = ['binaer', 'subnetz', 'ports', 'firewall', 'ticket'];
   var $ = function (s) { return kt.querySelector(s); };
   var view = $('[data-quiz-view]'), cmd = $('[data-quiz-cmd]'), tools = Array.prototype.slice.call(document.querySelectorAll('[data-quiz-tool]'));
   var modeBtns = kt.querySelectorAll('[data-quiz-mode]');
@@ -204,9 +381,13 @@
       o += '<button type="button" class="kt-opt" data-opt="' + i + '"><span class="k">' + keys[i] + '</span><span class="v">' + tx(op) + '</span><span class="m"></span></button>';
     });
     var v = '<b class="y">' + tx(q.v) + '</b>';
+    // Firewall-Regelwerk oder Ticket-Text über der Frage (Firewall als Tabelle in Festbreite)
+    var pre = q.pre ? (q.pre.de === q.pre.en ? '<div class="kt-pre kt-pre-' + mode + '">' + q.pre.de + '</div>'
+      : '<div class="kt-pre kt-pre-' + mode + '" data-l="de">' + q.pre.de + '</div><div class="kt-pre kt-pre-' + mode + '" data-l="en">' + q.pre.en + '</div>') : '';
     view.innerHTML =
       '<div class="kt-timer" data-quiz-timer><span class="kt-sec">⏱ <b data-quiz-sec>30</b> s</span><div><i data-quiz-bar></i></div><span class="y" data-quiz-bonus>+' + PER_SEC * SECONDS + ' Bonus</span></div>' +
       '<div class="kt-out c">' + bi('Runde', 'Round') + ' ' + (g.i + 1) + '/' + ROUNDS + ' ' + dotsHtml() + ' · ' + bi('Punkte', 'Points') + ' ' + g.pts + '</div>' +
+      pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div>' +
       '<div class="kt-opts">' + o + '</div>';
     view.querySelectorAll('[data-opt]').forEach(function (b) {
@@ -262,6 +443,13 @@
     fb.innerHTML = ok ? '[+] ' + bi('Richtig', 'Correct') + ': +' + p + ' ' + bi('Punkte', 'points')
       : '[-] ' + bi('Falsch', 'Wrong') + ' · ' + bi('Lösung', 'Answer') + ': ' + tx(g.q.opts[g.q.a]);
     view.appendChild(fb);
+    // Kurze Erklärung, damit man aus jeder Frage etwas mitnimmt
+    if (g.q.why) {
+      var wy = document.createElement('div');
+      wy.className = 'kt-out kt-why';
+      wy.innerHTML = '# ' + bi(esc(g.q.why.de), esc(g.q.why.en));
+      view.appendChild(wy);
+    }
     var nx = document.createElement('div');
     nx.className = 'kt-act';
     nx.innerHTML = '<button type="button" class="pri" data-quiz-next>' + (g.i + 1 < ROUNDS ? bi('Weiter', 'Next') + ' →' : bi('Ergebnis', 'Result') + ' →') + '</button>';
@@ -270,7 +458,8 @@
     nx.querySelector('button').addEventListener('click', go);
     nx.querySelector('button').focus({ preventScroll: true });
     // Automatisch weiter, damit das Spiel im Fluss bleibt (bei falscher Antwort etwas länger zum Lesen)
-    next = setTimeout(go, ok ? 1400 : 2600);
+    // Mit Erklärung bleibt mehr Zeit zum Lesen.
+    next = setTimeout(go, g.q.why ? (ok ? 3500 : 7000) : (ok ? 1400 : 2600));
   };
 
   var result = function () {

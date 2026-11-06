@@ -1191,6 +1191,11 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .gw .y, .kt-out.y { color: #f5c04a; } .kt-out.d { color: #8a919c; }
 .kt-q { font-size: 18px; line-height: 1.45; color: #fff; margin: 6px 0 2px; }
 .kt-q b { font-weight: 700; }
+.kt-pre { margin: 4px 0 0; padding: 12px 14px; background: #1a1c22; border: 1px solid #3b404c; border-radius: 8px; color: #e5e7eb; font-size: 14px; line-height: 1.55; }
+.kt-pre .g { color: #3ccf6e; font-weight: 700; } .kt-pre .r { color: #ff5f56; font-weight: 700; } .kt-pre .d { color: #8a919c; }
+.kt-pre-firewall { white-space: pre; overflow-x: auto; font-size: 13.5px; }
+.kt-pre-ticket { border-left: 3px solid #f5c04a; font-size: 16px; }
+.kt-out.kt-why { color: #7fdcea; line-height: 1.5; }
 .kt-opts { display: grid; gap: 8px; }
 .kt-opt { display: flex; align-items: center; gap: 12px; width: 100%; padding: 15px 16px; background: #2b2e38; border: 1px solid #3b404c; border-radius: 8px; color: #e5e7eb; text-align: left; transition: border-color .15s, background-color .15s; }
 .kt-opt:hover:not(:disabled), .kt-opt:focus-visible { border-color: #3a8dff; outline: none; background: #30343f; }
@@ -1232,6 +1237,8 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .kt-q { font-size: 17px; }
   .kt-opt { padding: 13px 14px; }
   .kt-opt .v { font-size: 18px; }
+  .kt-pre-firewall { font-size: 12px; padding: 10px; }
+  .kt-pre-ticket { font-size: 15px; }
   .kt-pct { font-size: 44px; }
 }
 
@@ -1251,7 +1258,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .kt-pct { white-space: nowrap; }
 @media (max-width: 860px) {
   .ktabs { flex-wrap: wrap; }
-  .ktabs button { flex: 1; text-align: center; padding: 7px 4px; font-size: 12px !important; }
+  .ktabs button { flex: 1 1 30%; text-align: center; padding: 7px 4px; font-size: 12px !important; }
   .kt-pct { font-size: 40px; }
   .resrow { gap: 12px; }
 }

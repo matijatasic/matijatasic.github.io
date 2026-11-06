@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Terminal · Matija Tasic</title>
-  <meta name="description" content="Interaktives Terminal-Quiz zu Binärzahlen, Subnetzen und Ports: fünf Fragen pro Runde, 30 Sekunden pro Frage. Läuft nur im Browser.">
+  <meta name="description" content="Interaktives Terminal-Quiz zu Binärzahlen, Subnetzen, Ports, Firewall-Regeln und Störungstickets: fünf Fragen pro Runde, 30 Sekunden pro Frage. Läuft nur im Browser.">
   <link rel="canonical" href="https://matija-tasic.de/terminal.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Matija Tasic">
   <meta property="og:locale" content="de_DE">
   <meta property="og:title" content="Terminal · Matija Tasic">
-  <meta property="og:description" content="Interaktives Terminal-Quiz zu Binärzahlen, Subnetzen und Ports: fünf Fragen pro Runde, 30 Sekunden pro Frage. Läuft nur im Browser.">
+  <meta property="og:description" content="Interaktives Terminal-Quiz zu Binärzahlen, Subnetzen, Ports, Firewall-Regeln und Störungstickets: fünf Fragen pro Runde, 30 Sekunden pro Frage. Läuft nur im Browser.">
   <meta property="og:url" content="https://matija-tasic.de/terminal.html">
   <meta property="og:image" content="https://matija-tasic.de/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -22,7 +22,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-display-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=2026110503">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026110601">
   <script>
     (function () {
       var d = document.documentElement, l = null;
@@ -38,7 +38,7 @@
     })();
   </script>
   <script src="assets/js/site.js?v=2026110503" defer></script>
-  <script src="assets/js/quiz.js?v=2026110351" defer></script>
+  <script src="assets/js/quiz.js?v=2026110601" defer></script>
   <script data-goatcounter="https://matija.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="page-term">
@@ -101,7 +101,7 @@
             <section class="zone z-intro">
               <h2 class="zh"><i aria-hidden="true"></i><span data-l="de">So geht’s</span><span data-l="en">How it works</span></h2>
               <div class="ch-head lc-h" data-node data-runtitle data-runtitle-de="Interaktiv" data-runtitle-en="Interactive"><span class="lc-num">00</span><h1 class="lc-ch"><span data-l="de">Interaktiv</span><span data-l="en">Interactive</span></h1></div>
-              <h3 class="lc-title"><span data-l="de">Testen Sie Ihr <span>Netzwerk-Wissen.</span></span><span data-l="en">Test your <span>networking knowledge.</span></span></h3>
+              <h3 class="lc-title"><span data-l="de">Testen Sie Ihr <span>Admin-Wissen.</span></span><span data-l="en">Test your <span>admin skills.</span></span></h3>
               <p class="lc-text"><span data-l="de">Fünf Fragen pro Runde, je drei Antworten. Klicken Sie die richtige an. Je schneller, desto mehr Punkte: In den ersten 30 Sekunden gibt es einen Zeitbonus.</span><span data-l="en">Five questions per round, three answers each. Click the right one. The faster, the more points: answers within 30 seconds earn a time bonus.</span></p>
               <div class="lc-rules"><div><b>5</b><span><span data-l="de">Runden</span><span data-l="en">rounds</span></span></div><div><b>30 s</b><span><span data-l="de">pro Frage</span><span data-l="en">per question</span></span></div><div><b>+10</b><span><span data-l="de">je Sekunde</span><span data-l="en">per second</span></span></div></div>
             </section>
@@ -112,6 +112,8 @@
                 <a class="cs-k on" data-quiz-tool="binaer" href="werkzeuge.html#binaer" target="_blank" rel="noopener"><kbd aria-hidden="true">F1</kbd><span data-l="de">Binär-Umrechner</span><span data-l="en">Binary converter</span> ↗</a>
                 <a class="cs-k" data-quiz-tool="subnetz" href="werkzeuge.html#subnetz" target="_blank" rel="noopener"><kbd aria-hidden="true">F2</kbd><span data-l="de">Subnetzrechner</span><span data-l="en">Subnet calculator</span> ↗</a>
                 <a class="cs-k" data-quiz-tool="ports" href="werkzeuge.html#ports" target="_blank" rel="noopener"><kbd aria-hidden="true">F3</kbd><span data-l="de">Port-Lexikon</span><span data-l="en">Port reference</span> ↗</a>
+                <a class="cs-k" data-quiz-tool="firewall" href="werkzeuge.html#vlan" target="_blank" rel="noopener"><kbd aria-hidden="true">F4</kbd><span data-l="de">VLAN-Planer</span><span data-l="en">VLAN planner</span> ↗</a>
+                <a class="cs-k" data-quiz-tool="ticket" href="werkzeuge.html#befehle" target="_blank" rel="noopener"><kbd aria-hidden="true">F5</kbd><span data-l="de">Befehls-Baukasten</span><span data-l="en">Command builder</span> ↗</a>
               </div>
               <div class="cs-n"><span data-l="de">öffnet im neuen Tab · Quiz bleibt offen</span><span data-l="en">opens in a new tab · quiz stays open</span></div>
             </section>
@@ -120,7 +122,7 @@
             <section class="zone z-game">
               <h2 class="zh"><i aria-hidden="true"></i><span data-l="de">Spielfeld</span><span data-l="en">Game</span></h2>
               <div class="rp">
-                <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button></div>
+                <div class="ktabs" role="group" aria-label="Modus"><button type="button" data-quiz-mode="binaer" aria-pressed="true" class="on">binaer.sh</button><button type="button" data-quiz-mode="subnetz" aria-pressed="false">subnetz.sh</button><button type="button" data-quiz-mode="ports" aria-pressed="false">ports.sh</button><button type="button" data-quiz-mode="firewall" aria-pressed="false">firewall.sh</button><button type="button" data-quiz-mode="ticket" aria-pressed="false">ticket.sh</button></div>
                 <div class="kt-body">
                   <div class="kp"><span class="b">┌──(</span><span class="u">gast㉿matija-tasic</span><span class="b">)-[</span><span class="w">~/quiz</span><span class="b">]</span></div>
                   <div class="kp"><span class="b">└─</span><span class="u">$</span> <span class="w" data-quiz-cmd>./binaer.sh --timer 30</span></div>
