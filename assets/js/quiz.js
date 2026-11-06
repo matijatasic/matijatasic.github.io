@@ -1035,12 +1035,12 @@
   var LABELS = { binaer: { de: 'Binär → Dezimal', en: 'Binary → decimal' }, subnetz: { de: 'Subnetze', en: 'Subnets' }, ports: { de: 'Ports & Dienste', en: 'Ports & services' },
     firewall: { de: 'Firewall-Regelwerk', en: 'Firewall rules' }, ticket: { de: 'Störungsticket', en: 'Support ticket' } };
   var FILES = { binaer: 'binaer.sh', subnetz: 'subnetz.sh', ports: 'ports.sh', firewall: 'firewall.sh', ticket: 'ticket.sh' };
-  var ORDER = ['binaer', 'subnetz', 'ports', 'firewall', 'ticket'];
+  var ORDER = ['ticket', 'binaer', 'subnetz', 'ports', 'firewall'];
   var $ = function (s) { return kt.querySelector(s); };
   var view = $('[data-quiz-view]'), cmd = $('[data-quiz-cmd]'), tools = Array.prototype.slice.call(document.querySelectorAll('[data-quiz-tool]'));
   var modeBtns = kt.querySelectorAll('[data-quiz-mode]');
 
-  var mode = 'binaer';
+  var mode = 'ticket';
   try { var s = sessionStorage.getItem('quiz'); if (MAKERS[s]) mode = s; } catch (e) {}
   // Bestenliste pro Modus, nur im Browser des Besuchers
   var getTop = function (m) {
@@ -1078,7 +1078,7 @@
     if (!boardEl) return;
     var rec = getTop(mode)[0], prev = live ? live.prev : getLast(mode);
     var cur = live ? live.cur : null, pct = cur == null ? 0 : (live.newRec ? 100 : ringPct(cur, rec));
-    var sub = cur == null ? bi('Bereit · Start drücken', 'Ready · press start')
+    var sub = cur == null ? bi('Bereit · Antwort wählen', 'Ready · pick an answer')
       : live.newRec ? bi('Neuer Rekord!', 'New record!')
       : rec ? bi(pct + ' % vom Rekord', pct + ' % of record') : bi('Erste Runde', 'First round');
     var d = cur == null ? null : delta(cur, prev), dh = '';
@@ -1112,16 +1112,12 @@
     return h + '</span>';
   };
 
+  // Beim Laden und beim Wechsel des Modus steht Frage 1 schon offen da. Die Uhr läuft noch nicht:
+  // Die erste Antwort startet das Spiel (Frage 1 zählt mit vollem Zeitbonus), danach weiter mit „Weiter“ oder Enter.
   var intro = function () {
-    stop(); g = null; live = null; board();
-    pultMsg('Antworten erscheinen hier nach dem Start.', 'Answers appear here after you start.');
-    var b = getTop(mode)[0] || 0;
-    view.innerHTML =
-      '<div class="kt-out c">' + bi('[*] Bereit: 5 Fragen, je 30 Sekunden.', '[*] Ready: 5 questions, 30 seconds each.') + '</div>' +
-      '<div class="kt-out d">' + bi('# Schneller antworten bringt mehr Punkte.', '# Faster answers earn more points.') + '</div>' +
-      (b ? '<div class="kt-out y">' + bi('Ihr Rekord: ' + b.toLocaleString('de-DE') + ' Punkte', 'Your record: ' + b.toLocaleString('en-US') + ' points') + '</div>' : '') +
-      '<div class="kt-act"><button type="button" class="pri" data-quiz-start>▶ ' + bi('Start', 'Start') + '</button></div>';
-    view.querySelector('[data-quiz-start]').addEventListener('click', start);
+    stop(); live = null; board();
+    g = { i: 0, pts: 0, res: [], used: {}, times: [] };
+    ask(true);
   };
 
   var start = function () {
@@ -1132,10 +1128,10 @@
     ask();
   };
 
-  var ask = function () {
+  var ask = function (warm) {
     var q, tries = 0;
     do { q = make(mode); } while (g.used[q.key] && ++tries < 30);
-    g.used[q.key] = 1; g.q = q; g.left = SECONDS; g.t0 = Date.now(); g.done = false; g.over = false;
+    g.used[q.key] = 1; g.q = q; g.left = SECONDS; g.t0 = Date.now(); g.done = false; g.over = false; g.warm = !!warm;
     var keys = ['A', 'B', 'C'], o = '';
     q.opts.forEach(function (op, i) {
       o += '<button type="button" class="kt-opt" data-opt="' + i + '"><span class="k">' + keys[i] + '</span><span class="v">' + tx(op) + '</span><span class="m"></span></button>';
@@ -1154,13 +1150,15 @@
       '<div class="kq-bar"><i data-quiz-bar></i></div></div>' +
       '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
-      '<div class="kt-opts">' + o + '</div>';
+      '<div class="kt-opts">' + o + '</div>' +
+      (warm ? '<div class="kt-out d kq-warm">' + bi('# Antwort anklicken (oder A/B/C) – damit startet das Spiel. Die Uhr läuft ab Frage 2.', '# Click an answer (or A/B/C) to start the game. The clock runs from question 2.') + '</div>' : '');
     g.opts = view.querySelector('.kt-opts'); g.act = null;
     if (pult) pult.innerHTML = '';
     place();
     g.opts.querySelectorAll('[data-opt]').forEach(function (b) {
       b.addEventListener('click', function () { answer(+b.getAttribute('data-opt')); });
     });
+    if (warm) return;
     tick();
     timer = setInterval(tick, 100);
   };
@@ -1196,6 +1194,12 @@
 
   var answer = function (i) {
     if (!g || g.done) return;
+    // Erste Antwort auf die offene Startfrage: jetzt beginnt die Runde
+    if (g.warm) {
+      g.warm = false; g.left = SECONDS; g.t0 = Date.now();
+      live = { cur: 0, prev: getLast(mode), done: false, newRec: false };
+      var wh = view.querySelector('.kq-warm'); if (wh) wh.parentNode.removeChild(wh);
+    }
     g.done = true; clearInterval(timer); timer = 0;
     var ok = i === g.q.a, used = Math.min(SECONDS, (Date.now() - g.t0) / 1000), p = points(ok, g.left);
     g.pts += p; g.res.push({ ok: ok }); g.times.push(used);
