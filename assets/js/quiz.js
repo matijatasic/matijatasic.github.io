@@ -1113,7 +1113,7 @@
   };
 
   // Beim Laden und beim Wechsel des Modus steht Frage 1 schon offen da. Die Uhr läuft noch nicht:
-  // Die erste Antwort startet das Spiel (Frage 1 zählt mit vollem Zeitbonus), danach weiter mit „Weiter“ oder Enter.
+  // Die erste Antwort startet das Spiel (Frage 1 ohne Zeitbonus, nur Grundpunkte), danach weiter mit „Weiter“ oder Enter.
   var intro = function () {
     stop(); live = null; board();
     g = { i: 0, pts: 0, res: [], used: {}, times: [] };
@@ -1125,7 +1125,7 @@
     g = { i: 0, pts: 0, res: [], used: {}, times: [] };
     live = { cur: 0, prev: getLast(mode), done: false, newRec: false };
     board();
-    ask();
+    ask(true);
   };
 
   var ask = function (warm) {
@@ -1144,21 +1144,21 @@
     view.innerHTML =
       '<div class="kq-hud" data-quiz-timer>' +
       '<div class="kq-c"><small>' + bi('Runde', 'Round') + '</small><b>' + (g.i + 1) + '/' + ROUNDS + '</b>' + dotsHtml() + '</div>' +
-      '<div class="kq-c t"><small>' + bi('Zeit', 'Time') + '</small><b><span data-quiz-sec>' + SECONDS + '</span> s</b></div>' +
-      '<div class="kq-c"><small>Bonus</small><b data-quiz-bonus>+' + PER_SEC * SECONDS + '</b></div>' +
+      '<div class="kq-c t"><small>' + bi('Zeit', 'Time') + '</small><b>' + (warm ? '<span data-quiz-sec>–</span>' : '<span data-quiz-sec>' + SECONDS + '</span> s') + '</b></div>' +
+      '<div class="kq-c"><small>Bonus</small><b data-quiz-bonus>+' + (warm ? 0 : PER_SEC * SECONDS) + '</b></div>' +
       '<div class="kq-c s"><small>' + bi('Punkte', 'Points') + '</small><b data-quiz-pts>' + fmt(g.pts) + '</b></div>' +
       '<div class="kq-bar"><i data-quiz-bar></i></div></div>' +
       '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
       '<div class="kt-opts">' + o + '</div>' +
-      (warm ? '<div class="kt-out d kq-warm">' + bi('# Antwort anklicken (oder A/B/C) – damit startet das Spiel. Die Uhr läuft ab Frage 2.', '# Click an answer (or A/B/C) to start the game. The clock runs from question 2.') + '</div>' : '');
+      (warm ? '<div class="kt-out d kq-warm">' + bi('# Frage 1 ohne Zeitbonus: Antwort anklicken (oder A/B/C) startet das Spiel. Uhr und Bonus laufen ab Frage 2.', '# Question 1 has no time bonus: click an answer (or A/B/C) to start. Clock and bonus run from question 2.') + '</div>' : '');
     g.opts = view.querySelector('.kt-opts'); g.act = null;
     if (pult) pult.innerHTML = '';
     place();
     g.opts.querySelectorAll('[data-opt]').forEach(function (b) {
       b.addEventListener('click', function () { answer(+b.getAttribute('data-opt')); });
     });
-    if (warm) return;
+    if (warm) { var wb = view.querySelector('[data-quiz-bar]'); if (wb) wb.style.width = '0%'; return; }
     tick();
     timer = setInterval(tick, 100);
   };
@@ -1196,7 +1196,7 @@
     if (!g || g.done) return;
     // Erste Antwort auf die offene Startfrage: jetzt beginnt die Runde
     if (g.warm) {
-      g.warm = false; g.left = SECONDS; g.t0 = Date.now();
+      g.warm = false; g.left = 0; g.t0 = Date.now();
       live = { cur: 0, prev: getLast(mode), done: false, newRec: false };
       var wh = view.querySelector('.kq-warm'); if (wh) wh.parentNode.removeChild(wh);
     }
