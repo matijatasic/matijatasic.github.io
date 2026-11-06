@@ -409,7 +409,7 @@
     var wide = !!(pult && mqWide && mqWide.matches), fb = view.querySelector('.kq-fb');
     if (wide) { pult.appendChild(g.opts); if (g.act) pult.appendChild(g.act); }
     else {
-      // Schmal: Frage, Antworten, Ergebnis, Hilfetabelle
+      // Schmal: Frage, Antworten, Ergebnis
       var card = view.querySelector('.kq-card');
       view.insertBefore(g.opts, card ? card.nextSibling : null);
       if (fb) { view.insertBefore(fb, g.opts.nextSibling); if (g.act) fb.appendChild(g.act); }
@@ -480,23 +480,6 @@
     ask();
   };
 
-  // Binär: Spickzettel mit Stellenwerten (2^7 … 2^0) und einem Rechenbeispiel unter der Frage
-  var binHint = function () {
-    var th = '', on = '', val = '';
-    for (var k = 7; k >= 0; k--) { th += '<th>2<sup>' + k + '</sup></th>'; on += '<td>1</td>'; val += '<td>' + (1 << k) + '</td>'; }
-    return '<div class="kq-bh"><table><tr>' + th + '</tr><tr class="o">' + on + '</tr><tr class="w">' + val + '</tr></table>' +
-      '<div class="ex"># ' + bi('Beispiel', 'Example') + '<br><i>0000 0101</i><br>= 4 + 1 = <b>5</b></div></div>';
-  };
-  // Subnetz: Präfix, Host-Bits und 2^n; Hosts = 2^n − 2 (Netz- und Broadcast-Adresse abziehen)
-  var subHint = function () {
-    var pr = '', hb = '', pw = '';
-    for (var p = 22; p <= 30; p++) { pr += '<td>/' + p + '</td>'; hb += '<td>' + (32 - p) + '</td>'; pw += '<td>' + Math.pow(2, 32 - p) + '</td>'; }
-    return '<div class="kq-bh kq-sh"><table><tr class="o"><td class="l">' + bi('Präfix', 'Prefix') + '</td>' + pr + '</tr>' +
-      '<tr class="c"><td class="l">' + bi('Host-Bits', 'Host bits') + '</td>' + hb + '</tr>' +
-      '<tr class="w"><td class="l">2<sup>n</sup></td>' + pw + '</tr></table>' +
-      '<div class="ex"># Hosts <br>= 2<sup>n</sup> − 2 <br><i>' + bi('Netz + Broadcast', 'network + broadcast') + '</i></div></div>';
-  };
-
   var ask = function () {
     var q, tries = 0;
     do { q = make(mode); } while (g.used[q.key] && ++tries < 30);
@@ -519,7 +502,6 @@
       '<div class="kq-bar"><i data-quiz-bar></i></div></div>' +
       '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
-      (mode === 'binaer' ? binHint() : mode === 'subnetz' ? subHint() : '') +
       '<div class="kt-opts">' + o + '</div>';
     g.opts = view.querySelector('.kt-opts'); g.act = null;
     if (pult) pult.innerHTML = '';
@@ -579,7 +561,7 @@
     // Ergebnisfeld: Meldung, Erklärung und „Weiter“ zusammen in einem Kasten
     var box = document.createElement('div');
     box.className = 'kq-fb ' + (ok ? 'ok' : 'bad');
-    // Ergebnis direkt unter der Frage (schmal: unter den Antworten), die Hilfetabelle rückt nach unten
+    // Ergebnis direkt unter der Frage (schmal: unter den Antworten)
     var anchor = g.opts.parentNode === view ? g.opts : view.querySelector('.kq-card');
     view.insertBefore(box, anchor ? anchor.nextSibling : null);
     var fb = document.createElement('div');
