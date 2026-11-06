@@ -369,7 +369,51 @@
     return { top: top.slice(0, 3), place: i + 1 };
   };
 
-  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, TICKETS: TICKETS, fwHit: fwHit, MODES: Object.keys(MAKERS), make: make, points: points, delta: delta, ringPct: ringPct, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf };
+  // Rechenweg nach der Antwort (Binär und Subnetz): kurze Skizze, wie man auf die Lösung kommt.
+  // Liefert HTML (zweisprachig über data-l) oder '' für Modi ohne Skizze.
+  var sk2 = function (de, en) { return de === en ? de : '<span data-l="de">' + de + '</span><span data-l="en">' + en + '</span>'; };
+  var sup = function (n) { return '2' + String(n).replace(/\d/g, function (d) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.charAt(+d); }); };
+  var sketch = function (key) {
+    var t = key.charAt(0), n = +key.slice(1), i, h = '';
+    if (t === 'b') {
+      var bits = '', vals = '', parts = [];
+      for (i = 7; i >= 0; i--) {
+        var on = (n >> i) & 1, w = 1 << i;
+        bits += '<td class="' + (on ? 'on' : 'off') + '">' + on + '</td>';
+        vals += '<td class="' + (on ? 'on' : 'off') + '">' + w + '</td>';
+        if (on) parts.push(w);
+      }
+      return '<div class="kq-sk"><div class="sk-h"># ' + sk2('Rechenweg', 'How to') + '</div>' +
+        '<table><tr><th>Bit</th>' + bits + '</tr><tr><th>' + sk2('Wert', 'Value') + '</th>' + vals + '</tr></table>' +
+        '<div class="sk-r">' + sk2('Nur die Einsen zählen', 'Add the ones only') + ': ' + parts.join(' + ') + ' = <b>' + n + '</b></div></div>';
+    }
+    if (t === 'h' || t === 'p') {
+      var hb = 32 - n, all = Math.pow(2, hb), hosts = all - 2;
+      var steps = t === 'h'
+        ? ['32 − ' + n + ' = ' + hb + ' ' + sk2('Host-Bits', 'host bits'), sup(hb) + ' = ' + all + ' ' + sk2('Adressen', 'addresses'),
+           all + ' − 2 ' + sk2('(Netz + Broadcast)', '(network + broadcast)') + ' = <b>' + hosts + ' Hosts</b>']
+        : [hosts + ' + 2 ' + sk2('(Netz + Broadcast)', '(network + broadcast)') + ' = ' + all, all + ' = ' + sup(hb) + ' → ' + hb + ' ' + sk2('Host-Bits', 'host bits'),
+           '32 − ' + hb + ' = <b>/' + n + '</b>'];
+      for (i = 0; i < steps.length; i++) h += '<li><i>' + (i + 1) + '</i>' + steps[i] + '</li>';
+      return '<div class="kq-sk"><div class="sk-h"># ' + sk2('Rechenweg', 'How to') + '</div><ol>' + h + '</ol></div>';
+    }
+    if (t === 'm') {
+      var oct = [], dec = [];
+      for (var o = 0; o < 4; o++) {
+        var ones = Math.max(0, Math.min(8, n - o * 8)), s8 = '', v = 0, add = [];
+        for (i = 0; i < 8; i++) { s8 += i < ones ? '1' : '<u>0</u>'; if (i < ones) { v += 128 >> i; add.push(128 >> i); } }
+        oct.push(s8); dec.push(v);
+        if (ones > 1 && ones < 8) h = add.join(' + ') + ' = ' + v;
+      }
+      return '<div class="kq-sk"><div class="sk-h"># ' + sk2('Rechenweg', 'How to') + ': ' + n + ' ' + sk2('Einsen von links', 'ones from the left') + '</div>' +
+        '<div class="sk-m">' + oct.join('.<wbr>') + '</div>' +
+        (h ? '<div class="sk-r">' + sk2('Angebrochenes Oktett', 'Partial octet') + ': ' + h + '</div>' : '') +
+        '<div class="sk-r">→ <b>' + dec.join('.') + '</b></div></div>';
+    }
+    return '';
+  };
+
+  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, TICKETS: TICKETS, fwHit: fwHit, MODES: Object.keys(MAKERS), make: make, points: points, delta: delta, ringPct: ringPct, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf, sketch: sketch };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   global.NetQuiz = api;
 
@@ -577,6 +621,8 @@
       wy.innerHTML = '# ' + bi(esc(g.q.why.de), esc(g.q.why.en));
       box.appendChild(wy);
     }
+    // Binär und Subnetz: Rechenweg als kleine Skizze
+    if (mode === 'binaer' || mode === 'subnetz') box.insertAdjacentHTML('beforeend', sketch(g.q.key));
     var nx = document.createElement('div');
     nx.className = 'kt-act';
     nx.innerHTML = '<button type="button" class="pri" data-quiz-next>' + (g.i + 1 < ROUNDS ? bi('Weiter', 'Next') + ' →' : bi('Ergebnis', 'Result') + ' →') + '</button>';

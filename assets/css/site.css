@@ -1774,6 +1774,18 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .kq-card { padding: 10px 14px; } .kq-lab { margin-bottom: 6px; }
 }
 
+/* Rechenweg nach der Antwort (Binär, Subnetz) */
+.kq-sk { margin-top: 10px; padding: 10px 12px; background: #161922; border: 1px dashed #3b404c; border-radius: 8px; font-family: 'DejaVu Sans Mono', monospace; font-size: 13.5px; color: #c9ccd3; }
+.kq-sk .sk-h { margin-bottom: 6px; font-size: 12px; color: #8a919c; }
+.kq-sk table { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: center; }
+.kq-sk th { width: 54px; text-align: left; font-weight: 400; font-size: 11px; color: #6b7280; }
+.kq-sk td { padding: 2px 0; } .kq-sk td.on { color: #3ccf6e; font-weight: 700; } .kq-sk td.off { color: #4b5160; }
+.kq-sk tr + tr td { border-top: 1px solid #2b2e38; } .kq-sk tr + tr td.on { color: #e5e7eb; }
+.kq-sk .sk-r { margin-top: 6px; } .kq-sk b { color: #f5c04a; }
+.kq-sk ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.kq-sk li { display: flex; gap: 8px; align-items: baseline; } .kq-sk li i { flex: none; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #2b2e38; color: #7fdcea; font-style: normal; font-size: 11px; font-weight: 700; }
+.kq-sk .sk-m { color: #3ccf6e; font-weight: 700; letter-spacing: .04em; } .kq-sk .sk-m u { text-decoration: none; color: #4b5160; font-weight: 400; }
+@media (max-width: 600px) { .kq-sk { font-size: 12.5px; padding: 8px 10px; } .kq-sk th { width: 40px; } .kq-sk .sk-m { font-size: 11px; letter-spacing: 0; } }
 .kq-pult .kt-opt .v { white-space: nowrap; } .kq-pult .kt-opt .m span { display: none; }
 
 /* ---------- Fußbereich: Schiefer-Block ---------- */
