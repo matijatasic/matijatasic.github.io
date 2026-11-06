@@ -380,6 +380,8 @@
   var bi = function (de, en) { return '<span data-l="de">' + de + '</span><span data-l="en">' + en + '</span>'; };
   var tx = function (o) { return o.de === o.en ? o.de : bi(o.de, o.en); };
   var NAMES = { binaer: 'binär', subnetz: 'subnetz', ports: 'ports', firewall: 'firewall', ticket: 'ticket' };
+  var LABELS = { binaer: { de: 'Binär → Dezimal', en: 'Binary → decimal' }, subnetz: { de: 'Subnetze', en: 'Subnets' }, ports: { de: 'Ports & Dienste', en: 'Ports & services' },
+    firewall: { de: 'Firewall-Regelwerk', en: 'Firewall rules' }, ticket: { de: 'Störungsticket', en: 'Support ticket' } };
   var FILES = { binaer: 'binaer.sh', subnetz: 'subnetz.sh', ports: 'ports.sh', firewall: 'firewall.sh', ticket: 'ticket.sh' };
   var ORDER = ['binaer', 'subnetz', 'ports', 'firewall', 'ticket'];
   var $ = function (s) { return kt.querySelector(s); };
@@ -473,11 +475,16 @@
     // Firewall-Regelwerk oder Ticket-Text über der Frage (Firewall als Tabelle in Festbreite)
     var pre = q.pre ? (q.pre.de === q.pre.en ? '<div class="kt-pre kt-pre-' + mode + '">' + q.pre.de + '</div>'
       : '<div class="kt-pre kt-pre-' + mode + '" data-l="de">' + q.pre.de + '</div><div class="kt-pre kt-pre-' + mode + '" data-l="en">' + q.pre.en + '</div>') : '';
+    // Arcade-Aufbau: Anzeige (Runde, Zeit, Bonus, Punkte + Zeitbalken) · Fragekarte · Antworten · später Ergebnisfeld
     view.innerHTML =
-      '<div class="kt-timer" data-quiz-timer><span class="kt-sec">⏱ <b data-quiz-sec>30</b> s</span><div><i data-quiz-bar></i></div><span class="y" data-quiz-bonus>+' + PER_SEC * SECONDS + ' Bonus</span></div>' +
-      '<div class="kt-out c">' + bi('Runde', 'Round') + ' ' + (g.i + 1) + '/' + ROUNDS + ' ' + dotsHtml() + ' · ' + bi('Punkte', 'Points') + ' ' + g.pts + '</div>' +
-      pre +
-      '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div>' +
+      '<div class="kq-hud" data-quiz-timer>' +
+      '<div class="kq-c"><small>' + bi('Runde', 'Round') + '</small><b>' + (g.i + 1) + '/' + ROUNDS + '</b>' + dotsHtml() + '</div>' +
+      '<div class="kq-c t"><small>' + bi('Zeit', 'Time') + '</small><b><span data-quiz-sec>' + SECONDS + '</span> s</b></div>' +
+      '<div class="kq-c"><small>Bonus</small><b data-quiz-bonus>+' + PER_SEC * SECONDS + '</b></div>' +
+      '<div class="kq-c s"><small>' + bi('Punkte', 'Points') + '</small><b data-quiz-pts>' + fmt(g.pts) + '</b></div>' +
+      '<div class="kq-bar"><i data-quiz-bar></i></div></div>' +
+      '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
+      '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
       '<div class="kt-opts">' + o + '</div>';
     view.querySelectorAll('[data-opt]').forEach(function (b) {
       b.addEventListener('click', function () { answer(+b.getAttribute('data-opt')); });
@@ -493,7 +500,7 @@
     var sec = view.querySelector('[data-quiz-sec]'), bar = view.querySelector('[data-quiz-bar]'), bonus = view.querySelector('[data-quiz-bonus]');
     if (sec) sec.textContent = Math.ceil(left);
     if (bar) bar.style.width = (left / SECONDS * 100) + '%';
-    if (bonus) bonus.textContent = '+' + PER_SEC * Math.floor(left) + ' Bonus';
+    if (bonus) bonus.textContent = '+' + PER_SEC * Math.floor(left);
     var tm = view.querySelector('[data-quiz-timer]');
     if (tm) tm.classList.toggle('is-low', left <= 10);
     // Zeit abgelaufen: Frage bleibt stehen, bis der Spieler wählt (dann ohne Zeitbonus)
@@ -521,29 +528,37 @@
     var ok = i === g.q.a, used = Math.min(SECONDS, (Date.now() - g.t0) / 1000), p = points(ok, g.left);
     g.pts += p; g.res.push({ ok: ok }); g.times.push(used);
     if (live) { live.cur = g.pts; board(); }
+    var ptsEl = view.querySelector('[data-quiz-pts]');
+    if (ptsEl) ptsEl.innerHTML = fmt(g.pts);
+    var dot = view.querySelectorAll('.kq-hud .kt-dots i')[g.i];
+    if (dot) dot.className = ok ? 'ok' : 'bad';
     view.querySelectorAll('[data-opt]').forEach(function (b, j) {
       b.disabled = true;
       var m = b.querySelector('.m');
       if (j === g.q.a) { b.classList.add('ok'); m.innerHTML = '✓ ' + bi('richtig', 'correct'); }
       else if (j === i) { b.classList.add('bad'); m.innerHTML = '✗ ' + bi('falsch', 'wrong'); }
     });
+    // Ergebnisfeld: Meldung, Erklärung und „Weiter“ zusammen in einem Kasten
+    var box = document.createElement('div');
+    box.className = 'kq-fb ' + (ok ? 'ok' : 'bad');
+    view.appendChild(box);
     var fb = document.createElement('div');
     fb.className = 'kt-out ' + (ok ? 'g' : 'r');
     fb.setAttribute('role', 'status');
     fb.innerHTML = ok ? '[+] ' + bi('Richtig', 'Correct') + ': +' + p + ' ' + bi('Punkte', 'points')
       : '[-] ' + bi('Falsch', 'Wrong') + ' · ' + bi('Lösung', 'Answer') + ': ' + tx(g.q.opts[g.q.a]);
-    view.appendChild(fb);
+    box.appendChild(fb);
     // Kurze Erklärung, damit man aus jeder Frage etwas mitnimmt
     if (g.q.why) {
       var wy = document.createElement('div');
       wy.className = 'kt-out kt-why';
       wy.innerHTML = '# ' + bi(esc(g.q.why.de), esc(g.q.why.en));
-      view.appendChild(wy);
+      box.appendChild(wy);
     }
     var nx = document.createElement('div');
     nx.className = 'kt-act';
     nx.innerHTML = '<button type="button" class="pri" data-quiz-next>' + (g.i + 1 < ROUNDS ? bi('Weiter', 'Next') + ' →' : bi('Ergebnis', 'Result') + ' →') + '</button>';
-    view.appendChild(nx);
+    box.appendChild(nx);
     var go = function () { clearTimeout(next); next = 0; g.i++; if (g.i < ROUNDS) ask(); else result(); };
     nx.querySelector('button').addEventListener('click', go);
     nx.querySelector('button').focus({ preventScroll: true });
