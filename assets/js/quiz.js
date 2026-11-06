@@ -400,6 +400,17 @@
     try { var v = JSON.parse(localStorage.getItem('quiz-last-' + m)); return typeof v === 'number' && isFinite(v) ? v : null; } catch (e) { return null; }
   };
   var setLast = function (m, v) { try { localStorage.setItem('quiz-last-' + m, JSON.stringify(v)); } catch (e) {} };
+  // Antwort-Pult rechts unter der Rangliste (nur Desktop, wenn die rechte Spalte neben dem Spielfeld steht).
+  // Schmaler bleiben Antworten und „Weiter“ im Spielfeld unter der Frage.
+  var pult = $('[data-quiz-pult]'), mqWide = window.matchMedia ? window.matchMedia('(min-width: 1081px)') : null;
+  var pultMsg = function (de, en) { if (pult) pult.innerHTML = '<div class="kt-out d"># ' + bi(de, en) + '</div>'; };
+  var place = function () {
+    if (!g || !g.opts) return;
+    var wide = !!(pult && mqWide && mqWide.matches), fb = view.querySelector('.kq-fb');
+    if (wide) { pult.appendChild(g.opts); if (g.act) pult.appendChild(g.act); }
+    else { view.insertBefore(g.opts, fb); if (g.act && fb) fb.appendChild(g.act); }
+  };
+  if (mqWide) { if (mqWide.addEventListener) mqWide.addEventListener('change', place); else if (mqWide.addListener) mqWide.addListener(place); }
   var boardEl = document.querySelector('[data-quiz-board]'), podName = document.querySelector('[data-quiz-podname]');
   // live: laufende oder gerade beendete Runde { cur, prev, done, newRec }; null = noch nicht gestartet
   var live = null;
@@ -446,6 +457,7 @@
 
   var intro = function () {
     stop(); g = null; live = null; board();
+    pultMsg('Antworten erscheinen hier nach dem Start.', 'Answers appear here after you start.');
     var b = getTop(mode)[0] || 0;
     view.innerHTML =
       '<div class="kt-out c">' + bi('[*] Bereit: 5 Fragen, je 30 Sekunden.', '[*] Ready: 5 questions, 30 seconds each.') + '</div>' +
@@ -486,7 +498,10 @@
       '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
       '<div class="kt-opts">' + o + '</div>';
-    view.querySelectorAll('[data-opt]').forEach(function (b) {
+    g.opts = view.querySelector('.kt-opts'); g.act = null;
+    if (pult) pult.innerHTML = '';
+    place();
+    g.opts.querySelectorAll('[data-opt]').forEach(function (b) {
       b.addEventListener('click', function () { answer(+b.getAttribute('data-opt')); });
     });
     tick();
@@ -509,8 +524,8 @@
       var w = document.createElement('div');
       w.className = 'kt-out r'; w.setAttribute('role', 'status');
       w.innerHTML = '[!] ' + bi('Zeit abgelaufen · Wählen Sie trotzdem eine Antwort (ohne Zeitbonus).', 'Time is up · Pick an answer anyway (no time bonus).');
-      var opts = view.querySelector('.kt-opts');
-      if (opts) opts.parentNode.insertBefore(w, opts);
+      var card = view.querySelector('.kq-card');
+      if (card) view.insertBefore(w, card.nextSibling);
     }
   };
 
@@ -532,7 +547,7 @@
     if (ptsEl) ptsEl.innerHTML = fmt(g.pts);
     var dot = view.querySelectorAll('.kq-hud .kt-dots i')[g.i];
     if (dot) dot.className = ok ? 'ok' : 'bad';
-    view.querySelectorAll('[data-opt]').forEach(function (b, j) {
+    g.opts.querySelectorAll('[data-opt]').forEach(function (b, j) {
       b.disabled = true;
       var m = b.querySelector('.m');
       if (j === g.q.a) { b.classList.add('ok'); m.innerHTML = '✓ ' + bi('richtig', 'correct'); }
@@ -559,6 +574,7 @@
     nx.className = 'kt-act';
     nx.innerHTML = '<button type="button" class="pri" data-quiz-next>' + (g.i + 1 < ROUNDS ? bi('Weiter', 'Next') + ' →' : bi('Ergebnis', 'Result') + ' →') + '</button>';
     box.appendChild(nx);
+    g.act = nx; place();
     var go = function () { clearTimeout(next); next = 0; g.i++; if (g.i < ROUNDS) ask(); else result(); };
     nx.querySelector('button').addEventListener('click', go);
     nx.querySelector('button').focus({ preventScroll: true });
@@ -579,6 +595,7 @@
     if (live) { live.cur = g.pts; live.done = true; live.newRec = rec; }
     board();
     var chips = g.res.map(function (r, i) { return '<span class="' + (r.ok ? 'ok' : 'bad') + '">' + (i + 1) + ' ' + (r.ok ? '✓' : '✗') + '</span>'; }).join('');
+    pultMsg('Runde beendet · Ergebnis im Spielfeld.', 'Round complete · see the result in the game.');
     var col = pct >= 80 ? 'g' : (pct >= 40 ? 'y' : 'r');
     var nextMode = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
     view.innerHTML =
