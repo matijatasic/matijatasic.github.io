@@ -1772,6 +1772,7 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
   .zg .z-game > .zh { padding-top: 12px; } .zg .rp .kt-body { padding-top: 8px; padding-bottom: 12px; }
   .kq-bar { height: 9px; } .kq-c { padding: 4px; } .gw .kq-c b { font-size: 18px; }
   .kq-card { padding: 10px 14px; } .kq-lab { margin-bottom: 6px; }
+  .kq-sk { padding: 8px 12px; } .kq-pi dl { font-size: 12.5px; line-height: 1.4; } .kq-pi .pi-cs { margin-bottom: 6px; }
 }
 
 /* Rechenweg nach der Antwort (Binär, Subnetz) */
@@ -1786,6 +1787,14 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .kq-sk li { display: flex; gap: 8px; align-items: baseline; } .kq-sk li i { flex: none; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #2b2e38; color: #7fdcea; font-style: normal; font-size: 11px; font-weight: 700; }
 .kq-sk .sk-m { color: #3ccf6e; font-weight: 700; letter-spacing: .04em; } .kq-sk .sk-m u { text-decoration: none; color: #4b5160; font-weight: 400; }
 @media (max-width: 600px) { .kq-sk { font-size: 12.5px; padding: 8px 10px; } .kq-sk th { width: 40px; } .kq-sk .sk-m { font-size: 11px; letter-spacing: 0; } }
+.kq-pi .sk-h b { color: #f5c04a; }
+.kq-pi .pi-cs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.kq-pi .pi-c { padding: 2px 8px; border-radius: 999px; border: 1px solid #3b404c; font-size: 12px; }
+.kq-pi .pi-c.on { color: #3ccf6e; border-color: rgba(60, 207, 110, .5); } .kq-pi .pi-c.off { color: #6b7280; } .kq-pi .pi-c.cat { color: #7fdcea; border-color: rgba(127, 220, 234, .45); }
+.kq-pi dl { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 4px 10px; margin: 0; font-family: var(--sans, Inter, sans-serif); font-size: 13.5px; line-height: 1.45; }
+.kq-pi dt { color: #8a919c; font: 400 11.5px 'DejaVu Sans Mono', monospace; padding-top: 2px; } .kq-pi dd { margin: 0; color: #d6d9de; }
+.kq-pi .pi-rs { display: flex; flex-wrap: wrap; gap: 6px; } .kq-pi .pi-r { padding: 1px 7px; border-radius: 6px; background: #2b2e38; font: 400 12px 'DejaVu Sans Mono', monospace; color: #e5e7eb; }
+@media (max-width: 600px) { .kq-pi dl { grid-template-columns: 1fr; gap: 2px; } .kq-pi dd { margin-bottom: 4px; } }
 .kq-pult .kt-opt .v { white-space: nowrap; } .kq-pult .kt-opt .m span { display: none; }
 
 /* ---------- Fußbereich: Schiefer-Block ---------- */

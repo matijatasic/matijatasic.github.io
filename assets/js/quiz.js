@@ -621,8 +621,9 @@
       wy.innerHTML = '# ' + bi(esc(g.q.why.de), esc(g.q.why.en));
       box.appendChild(wy);
     }
-    // Binär und Subnetz: Rechenweg als kleine Skizze
+    // Binär und Subnetz: Rechenweg als kleine Skizze; Ports: Steckbrief aus dem Port-Lexikon
     if (mode === 'binaer' || mode === 'subnetz') box.insertAdjacentHTML('beforeend', sketch(g.q.key));
+    else if (mode === 'ports') box.insertAdjacentHTML('beforeend', portInfo(+g.q.key.slice(2)));
     var nx = document.createElement('div');
     nx.className = 'kt-act';
     nx.innerHTML = '<button type="button" class="pri" data-quiz-next>' + (g.i + 1 < ROUNDS ? bi('Weiter', 'Next') + ' →' : bi('Ergebnis', 'Result') + ' →') + '</button>';
@@ -633,6 +634,25 @@
     g.go = function () { if (g !== cur || g.i !== at || !g.done) return; g.go = null; g.i++; if (g.i < ROUNDS) ask(); else result(); };
     nx.querySelector('button').addEventListener('click', function () { if (g && g.go) g.go(); });
     nx.querySelector('button').focus({ preventScroll: true });
+  };
+
+  // Port-Steckbrief nach der Antwort: Protokoll, Bereich, wofür, Firewall-Hinweis, verwandte Ports (Daten aus ports.js)
+  var portInfo = function (port) {
+    var PD = global.PortData, e = null, i;
+    if (!PD) return '';
+    for (i = 0; i < PD.PORTS.length; i++) if (PD.PORTS[i].port === port) e = PD.PORTS[i];
+    if (!e) return '';
+    var t2 = function (x) { return typeof x === 'string' ? x : bi(esc(x[0]), esc(x[1])); };
+    var cat = PD.CATEGORIES[e.cat], yes = function (on, l) { return '<span class="pi-c ' + (on ? 'on' : 'off') + '">' + (on ? '✓ ' : '✗ ') + l + '</span>'; };
+    var rel = e.related.map(function (r) {
+      var o = null; for (var j = 0; j < PD.PORTS.length; j++) if (PD.PORTS[j].port === r) o = PD.PORTS[j];
+      return '<span class="pi-r">' + r + (o ? ' ' + t2(o.name) : '') + '</span>';
+    }).join('');
+    return '<div class="kq-sk kq-pi"><div class="sk-h"># ' + bi('Steckbrief', 'Fact sheet') + ': <b>Port ' + port + '</b> · ' + t2(e.name) + '</div>' +
+      '<div class="pi-cs">' + yes(e.tcp, 'TCP') + yes(e.udp, 'UDP') + (cat ? '<span class="pi-c cat">' + bi(cat[0], cat[1]) + '</span>' : '') + '</div>' +
+      '<dl><dt>' + bi('Wofür', 'Purpose') + '</dt><dd>' + t2(e.desc) + '</dd>' +
+      '<dt>Firewall</dt><dd>' + t2(e.note) + '</dd>' +
+      (rel ? '<dt>' + bi('Verwandt', 'Related') + '</dt><dd class="pi-rs">' + rel + '</dd>' : '') + '</dl></div>';
   };
 
   var result = function () {
