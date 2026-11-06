@@ -1341,15 +1341,10 @@ html[lang="de"] .plan [data-l="en"], html[lang="en"] .plan [data-l="de"] { displ
 .rk-ring .rk-s { display: block; margin-top: 4px; font-size: 11.5px; line-height: 1.3; color: #9aa1ab; }
 .rk-ring.idle b { color: #6b7280; }
 .rk-ring.rec { --rc: #e0b23a; } .rk-ring.rec .rk-s { color: #e0b23a; font-weight: 700; }
-/* Neuer Rekord: Goldener Siegerring (Leuchten, zwei Pulse, Stempel; Konfetti per Canvas aus quiz.js) */
-.rk-ring.rk-win { animation: rk-glow 1.6s ease-out 1 forwards; }
-.rk-ring.rk-win::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid #e0b23a; opacity: 0; animation: rk-pulse 1.2s ease-out 2; }
-@keyframes rk-glow { 0% { box-shadow: 0 0 0 0 rgba(224, 178, 58, 0); } 30% { box-shadow: 0 0 34px 8px rgba(224, 178, 58, .55); } 100% { box-shadow: 0 0 14px 2px rgba(224, 178, 58, .25); } }
-@keyframes rk-pulse { 0% { transform: scale(.95); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
-.rk-stamp { position: absolute; top: -4px; right: -34px; z-index: 2; transform: rotate(12deg) scale(0); opacity: 0; white-space: nowrap; font: 800 11px/1 var(--mono); letter-spacing: .06em; color: #14161b; background: #e0b23a; padding: 5px 8px; border-radius: 5px; box-shadow: 0 3px 0 #9c7a22; animation: rk-stamp .5s cubic-bezier(.2, 1.6, .4, 1) .9s forwards; }
-@keyframes rk-stamp { to { transform: rotate(12deg) scale(1); opacity: 1; } }
+/* Neuer Rekord: Goldener Siegerring. Bewegung kommt aus quiz.js (Web Animations), hier nur Form und Endzustand. */
+.rk-pulse { position: absolute; inset: -6px; border-radius: 50%; border: 3px solid #e0b23a; opacity: 0; pointer-events: none; }
+.rk-stamp { position: absolute; top: -4px; right: -34px; z-index: 2; transform: rotate(12deg); white-space: nowrap; font: 800 11px/1 var(--mono); letter-spacing: .06em; color: #14161b; background: #e0b23a; padding: 5px 8px; border-radius: 5px; box-shadow: 0 3px 0 #9c7a22; }
 .rk-confetti { position: absolute; z-index: 60; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .rk-ring.rk-win, .rk-ring.rk-win::after { animation: none; } .rk-ring.rk-win { box-shadow: 0 0 14px 2px rgba(224, 178, 58, .25); } .rk-stamp { animation: none; transform: rotate(12deg); opacity: 1; } }
 .rk-d { font: 700 13px var(--mono); color: #8a919c; }
 .rk-d.up { color: var(--t-green); } .rk-d.down { color: #ff5f56; }
 .rk-list { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 6px; }
