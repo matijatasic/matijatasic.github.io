@@ -408,7 +408,12 @@
     if (!g || !g.opts) return;
     var wide = !!(pult && mqWide && mqWide.matches), fb = view.querySelector('.kq-fb');
     if (wide) { pult.appendChild(g.opts); if (g.act) pult.appendChild(g.act); }
-    else { view.insertBefore(g.opts, fb); if (g.act && fb) fb.appendChild(g.act); }
+    else {
+      // Schmal: Frage, Antworten, Ergebnis, Hilfetabelle
+      var card = view.querySelector('.kq-card');
+      view.insertBefore(g.opts, card ? card.nextSibling : null);
+      if (fb) { view.insertBefore(fb, g.opts.nextSibling); if (g.act) fb.appendChild(g.act); }
+    }
   };
   if (mqWide) { if (mqWide.addEventListener) mqWide.addEventListener('change', place); else if (mqWide.addListener) mqWide.addListener(place); }
   var boardEl = document.querySelector('[data-quiz-board]'), podName = document.querySelector('[data-quiz-podname]');
@@ -479,8 +484,17 @@
   var binHint = function () {
     var th = '', on = '', val = '';
     for (var k = 7; k >= 0; k--) { th += '<th>2<sup>' + k + '</sup></th>'; on += '<td>1</td>'; val += '<td>' + (1 << k) + '</td>'; }
-    return '<div class="kq-bh"><table aria-label="' + 'Stellenwerte' + '"><tr>' + th + '</tr><tr class="o">' + on + '</tr><tr class="w">' + val + '</tr></table>' +
+    return '<div class="kq-bh"><table><tr>' + th + '</tr><tr class="o">' + on + '</tr><tr class="w">' + val + '</tr></table>' +
       '<div class="ex"># ' + bi('Beispiel', 'Example') + '<br><i>0000 0101</i><br>= 4 + 1 = <b>5</b></div></div>';
+  };
+  // Subnetz: Präfix, Host-Bits und 2^n; Hosts = 2^n − 2 (Netz- und Broadcast-Adresse abziehen)
+  var subHint = function () {
+    var pr = '', hb = '', pw = '';
+    for (var p = 22; p <= 30; p++) { pr += '<td>/' + p + '</td>'; hb += '<td>' + (32 - p) + '</td>'; pw += '<td>' + Math.pow(2, 32 - p) + '</td>'; }
+    return '<div class="kq-bh kq-sh"><table><tr class="o"><td class="l">' + bi('Präfix', 'Prefix') + '</td>' + pr + '</tr>' +
+      '<tr class="c"><td class="l">' + bi('Host-Bits', 'Host bits') + '</td>' + hb + '</tr>' +
+      '<tr class="w"><td class="l">2<sup>n</sup></td>' + pw + '</tr></table>' +
+      '<div class="ex"># Hosts <br>= 2<sup>n</sup> − 2 <br><i>' + bi('Netz + Broadcast', 'network + broadcast') + '</i></div></div>';
   };
 
   var ask = function () {
@@ -505,7 +519,7 @@
       '<div class="kq-bar"><i data-quiz-bar></i></div></div>' +
       '<div class="kq-card"><div class="kq-lab">' + tx(LABELS[mode]) + '</div>' + pre +
       '<div class="kt-q">' + bi(q.q.de.replace('{v}', v), q.q.en.replace('{v}', v)) + '</div></div>' +
-      (mode === 'binaer' ? binHint() : '') +
+      (mode === 'binaer' ? binHint() : mode === 'subnetz' ? subHint() : '') +
       '<div class="kt-opts">' + o + '</div>';
     g.opts = view.querySelector('.kt-opts'); g.act = null;
     if (pult) pult.innerHTML = '';
@@ -565,7 +579,9 @@
     // Ergebnisfeld: Meldung, Erklärung und „Weiter“ zusammen in einem Kasten
     var box = document.createElement('div');
     box.className = 'kq-fb ' + (ok ? 'ok' : 'bad');
-    view.appendChild(box);
+    // Ergebnis direkt unter der Frage (schmal: unter den Antworten), die Hilfetabelle rückt nach unten
+    var anchor = g.opts.parentNode === view ? g.opts : view.querySelector('.kq-card');
+    view.insertBefore(box, anchor ? anchor.nextSibling : null);
     var fb = document.createElement('div');
     fb.className = 'kt-out ' + (ok ? 'g' : 'r');
     fb.setAttribute('role', 'status');
@@ -584,13 +600,11 @@
     nx.innerHTML = '<button type="button" class="pri" data-quiz-next>' + (g.i + 1 < ROUNDS ? bi('Weiter', 'Next') + ' →' : bi('Ergebnis', 'Result') + ' →') + '</button>';
     box.appendChild(nx);
     g.act = nx; place();
-    var go = function () { clearTimeout(next); next = 0; g.i++; if (g.i < ROUNDS) ask(); else result(); };
-    nx.querySelector('button').addEventListener('click', go);
+    // Weiter geht es in allen Spielen nur per Klick auf „Weiter“ oder mit Enter, damit man in Ruhe lesen kann
+    var cur = g, at = g.i;
+    g.go = function () { if (g !== cur || g.i !== at || !g.done) return; g.go = null; g.i++; if (g.i < ROUNDS) ask(); else result(); };
+    nx.querySelector('button').addEventListener('click', function () { if (g && g.go) g.go(); });
     nx.querySelector('button').focus({ preventScroll: true });
-    // Automatisch weiter, damit das Spiel im Fluss bleibt (bei falscher Antwort etwas länger zum Lesen)
-    // Mit Erklärung bleibt mehr Zeit zum Lesen. Beim Störungsticket geht es nur per Klick auf „Weiter“ weiter,
-    // damit man in Ruhe nachlesen und recherchieren kann.
-    if (mode !== 'ticket') next = setTimeout(go, g.q.why ? (ok ? 3500 : 7000) : (ok ? 1400 : 2600));
   };
 
   var result = function () {
@@ -642,6 +656,14 @@
   };
   modeBtns.forEach(function (b) {
     b.addEventListener('click', function () { setMode(b.getAttribute('data-quiz-mode')); intro(); });
+  });
+
+  // Enter: nach einer Antwort weiter zur nächsten Frage, egal wo der Fokus gerade liegt
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.ctrlKey || e.metaKey || e.altKey || !g || !g.done || !g.go) return;
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (tag === 'A' && !kt.contains(t))) return;
+    e.preventDefault(); g.go();
   });
 
   // Tastatur: A/B/C oder 1/2/3 wählt eine Antwort, solange der Fokus im Terminal liegt
