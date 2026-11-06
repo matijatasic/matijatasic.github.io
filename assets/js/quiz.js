@@ -354,13 +354,10 @@
   // Punkte: richtig = 100 + 10 je volle übrige Sekunde, falsch oder Zeit abgelaufen = 0
   var points = function (right, left) { return right ? BASE + PER_SEC * Math.max(0, Math.floor(left)) : 0; };
 
-  // Stufen nach Punkten (höchstens 5 × 400 = 2.000)
-  var TIERS = [
-    { min: 1500, de: 'Senior-Admin', en: 'Senior admin', range: { de: 'ab 1.500', en: 'from 1,500' }, cls: 's' },
-    { min: 900, de: 'Mid-Level-Admin', en: 'Mid-level admin', range: { de: '900 – 1.499', en: '900 – 1,499' }, cls: 'm' },
-    { min: 0, de: 'Junior-Admin', en: 'Junior admin', range: { de: '0 – 899', en: '0 – 899' }, cls: 'j' }
-  ];
-  var tierOf = function (pts) { for (var i = 0; i < TIERS.length; i++) if (pts >= TIERS[i].min) return TIERS[i]; return TIERS[TIERS.length - 1]; };
+  // Abstand zur Vorrunde (null, wenn es noch keine Vorrunde gibt)
+  var delta = function (cur, prev) { return typeof prev === 'number' && isFinite(prev) ? cur - prev : null; };
+  // Anteil am Rekord in Prozent für den Ring (0–100, ohne Rekord 0)
+  var ringPct = function (cur, rec) { return rec > 0 ? Math.max(0, Math.min(100, Math.round(cur / rec * 100))) : 0; };
   // Bestenliste: höchstens 3 Punktestände, absteigend. Gibt die neue Liste und den Platz (1–3, sonst 0) zurück.
   var addScore = function (list, pts) {
     var top = (list || []).filter(function (x) { return typeof x === 'number' && isFinite(x); }).slice(0, 3);
@@ -372,7 +369,7 @@
     return { top: top.slice(0, 3), place: i + 1 };
   };
 
-  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, TICKETS: TICKETS, fwHit: fwHit, MODES: Object.keys(MAKERS), TIERS: TIERS, make: make, points: points, tierOf: tierOf, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf };
+  var api = { ROUNDS: ROUNDS, SECONDS: SECONDS, PORTS: PORTS, TICKETS: TICKETS, fwHit: fwHit, MODES: Object.keys(MAKERS), make: make, points: points, delta: delta, ringPct: ringPct, addScore: addScore, maskOf: maskOf, hostsOf: hostsOf };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   global.NetQuiz = api;
 
@@ -397,27 +394,39 @@
   };
   var setTop = function (m, t) { try { localStorage.setItem('quiz-top-' + m, JSON.stringify(t)); } catch (e) {} };
   var fmt = function (n) { return bi(n.toLocaleString('de-DE'), n.toLocaleString('en-US')); };
-  var pod = document.querySelector('[data-quiz-pod]'), tierBox = document.querySelector('[data-quiz-tiers]'), podName = document.querySelector('[data-quiz-podname]');
-  var last = {};
-  // Podium (Platz 1 in der Mitte) und Stufen links neben dem Terminal
+  var getLast = function (m) {
+    try { var v = JSON.parse(localStorage.getItem('quiz-last-' + m)); return typeof v === 'number' && isFinite(v) ? v : null; } catch (e) { return null; }
+  };
+  var setLast = function (m, v) { try { localStorage.setItem('quiz-last-' + m, JSON.stringify(v)); } catch (e) {} };
+  var boardEl = document.querySelector('[data-quiz-board]'), podName = document.querySelector('[data-quiz-podname]');
+  // live: laufende oder gerade beendete Runde { cur, prev, done, newRec }; null = noch nicht gestartet
+  var live = null;
+  // Rechts: Ring mit den Punkten der aktuellen Runde im Verhältnis zum Rekord, Abstand zur Vorrunde,
+  // darunter persönlicher Rekord und letzte Runde (alles nur im Browser des Besuchers)
   var board = function () {
-    var top = getTop(mode), mark = last[mode] != null ? last[mode] : top[0];
     if (podName) podName.textContent = mode;
-    if (pod) {
-      var col = function (place, cls) {
-        var v = top[place - 1];
-        return '<div class="' + cls + (v == null ? ' empty' : '') + (last[mode + 'p'] === place ? ' new' : '') + '"><b>' + place + '</b><span>' + (v == null ? '–' : fmt(v)) + '</span></div>';
-      };
-      pod.innerHTML = col(2, 'p2') + col(1, 'p1') + col(3, 'p3');
+    if (!boardEl) return;
+    var rec = getTop(mode)[0], prev = live ? live.prev : getLast(mode);
+    var cur = live ? live.cur : null, pct = cur == null ? 0 : (live.newRec ? 100 : ringPct(cur, rec));
+    var sub = cur == null ? bi('Bereit · Start drücken', 'Ready · press start')
+      : live.newRec ? bi('Neuer Rekord!', 'New record!')
+      : rec ? bi(pct + ' % vom Rekord', pct + ' % of record') : bi('Erste Runde', 'First round');
+    var d = cur == null ? null : delta(cur, prev), dh = '';
+    // Während der Runde: nur der Abstand zur Vorrunde (sonst stünde anfangs immer ein großes Minus da).
+    // Am Ende der Runde: ▲/▼ mit dem Ergebnis im Vergleich zur Vorrunde.
+    if (d != null && !live.done) {
+      dh = d < 0 ? '<div class="rk-d">' + bi('noch ' + (-d).toLocaleString('de-DE') + ' bis zur Vorrunde', (-d).toLocaleString('en-US') + ' to go to beat last round') + '</div>'
+        : '<div class="rk-d up">▲ ' + bi('Vorrunde übertroffen', 'Last round beaten') + '</div>';
+    } else if (d != null) {
+      var n = Math.abs(d), nde = n.toLocaleString('de-DE'), nen = n.toLocaleString('en-US');
+      dh = d > 0 ? '<div class="rk-d up">▲ ' + bi('+' + nde + ' zur Vorrunde', '+' + nen + ' vs. last round') + '</div>'
+        : d < 0 ? '<div class="rk-d down">▼ ' + bi('−' + nde + ' zur Vorrunde', '−' + nen + ' vs. last round') + '</div>'
+        : '<div class="rk-d">± ' + bi('0 · gleich wie Vorrunde', '0 · same as last round') + '</div>';
     }
-    if (tierBox) {
-      var you = mark != null ? tierOf(mark) : null, h = '';
-      TIERS.forEach(function (t) {
-        h += '<div class="lt ' + t.cls + (you === t ? ' you' : '') + '"><b>' + tx(t) + '</b><span>' + bi(t.range.de + ' Punkte', t.range.en + ' points') + '</span>' +
-          (you === t ? '<em>◀ ' + bi('Sie', 'You') + '</em>' : '') + '</div>';
-      });
-      tierBox.innerHTML = h;
-    }
+    boardEl.innerHTML =
+      '<div class="rk-ring' + (cur == null ? ' idle' : '') + (live && live.newRec ? ' rec' : '') + '" style="--p:' + pct + '"><div><b>' + (cur == null ? '–' : fmt(cur)) + '</b><span class="rk-s">' + sub + '</span></div></div>' + dh +
+      '<ul class="rk-list"><li class="rec"><span>🏆 ' + bi('Rekord', 'Record') + '</span><b>' + (rec ? fmt(rec) : '–') + '</b></li>' +
+      '<li><span>' + bi('Letzte Runde', 'Last round') + '</span><b>' + (prev != null ? fmt(prev) : '–') + '</b></li></ul>';
   };
 
   // Spielstand
@@ -434,7 +443,7 @@
   };
 
   var intro = function () {
-    stop(); g = null;
+    stop(); g = null; live = null; board();
     var b = getTop(mode)[0] || 0;
     view.innerHTML =
       '<div class="kt-out c">' + bi('[*] Bereit: 5 Fragen, je 30 Sekunden.', '[*] Ready: 5 questions, 30 seconds each.') + '</div>' +
@@ -447,6 +456,8 @@
   var start = function () {
     stop();
     g = { i: 0, pts: 0, res: [], used: {}, times: [] };
+    live = { cur: 0, prev: getLast(mode), done: false, newRec: false };
+    board();
     ask();
   };
 
@@ -509,6 +520,7 @@
     g.done = true; clearInterval(timer); timer = 0;
     var ok = i === g.q.a, used = Math.min(SECONDS, (Date.now() - g.t0) / 1000), p = points(ok, g.left);
     g.pts += p; g.res.push({ ok: ok }); g.times.push(used);
+    if (live) { live.cur = g.pts; board(); }
     view.querySelectorAll('[data-opt]').forEach(function (b, j) {
       b.disabled = true;
       var m = b.querySelector('.m');
@@ -545,10 +557,11 @@
     stop();
     var right = g.res.filter(function (r) { return r.ok; }).length, pct = Math.round(right / ROUNDS * 100);
     var avg = g.times.reduce(function (a, b) { return a + b; }, 0) / g.times.length;
-    var top = getTop(mode), add = addScore(top, g.pts), rec = add.place === 1;
+    var top = getTop(mode), add = addScore(top, g.pts), rec = add.place === 1, best = add.top[0] || 0;
+    var d = live ? delta(g.pts, live.prev) : null;
     setTop(mode, add.top);
-    last[mode] = g.pts; last[mode + 'p'] = add.place;
-    var tier = tierOf(g.pts);
+    setLast(mode, g.pts);
+    if (live) { live.cur = g.pts; live.done = true; live.newRec = rec; }
     board();
     var chips = g.res.map(function (r, i) { return '<span class="' + (r.ok ? 'ok' : 'bad') + '">' + (i + 1) + ' ' + (r.ok ? '✓' : '✗') + '</span>'; }).join('');
     var col = pct >= 80 ? 'g' : (pct >= 40 ? 'y' : 'r');
@@ -558,12 +571,14 @@
       '<div class="kt-out g">[+] ' + bi('Runde beendet', 'Round complete') + '</div>' +
       '<div class="resrow"><div class="kt-pct ' + col + '">' + pct + ' %</div><div class="resinfo">' +
       '<div class="kt-out">' + bi(right + ' von ' + ROUNDS + ' richtig', right + ' of ' + ROUNDS + ' correct') + ' · ' + bi('Punkte', 'Points') + ' <b class="y">' + fmt(g.pts) + '</b></div>' +
-      '<div class="kt-out g">' + (add.place ? '★ ' + bi('Platz ' + add.place, 'Rank ' + add.place) + ' · ' : '') + tx(tier) + (rec ? ' · ' + bi('Neuer Rekord!', 'New record!') : '') + '</div>' +
+      (rec ? '<div class="kt-out g">★ ' + bi('Neuer persönlicher Rekord!', 'New personal record!') + '</div>'
+        : d != null ? '<div class="kt-out ' + (d > 0 ? 'g">▲ +' : d < 0 ? 'r">▼ −' : 'd">± ') + bi(Math.abs(d).toLocaleString('de-DE') + ' zur Vorrunde', Math.abs(d).toLocaleString('en-US') + ' vs. last round') + '</div>' : '') +
       '</div></div><div class="kt-bar2 ' + col + '"><i style="width:' + pct + '%"></i></div>' +
       '<div class="kt-out y">' + bi('Ø ' + avg.toFixed(1).replace('.', ',') + ' s pro Antwort', 'avg ' + avg.toFixed(1) + ' s per answer') + '</div>' +
-      '<div class="kt-out d">' + (add.place ? bi('# Neuer Eintrag auf Platz ' + add.place + ' in Ihrer Bestenliste.', '# New entry at rank ' + add.place + ' on your leaderboard.')
-        : (add.top.length < 3 ? bi('# Ohne Punkte kein Eintrag. Gleich nochmal?', '# No points, no entry. Try again?')
-        : bi('# Für die Bestenliste fehlen ' + (add.top[2] - g.pts + 1) + ' Punkte.', '# ' + (add.top[2] - g.pts + 1) + ' more points needed for the leaderboard.'))) + '</div>' +
+      '<div class="kt-out d">' + (rec ? bi('# Das ist Ihr neuer Bestwert für diesen Modus.', '# That is your new best for this mode.')
+        : best && best === g.pts ? bi('# Rekord genau eingestellt.', '# You matched your record.')
+        : best ? bi('# Noch ' + (best - g.pts).toLocaleString('de-DE') + ' Punkte bis zum Rekord.', '# ' + (best - g.pts).toLocaleString('en-US') + ' points short of your record.')
+        : bi('# Ohne Punkte kein Rekord. Gleich nochmal?', '# No points, no record. Try again?')) + '</div>' +
       '<div class="kt-review">' + chips + '</div>' +
       '<div class="kt-act"><button type="button" class="pri" data-quiz-again>↻ ' + bi('Nochmal', 'Again') + '</button>' +
       '<button type="button" data-quiz-nextmode>' + bi('Nächster Modus', 'Next mode') + ': ' + NAMES[nextMode] + ' →</button></div></div>';
@@ -572,7 +587,7 @@
   };
 
   var setMode = function (m) {
-    mode = m;
+    mode = m; live = null;
     try { sessionStorage.setItem('quiz', m); } catch (e) {}
     modeBtns.forEach(function (b) {
       var on = b.getAttribute('data-quiz-mode') === m;

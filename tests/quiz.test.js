@@ -97,13 +97,14 @@ test('Punkte: 100 + 10 je volle übrige Sekunde, falsch = 0', function () {
   assert.strictEqual(Q.points(false, 25), 0);
 });
 
-test('Stufen: Junior bis 899, Mid-Level 900–1.499, Senior ab 1.500', function () {
-  assert.strictEqual(Q.tierOf(0).de, 'Junior-Admin');
-  assert.strictEqual(Q.tierOf(899).de, 'Junior-Admin');
-  assert.strictEqual(Q.tierOf(900).de, 'Mid-Level-Admin');
-  assert.strictEqual(Q.tierOf(1499).de, 'Mid-Level-Admin');
-  assert.strictEqual(Q.tierOf(1500).de, 'Senior-Admin');
-  assert.strictEqual(Q.tierOf(2000).de, 'Senior-Admin');
+test('Rangliste: Abstand zur Vorrunde und Ring-Anteil am Rekord', function () {
+  assert.strictEqual(Q.delta(1230, 1180), 50);
+  assert.strictEqual(Q.delta(1130, 1180), -50);
+  assert.strictEqual(Q.delta(500, null), null);
+  assert.strictEqual(Q.ringPct(1230, 1640), 75);
+  assert.strictEqual(Q.ringPct(2000, 1640), 100);
+  assert.strictEqual(Q.ringPct(0, 1640), 0);
+  assert.strictEqual(Q.ringPct(800, undefined), 0);
 });
 
 test('Bestenliste: höchstens 3 Einträge, absteigend, Platz stimmt', function () {
