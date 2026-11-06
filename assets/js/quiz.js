@@ -1114,6 +1114,46 @@
     return pick;
   };
 
+  // Neuer Rekord (alter Rekord übertroffen): „Goldener Siegerring“. Der Ring leuchtet und pulsiert,
+  // ein Stempel „NEUER REKORD“ springt ein und goldenes Konfetti rieselt über den Ring (einmalig, ca. 3 s).
+  var celebrate = function () {
+    var ring = boardEl && boardEl.querySelector('.rk-ring');
+    if (!ring) return;
+    var st = document.createElement('span');
+    st.className = 'rk-stamp'; st.setAttribute('aria-hidden', 'true');
+    st.innerHTML = bi('NEUER REKORD', 'NEW RECORD');
+    ring.appendChild(st);
+    ring.classList.add('rk-win');
+    if (reduceMotion) return;
+    // Canvas im Ranglisten-Block, damit es mit dem Ring mitwandert, auch wenn sich das Layout darüber ändert
+    var W = ring.offsetWidth + 160, H = ring.offsetHeight + 200, d = window.devicePixelRatio || 1;
+    var c = document.createElement('canvas');
+    c.className = 'rk-confetti'; c.setAttribute('aria-hidden', 'true');
+    c.width = W * d; c.height = H * d;
+    c.style.cssText = 'left:' + (ring.offsetLeft - 80) + 'px;top:' + (ring.offsetTop - 140) + 'px;width:' + W + 'px;height:' + H + 'px';
+    boardEl.appendChild(c);
+    var x = c.getContext('2d'), cols = ['#e0b23a', '#f5c04a', '#fff0b8', '#c8962a'], ps = [];
+    x.setTransform(d, 0, 0, d, 0, 0);
+    for (var i = 0; i < 60; i++) ps.push({ x: Math.random() * W, y: -10 - Math.random() * 110, vx: (Math.random() - 0.5) * 30, vy: 60 + Math.random() * 80,
+      r: Math.random() * 6, vr: (Math.random() - 0.5) * 8, w: 4 + Math.random() * 4, h: 7 + Math.random() * 5, c: cols[i % 4] });
+    var t0 = 0, DUR = 3;
+    var frame = function (t) {
+      if (!t0) t0 = t;
+      var k = (t - t0) / 1000;
+      x.clearRect(0, 0, W, H);
+      ps.forEach(function (p) {
+        x.save();
+        x.translate(p.x + p.vx * k + Math.sin(k * 3 + p.r) * 12, p.y + p.vy * k + 40 * k * k);
+        x.rotate(p.r + p.vr * k); x.scale(1, Math.cos(k * 6 + p.r));
+        x.globalAlpha = Math.max(0, 1 - k / DUR); x.fillStyle = p.c;
+        x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        x.restore();
+      });
+      if (k < DUR) requestAnimationFrame(frame); else if (c.parentNode) c.parentNode.removeChild(c);
+    };
+    setTimeout(function () { requestAnimationFrame(frame); }, 500);
+  };
+
   // Spielstand
   var g = null, timer = 0, next = 0;
   var stop = function () { clearInterval(timer); clearTimeout(next); timer = 0; next = 0; };
@@ -1287,11 +1327,13 @@
     var right = g.res.filter(function (r) { return r.ok; }).length, pct = Math.round(right / ROUNDS * 100);
     var avg = g.times.reduce(function (a, b) { return a + b; }, 0) / g.times.length;
     var top = getTop(mode), add = addScore(top, g.pts), rec = add.place === 1, best = add.top[0] || 0;
+    var beat = rec && top.length > 0 && g.pts > top[0];
     var d = live ? delta(g.pts, live.prev) : null;
     setTop(mode, add.top);
     setLast(mode, g.pts);
     if (live) { live.cur = g.pts; live.done = true; live.newRec = rec; }
     board();
+    if (beat) celebrate();
     var chips = g.res.map(function (r, i) { return '<span class="' + (r.ok ? 'ok' : 'bad') + '">' + (i + 1) + ' ' + (r.ok ? '✓' : '✗') + '</span>'; }).join('');
     pultMsg('Runde beendet · Ergebnis im Spielfeld.', 'Round complete · see the result in the game.');
     var col = pct >= 80 ? 'g' : (pct >= 40 ? 'y' : 'r');
